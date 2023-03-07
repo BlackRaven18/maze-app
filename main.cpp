@@ -128,20 +128,6 @@ int main(int, char const**)
             tab[i][j]=1;
         }
     }
-    
-    sf::Image icon;
-    if (!icon.loadFromFile(resourcePath() + "icon.png")) {
-        return EXIT_FAILURE;
-    }
-    
-    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-    sf::Font font;
-    if (!font.loadFromFile(resourcePath() + "sansation.ttf")) {
-        return EXIT_FAILURE;
-    }
-    
-    sf::Text text("A", font, 50);
-    text.setFillColor(sf::Color::Black);
     while (window.isOpen())
     {
         sf::Vector2i position = sf::Mouse::getPosition(window);
@@ -158,7 +144,6 @@ int main(int, char const**)
         }
         
         window.clear();
-        window.draw(text);
         for(i=0; i<55; i++){
             for(j=0; j<30; j++){
                 if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<i*40+20&&position.x>i*40&&position.y>j*40&&position.y<j*40+20){
