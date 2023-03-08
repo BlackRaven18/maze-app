@@ -49,82 +49,81 @@ sf::RectangleShape zrobCzerwonyProstokat(int x, int y, int width, int height){
 
 int main(int, char const**)
 {
-    sf::RenderWindow window(sf::VideoMode(3000, 1700), "SFML window");
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "SFML window");
     
     sf::RectangleShape rectangle2;
     rectangle2.setSize(sf::Vector2f(50, 50));
     rectangle2.setOutlineColor(sf::Color::Red);
-    rectangle2.setPosition(2575, 300);
+    rectangle2.setPosition(1650, 300);
     rectangle2.setFillColor(sf::Color::White);
     
     sf::RectangleShape rectangle22;
     rectangle22.setSize(sf::Vector2f(250, 250));
     rectangle22.setOutlineColor(sf::Color::Red);
-    rectangle22.setPosition(2475, 200);
+    rectangle22.setPosition(1550, 200);
     rectangle22.setFillColor(sf::Color::Black);
     
     sf::RectangleShape rectangle23;
     rectangle23.setSize(sf::Vector2f(300, 300));
     rectangle23.setOutlineColor(sf::Color::Red);
-    rectangle23.setPosition(2450, 175);
+    rectangle23.setPosition(1525, 175);
     rectangle23.setFillColor(sf::Color::Yellow);
     
     sf::RectangleShape rectangle3;
     rectangle3.setSize(sf::Vector2f(50, 50));
     rectangle3.setOutlineColor(sf::Color::Red);
-    rectangle3.setPosition(2450, 600);
+    rectangle3.setPosition(1525, 600);
     rectangle3.setFillColor(sf::Color::Green);
     
     sf::RectangleShape rectangle32;
     rectangle32.setSize(sf::Vector2f(150, 150));
     rectangle32.setOutlineColor(sf::Color::Red);
-    rectangle32.setPosition(2400, 550);
+    rectangle32.setPosition(1475, 550);
     rectangle32.setFillColor(sf::Color::Black);
     
     sf::RectangleShape rectangle33;
     rectangle33.setSize(sf::Vector2f(200, 200));
     rectangle33.setOutlineColor(sf::Color::Red);
-    rectangle33.setPosition(2375, 525);
+    rectangle33.setPosition(1450, 525);
     rectangle33.setFillColor(sf::Color::Yellow);
     
     sf::RectangleShape rectangle4;
     rectangle4.setSize(sf::Vector2f(50, 50));
     rectangle4.setOutlineColor(sf::Color::Red);
-    rectangle4.setPosition(2700, 600);
+    rectangle4.setPosition(1775, 600);
     rectangle4.setFillColor(sf::Color::Red);
     
     sf::RectangleShape rectangle42;
     rectangle42.setSize(sf::Vector2f(150, 150));
     rectangle42.setOutlineColor(sf::Color::Red);
-    rectangle42.setPosition(2650, 550);
+    rectangle42.setPosition(1725, 550);
     rectangle42.setFillColor(sf::Color::Black);
     
     sf::RectangleShape rectangle43;
     rectangle43.setSize(sf::Vector2f(200, 200));
     rectangle43.setOutlineColor(sf::Color::Red);
-    rectangle43.setPosition(2625, 525);
+    rectangle43.setPosition(1700, 525);
     rectangle43.setFillColor(sf::Color::Yellow);
     
     sf::RectangleShape rectangle5;
     rectangle5.setSize(sf::Vector2f(150, 150));
     rectangle5.setOutlineColor(sf::Color::Red);
-    rectangle5.setPosition(700, 1300);
+    rectangle5.setPosition(300, 900);
     rectangle5.setFillColor(sf::Color::Green);
     
     sf::RectangleShape rectangle6;
     rectangle6.setSize(sf::Vector2f(150, 150));
     rectangle6.setOutlineColor(sf::Color::Red);
-    rectangle6.setPosition(1000, 1300);
+    rectangle6.setPosition(600, 900);
     rectangle6.setFillColor(sf::Color::Red);
     
-    int tab[55][30];
+    int tab[36][22];
     int i=1;
     int j=1;
     int n=1;
     srand(time(0));
-    for(i=1; i<55; i++){
-        for(j=1; j<30; j++){
-            int a=rand()%2;
+    for(i=0; i<36; i++){
+        for(j=0; j<22; j++){
             tab[i][j]=1;
         }
     }
@@ -144,8 +143,8 @@ int main(int, char const**)
         }
         
         window.clear();
-        for(i=0; i<55; i++){
-            for(j=0; j<30; j++){
+        for(i=0; i<36; i++){
+            for(j=0; j<22; j++){
                 if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<i*40+20&&position.x>i*40&&position.y>j*40&&position.y<j*40+20){
                         if(tab[i][j]==1&&n==1){
                             tab[i][j]=0;
@@ -160,19 +159,19 @@ int main(int, char const**)
             }
         }
         
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<2625&&position.x>2575&&position.y>300&&position.y<350){
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<1700&&position.x>1650&&position.y>300&&position.y<350){
                 n=1;
         }
         
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<2500&&position.x>2450&&position.y>600&&position.y<650){
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<1575&&position.x>1525&&position.y>600&&position.y<650){
                 n=2;
         }
         
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<2750&&position.x>2700&&position.y>600&&position.y<650){
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<1825&&position.x>1775&&position.y>600&&position.y<650){
                 n=3;
         }
         
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<1150&&position.x>1000&&position.y>1300&&position.y<1450){
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<750&&position.x>600&&position.y>900&&position.y<1050){
             for(i=1; i<55; i++){
                 for(j=1; j<30; j++){
                     tab[i][j]=1;
@@ -180,9 +179,9 @@ int main(int, char const**)
             }
         }
         
-        window.draw(zrobNiebieskiProstokat(0, 0, 3000, 1700));
-        for(i=1; i<55; i++){
-            for(j=1; j<30; j++){
+        window.draw(zrobNiebieskiProstokat(0, 0, 1920, 1080));
+        for(i=0; i<36; i++){
+            for(j=0; j<22; j++){
                 if(tab[i][j]==1){
                     window.draw(zrobCzarnyProstokat(i*40, j*40, 40, 40));
                 }
