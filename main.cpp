@@ -1,73 +1,34 @@
-#include <SFML/Audio.hpp>
-#include <SFML/Graphics.hpp>
-#include "ResourcePath.hpp"
 
-sf::RectangleShape zrobCzarnyProstokat(int x, int y, int width, int height){
+#include "Engine.h"
+
+sf::RectangleShape createRectangle(int x, int y, int width, int height, sf::Color fillColor) {
     sf::RectangleShape rectangle;
     rectangle.setSize(sf::Vector2f(width, height));
     rectangle.setOutlineColor(sf::Color::Red);
     rectangle.setPosition(x, y);
-    rectangle.setFillColor(sf::Color::Black);
+    rectangle.setFillColor(fillColor);
     return rectangle;
 }
 
-sf::RectangleShape zrobBialyProstokat(int x, int y, int width, int height){
-    sf::RectangleShape rectangle;
-    rectangle.setSize(sf::Vector2f(width, height));
-    rectangle.setOutlineColor(sf::Color::Red);
-    rectangle.setPosition(x, y);
-    rectangle.setFillColor(sf::Color::White);
-    return rectangle;
-}
-
-sf::RectangleShape zrobNiebieskiProstokat(int x, int y, int width, int height){
-    sf::RectangleShape rectangle;
-    rectangle.setSize(sf::Vector2f(width, height));
-    rectangle.setOutlineColor(sf::Color::Red);
-    rectangle.setPosition(x, y);
-    rectangle.setFillColor(sf::Color::Blue);
-    return rectangle;
-}
-
-sf::RectangleShape zrobZielonyProstokat(int x, int y, int width, int height){
-    sf::RectangleShape rectangle;
-    rectangle.setSize(sf::Vector2f(width, height));
-    rectangle.setOutlineColor(sf::Color::Red);
-    rectangle.setPosition(x, y);
-    rectangle.setFillColor(sf::Color::Green);
-    return rectangle;
-}
-
-sf::RectangleShape zrobCzerwonyProstokat(int x, int y, int width, int height){
-    sf::RectangleShape rectangle;
-    rectangle.setSize(sf::Vector2f(width, height));
-    rectangle.setOutlineColor(sf::Color::Red);
-    rectangle.setPosition(x, y);
-    rectangle.setFillColor(sf::Color::Red);
-    return rectangle;
-}
+//void initializeMazeTable(int mazeTable[][MAZE_TABLE_HEIGHT]) {
+//    for (int i = 0; i < MAZE_TABLE_WIDTH; i++) {
+//        for (int j = j = 0; j < MAZE_TABLE_HEIGHT; j++) {
+//            mazeTable[i][j] = 1;
+//        }
+//    }
+//}
 
 int main(int, char const**)
 {
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "SFML window");
+
+    Engine engine;
+    engine.start();
+    /*sf::RenderWindow window(sf::VideoMode(1920, 1080), "SFML window");
     
-    sf::RectangleShape rectangle2;
-    rectangle2.setSize(sf::Vector2f(50, 50));
-    rectangle2.setOutlineColor(sf::Color::Red);
-    rectangle2.setPosition(1650, 300);
-    rectangle2.setFillColor(sf::Color::White);
-    
-    sf::RectangleShape rectangle22;
-    rectangle22.setSize(sf::Vector2f(250, 250));
-    rectangle22.setOutlineColor(sf::Color::Red);
-    rectangle22.setPosition(1550, 200);
-    rectangle22.setFillColor(sf::Color::Black);
-    
-    sf::RectangleShape rectangle23;
-    rectangle23.setSize(sf::Vector2f(300, 300));
-    rectangle23.setOutlineColor(sf::Color::Red);
-    rectangle23.setPosition(1525, 175);
-    rectangle23.setFillColor(sf::Color::Yellow);
+    sf::RectangleShape rectangle2 = createRectangle(1650, 300, 50, 50, sf::Color::White);
+    sf::RectangleShape rectangle22 = createRectangle(1550, 200, 250, 250, sf::Color::Black);
+    sf::RectangleShape rectangle23 = createRectangle(1525, 175, 300, 300, sf::Color::Yellow);
+
     
     sf::RectangleShape rectangle3;
     rectangle3.setSize(sf::Vector2f(50, 50));
@@ -117,16 +78,12 @@ int main(int, char const**)
     rectangle6.setPosition(600, 900);
     rectangle6.setFillColor(sf::Color::Red);
     
-    int tab[36][22];
-    int i=1;
-    int j=1;
-    int n=1;
-    srand(time(0));
-    for(i=0; i<36; i++){
-        for(j=0; j<22; j++){
-            tab[i][j]=1;
-        }
-    }
+    int mazeTable[MAZE_TABLE_WIDTH][MAZE_TABLE_HEIGHT];
+    int n = 1;
+
+    initializeMazeTable(mazeTable);
+
+   
     while (window.isOpen())
     {
         sf::Vector2i position = sf::Mouse::getPosition(window);
@@ -143,17 +100,17 @@ int main(int, char const**)
         }
         
         window.clear();
-        for(i=0; i<36; i++){
-            for(j=0; j<22; j++){
-                if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<i*40+20&&position.x>i*40&&position.y>j*40&&position.y<j*40+20){
-                        if(tab[i][j]==1&&n==1){
-                            tab[i][j]=0;
+        for(int i = 0; i < MAZE_TABLE_WIDTH; i++){
+            for(int j = 0; j < MAZE_TABLE_HEIGHT; j++){
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<i*TABLE_CELL_SIZE+20&&position.x>i*TABLE_CELL_SIZE&&position.y>j*TABLE_CELL_SIZE&&position.y<j*TABLE_CELL_SIZE+20){
+                        if(mazeTable[i][j]==1&&n==1){
+                            mazeTable[i][j]=0;
                         }
                         else if(n==2){
-                            tab[i][j]=2;
+                            mazeTable[i][j]=2;
                         }
                         else if(n==3){
-                            tab[i][j]=3;
+                            mazeTable[i][j]=3;
                         }
                 }
             }
@@ -172,27 +129,27 @@ int main(int, char const**)
         }
         
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<750&&position.x>600&&position.y>900&&position.y<1050){
-            for(i=1; i<55; i++){
-                for(j=1; j<30; j++){
-                    tab[i][j]=1;
+            for(int i = 1; i < MAZE_TABLE_WIDTH; i++){
+                for(int j = 1; j < MAZE_TABLE_HEIGHT; j++){
+                    mazeTable[i][j]=1;
                 }
             }
         }
         
-        window.draw(zrobNiebieskiProstokat(0, 0, 1920, 1080));
-        for(i=0; i<36; i++){
-            for(j=0; j<22; j++){
-                if(tab[i][j]==1){
-                    window.draw(zrobCzarnyProstokat(i*40, j*40, 40, 40));
+        window.draw(createRectangle(0, 0, 1920, 1080, sf::Color::Blue));
+        for(int i=0; i < MAZE_TABLE_WIDTH; i++){
+            for(int j = 0; j < MAZE_TABLE_HEIGHT; j++){
+                if(mazeTable[i][j]==1){
+                    window.draw(createRectangle(i * TABLE_CELL_SIZE, j * TABLE_CELL_SIZE, TABLE_CELL_SIZE, TABLE_CELL_SIZE, sf::Color::Black));
                 }
-                else if(tab[i][j]==0){
-                    window.draw(zrobBialyProstokat(i*40, j*40, 40, 40));
+                else if(mazeTable[i][j]==0){
+                    window.draw(createRectangle(i*TABLE_CELL_SIZE, j*TABLE_CELL_SIZE, TABLE_CELL_SIZE, TABLE_CELL_SIZE, sf::Color::White));
                 }
-                else if(tab[i][j]==2){
-                    window.draw(zrobZielonyProstokat(i*40, j*40, 40, 40));
+                else if(mazeTable[i][j]==2){
+                    window.draw(createRectangle(i*TABLE_CELL_SIZE, j*TABLE_CELL_SIZE, TABLE_CELL_SIZE, TABLE_CELL_SIZE, sf::Color::Green));
                 }
-                else if(tab[i][j]==3){
-                    window.draw(zrobCzerwonyProstokat(i*40, j*40, 40, 40));
+                else if(mazeTable[i][j]==3){
+                    window.draw(createRectangle(i*TABLE_CELL_SIZE, j*TABLE_CELL_SIZE, TABLE_CELL_SIZE, TABLE_CELL_SIZE, sf::Color::Red));
                 }
             }
         }
@@ -209,6 +166,6 @@ int main(int, char const**)
         window.draw(rectangle5);
         window.draw(rectangle6);
         window.display();
-    }
+    }*/
     return EXIT_SUCCESS;
 }
