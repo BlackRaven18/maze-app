@@ -42,9 +42,31 @@ void Engine::update() {
 	}
 }
 
+
+
 void Engine::draw() {
 	window->clear();
 
+	drawMazeTable();
+
 	window->display();
 
+}
+
+void Engine::drawMazeTable() {
+	for(int i = 0; i < MAZE_TABLE_WIDTH; i++)
+		for (int j = 0; j < MAZE_TABLE_HEIGHT; j++) {
+			
+			window->draw(createRectangle(i * MAZE_TABLE_CELL_SIZE, j * MAZE_TABLE_CELL_SIZE, 
+				MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE, sf::Color::White));
+		}
+
+}
+
+sf::RectangleShape Engine::createRectangle(int x, int y, int width, int height, sf::Color color) {
+	sf::RectangleShape rectangle;
+	rectangle.setSize(sf::Vector2f(width, height));
+	rectangle.setPosition(x, y);
+	rectangle.setFillColor(color);
+	return rectangle;
 }
