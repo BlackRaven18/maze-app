@@ -7,6 +7,11 @@ void Engine::start() {
 	startMainLoop();
 }
 
+void Engine::updateMousePosition() {
+	sf::Vector2i pixelPos = sf::Mouse::getPosition(*window);
+	mousePosition = window->mapPixelToCoords(pixelPos);
+}
+
 void Engine::initializeMazeTable() {
 	for (int i = 0; i < MAZE_TABLE_WIDTH; i++) {
 		for (int j = j = 0; j < MAZE_TABLE_HEIGHT; j++) {
@@ -42,12 +47,19 @@ void Engine::handleEvents()
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
 			window->close();
 		}
+
+		//if (event.type == sf::Event::Resized)
+		//{
+		//	// update the view to the new size of the window
+		//	sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+		//	window -> setView(sf::View(visibleArea));
+		//}
 	}
 }
 
 void Engine::update() {
 	handleEvents();
-	mousePosition = sf::Mouse::getPosition(*window);
+	updateMousePosition();
 }
 
 
@@ -71,7 +83,7 @@ void Engine::drawMaze()
 	//checking if mouse is on the maze board
 
 	if (mousePosition.x > MAZE_TABLE_WIDTH * MAZE_TABLE_CELL_SIZE && mousePosition.y > MAZE_TABLE_HEIGHT * MAZE_TABLE_CELL_SIZE) {
-		return;//std::cout << "bebe" << std::endl;
+		return;
 	}
 
 	if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {

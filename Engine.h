@@ -15,9 +15,14 @@ class Engine {
 private:
 	sf::RenderWindow *window;
 	Rectangle mazeTable[MAZE_TABLE_WIDTH][MAZE_TABLE_HEIGHT];
-	sf::Vector2i mousePosition;
+	sf::Vector2f mousePosition;
 
+	void updateMousePosition();
 	void initializeMazeTable();
+	void drawMaze();
+	void drawMazeTable();
+	sf::RectangleShape createRectangle(int x, int y, int width, int height, sf::Color color);
+
 	void startMainLoop();
 	void handleEvents();
 
@@ -25,10 +30,6 @@ private:
 	void update();
 	void draw();
 
-	void drawMaze();
-
-	void drawMazeTable();
-	sf::RectangleShape createRectangle(int x, int y, int width, int height, sf::Color color);
 
 public:
 	void start();
