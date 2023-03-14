@@ -6,6 +6,8 @@
 class Button : public sf::Drawable, public sf::Transformable
 {
 public:
+    Button();
+
     Button(const std::string& buttonText, const sf::Vector2f& position, const sf::Font& font,
         const sf::Color& textColor, const sf::Color& buttonColor, const sf::Color& outlineColor, const sf::Vector2f& buttonSize);
     Button(const sf::Texture& buttonTexture, const sf::Vector2f& position, const sf::Color& outlineColor, const sf::Vector2f& buttonSize);

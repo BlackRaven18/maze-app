@@ -1,5 +1,7 @@
 #include "Button.h"
 
+Button::Button() {};
+
 Button::Button(const std::string& buttonText, const sf::Vector2f& position, const sf::Font& font,
     const sf::Color& textColor, const sf::Color& buttonColor, const sf::Color& outlineColor, const sf::Vector2f& buttonSize)
 {

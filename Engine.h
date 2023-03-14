@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Rectangle.h"
+#include "Button.h"
 
 #define APP_WIDTH 1280
 #define APP_HEIGHT 720
@@ -17,8 +18,12 @@ private:
 	Rectangle mazeTable[MAZE_TABLE_WIDTH][MAZE_TABLE_HEIGHT];
 	sf::Vector2f mousePosition;
 
+	sf::Font font;
+	Button textButton;
+
 	void updateMousePosition();
 	void initializeMazeTable();
+	void initializeButtons();
 	void drawMaze();
 	void drawMazeTable();
 	sf::RectangleShape createRectangle(int x, int y, int width, int height, sf::Color color);
@@ -30,7 +35,7 @@ private:
 	void update();
 	void draw();
 
-
 public:
+	Engine();
 	void start();
 };

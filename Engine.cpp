@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include <iostream>
 
+Engine::Engine() {};
 
 void Engine::start() {
 	initialize();
@@ -22,10 +23,17 @@ void Engine::initializeMazeTable() {
 	}
 }
 
+void Engine::initializeButtons() {
+	font.loadFromFile("arial.ttf");
+
+	textButton = Button("Reset", sf::Vector2f(100, 630), font, sf::Color::Black, sf::Color::White,sf::Color::Black, sf::Vector2f(100, 50));
+}
+
 void Engine::initialize() {
 	this->window = new sf::RenderWindow(sf::VideoMode(APP_WIDTH, APP_HEIGHT), APP_TITLE);
 
 	initializeMazeTable();
+	initializeButtons();
 }
 
 void Engine::startMainLoop() {
@@ -46,6 +54,14 @@ void Engine::handleEvents()
 
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
 			window->close();
+		}
+
+		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+		{
+			if (textButton.isClicked(window))
+			{
+				std::cout << "Text button clicked!" << std::endl;
+			}
 		}
 
 		//if (event.type == sf::Event::Resized)
@@ -69,6 +85,8 @@ void Engine::draw() {
 
 	drawMazeTable();
 	drawMaze();
+
+	window->draw(textButton);
 
 	window->display();
 
