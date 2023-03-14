@@ -60,7 +60,11 @@ void Engine::handleEvents()
 		{
 			if (textButton.isClicked(window))
 			{
-				std::cout << "Text button clicked!" << std::endl;
+				for (int i = 0; i < MAZE_TABLE_WIDTH; i++) {
+					for (int j = j = 0; j < MAZE_TABLE_HEIGHT; j++) {
+						mazeTable[i][j].setColor(sf::Color::White);
+					}
+				}
 			}
 		}
 
