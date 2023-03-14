@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 #include "Rectangle.h"
+#include "MazeCell.h"
+#include "MazeCellTypes.h"
 
 #define APP_WIDTH 1280
 #define APP_HEIGHT 720
@@ -14,7 +16,7 @@
 class Engine {
 private:
 	sf::RenderWindow *window;
-	Rectangle mazeTable[MAZE_TABLE_WIDTH][MAZE_TABLE_HEIGHT];
+	MazeCell mazeTable[MAZE_TABLE_WIDTH][MAZE_TABLE_HEIGHT];
 	sf::Vector2f mousePosition;
 
 	void updateMousePosition();
@@ -32,5 +34,7 @@ private:
 
 
 public:
+	Engine();
+
 	void start();
 };
