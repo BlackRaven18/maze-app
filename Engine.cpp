@@ -24,9 +24,22 @@ void Engine::initializeMazeTable() {
 }
 
 void Engine::initializeButtons() {
-	font.loadFromFile("arial.ttf");
+	//font.loadFromFile("arial.ttf");
+	//textButton = Button("Reset", sf::Vector2f(100, 630), font, sf::Color::Black, sf::Color::White,sf::Color::Black, sf::Vector2f(100, 50));
+	buttonsTextures.resize(BUTTONS_NUM);
+	buttonsTextures[0].loadFromFile("Textures/start.png");
+	buttonsTextures[1].loadFromFile("Textures/restart.png");
+	buttonsTextures[2].loadFromFile("Textures/boxwhite.png");
+	buttonsTextures[3].loadFromFile("Textures/boxgreen.png");
+	buttonsTextures[4].loadFromFile("Textures/boxred.png");
 
-	textButton = Button("Reset", sf::Vector2f(100, 630), font, sf::Color::Black, sf::Color::White,sf::Color::Black, sf::Vector2f(100, 50));
+	buttonsPos = { {100,630}, {250,630}, {1100, 200}, {1100,300}, {1100,400} };
+	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72} };
+
+	buttons.resize(BUTTONS_NUM);
+	for (int i = 0; i < BUTTONS_NUM; i++) {
+		buttons[i] = Button(buttonsTextures[i], buttonsPos[i], sf::Color::White, buttonsSizes[i]);
+	}
 }
 
 void Engine::initialize() {
@@ -58,7 +71,8 @@ void Engine::handleEvents()
 
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
-			if (textButton.isClicked(window))
+
+			if (buttons[1].isClicked(window))
 			{
 				for (int i = 0; i < MAZE_TABLE_WIDTH; i++) {
 					for (int j = j = 0; j < MAZE_TABLE_HEIGHT; j++) {
@@ -90,10 +104,11 @@ void Engine::draw() {
 	drawMazeTable();
 	drawMaze();
 
-	window->draw(textButton);
+	for (auto b : buttons) {
+		window->draw(b);
+	}
 
 	window->display();
-
 }
 
 void Engine::drawMaze()

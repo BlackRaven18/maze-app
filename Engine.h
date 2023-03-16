@@ -12,14 +12,20 @@
 #define MAZE_TABLE_HEIGHT 15
 #define MAZE_TABLE_CELL_SIZE 40
 
+#define BUTTONS_NUM 5
+
 class Engine {
 private:
 	sf::RenderWindow *window;
 	Rectangle mazeTable[MAZE_TABLE_WIDTH][MAZE_TABLE_HEIGHT];
 	sf::Vector2f mousePosition;
 
-	sf::Font font;
-	Button textButton;
+	std::vector<sf::Vector2f> buttonsPos;
+	std::vector<sf::Vector2f> buttonsSizes;
+	std::vector<sf::Texture> buttonsTextures;
+	std::vector<Button> buttons;
+	//sf::Font font;
+
 
 	void updateMousePosition();
 	void initializeMazeTable();
