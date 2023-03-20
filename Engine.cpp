@@ -1,7 +1,7 @@
 #include "Engine.h"
 #include <iostream>
 
-Engine::Engine() {};
+Engine::Engine() {}
 
 void Engine::start() {
 	initialize();
@@ -19,6 +19,7 @@ void Engine::initializeMazeTable() {
 			mazeTable[i][j].setPosition(i * MAZE_TABLE_CELL_SIZE, j * MAZE_TABLE_CELL_SIZE);
 			mazeTable[i][j].setSize(MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE);
 			mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
+			mazeTable[i][j].setId(MazeCellTypes::PATH);	
 		}
 	}
 }

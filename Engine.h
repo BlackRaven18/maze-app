@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 #include "Rectangle.h"
+#include "MazeCell.h"
+#include "MazeCellTypes.h"
 #include "Button.h"
 
 #define APP_WIDTH 1280
@@ -25,7 +27,7 @@
 class Engine {
 private:
 	sf::RenderWindow *window;
-	Rectangle mazeTable[MAZE_TABLE_WIDTH][MAZE_TABLE_HEIGHT];
+	MazeCell mazeTable[MAZE_TABLE_WIDTH][MAZE_TABLE_HEIGHT];
 	sf::Vector2f mousePosition;
 
 	std::vector<sf::Vector2f> buttonsPos;

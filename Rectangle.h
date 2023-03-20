@@ -2,7 +2,7 @@
 #include "SFML/Graphics.hpp"
 
 class Rectangle {
-private:
+protected:
 	sf::RectangleShape rectangle;
 	int x, y;
 	int width, height;
