@@ -18,14 +18,22 @@
 #define MAZE_AREA_WIDTH MAZE_TABLE_WIDTH * MAZE_TABLE_CELL_SIZE
 #define MAZE_AREA_HEIGHT MAZE_TABLE_HEIGHT * MAZE_TABLE_CELL_SIZE
 
+#define END_POINT_COLOR sf::Color{255, 0, 0}
+#define START_POINT_COLOR sf::Color{0, 255, 0}
+
 #define BACKGROUND_COLOR sf::Color{51, 51, 255}
 #define MAZE_BACKGROUND_COLOR sf::Color{102, 0, 102}
 #define MAZE_WALL_COLOR sf::Color{255, 255, 255}
 
 #define BUTTONS_NUM 5
 
+enum MODE{PUT_WALL, PUT_END_POINT, PUT_START_POINT};
+
 class Engine {
 private:
+
+	int MODE;
+	
 	sf::RenderWindow *window;
 	MazeCell mazeTable[MAZE_TABLE_WIDTH][MAZE_TABLE_HEIGHT];
 	sf::Vector2f mousePosition;
