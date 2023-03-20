@@ -18,7 +18,7 @@ void Engine::initializeMazeTable() {
 		for (int j = j = 0; j < MAZE_TABLE_HEIGHT; j++) {
 			mazeTable[i][j].setPosition(i * MAZE_TABLE_CELL_SIZE, j * MAZE_TABLE_CELL_SIZE);
 			mazeTable[i][j].setSize(MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE);
-			mazeTable[i][j].setColor(sf::Color::White);
+			mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
 		}
 	}
 }
@@ -99,7 +99,7 @@ void Engine::update() {
 
 
 void Engine::draw() {
-	window->clear();
+	window->clear(BACKGROUND_COLOR);
 
 	drawMazeTable();
 	drawMaze();

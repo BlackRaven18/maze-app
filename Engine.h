@@ -12,6 +12,9 @@
 #define MAZE_TABLE_HEIGHT 15
 #define MAZE_TABLE_CELL_SIZE 40
 
+#define BACKGROUND_COLOR sf::Color{51, 51, 255}
+#define MAZE_BACKGROUND_COLOR sf::Color{102, 0, 102}
+
 #define BUTTONS_NUM 5
 
 class Engine {
