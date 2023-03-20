@@ -113,9 +113,6 @@ void Engine::draw() {
 
 void Engine::addMazeWalls()
 {
-
-	//TODO: napisaæ funkcje która sprawdzi czy punkt(albo myszka) jest aktualnie wewn¹trz danego obszaru; przyda sie do 
-	//sprawdzania czy myszka jest na obszarze do rysowania i do znalezienia elementu tablicy do pokolorowania 
 	
 	//checking if mouse is on the maze board
 
@@ -123,15 +120,21 @@ void Engine::addMazeWalls()
 		return;
 	}
 
-	if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+	if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && !sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 		return;
 	}
 
+	//TODO: improve code structure to eliminate repetability
 	int i = mousePosition.x / MAZE_TABLE_CELL_SIZE;
 	int j = mousePosition.y / MAZE_TABLE_CELL_SIZE;
 
-	if (i < MAZE_TABLE_WIDTH && j < MAZE_TABLE_HEIGHT)
-		mazeTable[i][j].setColor(MAZE_WALL_COLOR);
+	if (i < MAZE_TABLE_WIDTH && j < MAZE_TABLE_HEIGHT) {
+		if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			mazeTable[i][j].setColor(MAZE_WALL_COLOR);
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+			mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
+		}
+	}
 }
 
 void Engine::drawMazeTable() {
@@ -140,7 +143,6 @@ void Engine::drawMazeTable() {
 			mazeTable[i][j].draw(window);
 
 		}
-
 }
 
 sf::RectangleShape Engine::createRectangle(int x, int y, int width, int height, sf::Color color) {
