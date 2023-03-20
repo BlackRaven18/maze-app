@@ -1,7 +1,9 @@
 #include "Engine.h"
 #include <iostream>
 
-Engine::Engine() {}
+Engine::Engine() {
+	this->MODE = PUT_WALL;
+}
 
 void Engine::start() {
 	initialize();
@@ -81,6 +83,22 @@ void Engine::handleEvents()
 					}
 				}
 			}
+
+			//TODO: pomyœleæ czy to powinno tu byæ
+
+			if (buttons[2].isClicked(window))
+			{
+				this->MODE = PUT_WALL;
+				std::cout << "1";
+			}
+			else if (buttons[3].isClicked(window)) {
+				this->MODE = PUT_START_POINT;
+				std::cout << "2";
+			}
+			else if (buttons[4].isClicked(window)) {
+				this->MODE = PUT_END_POINT;
+					std::cout << "3";
+			}
 		}
 
 		//if (event.type == sf::Event::Resized)
@@ -131,7 +149,15 @@ void Engine::addMazeWalls()
 
 	if (i < MAZE_TABLE_WIDTH && j < MAZE_TABLE_HEIGHT) {
 		if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			mazeTable[i][j].setColor(MAZE_WALL_COLOR);
+			if (MODE == PUT_WALL) {
+				mazeTable[i][j].setColor(MAZE_WALL_COLOR);
+			}
+			else if (MODE == PUT_END_POINT) {
+				mazeTable[i][j].setColor(END_POINT_COLOR);
+			}
+			else if (MODE == PUT_START_POINT) {
+				mazeTable[i][j].setColor(START_POINT_COLOR);
+			}
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 			mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
 		}
