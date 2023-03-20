@@ -76,7 +76,7 @@ void Engine::handleEvents()
 			{
 				for (int i = 0; i < MAZE_TABLE_WIDTH; i++) {
 					for (int j = j = 0; j < MAZE_TABLE_HEIGHT; j++) {
-						mazeTable[i][j].setColor(sf::Color::White);
+						mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
 					}
 				}
 			}
@@ -102,7 +102,7 @@ void Engine::draw() {
 	window->clear(BACKGROUND_COLOR);
 
 	drawMazeTable();
-	drawMaze();
+	addMazeWalls();
 
 	for (auto b : buttons) {
 		window->draw(b);
@@ -111,7 +111,7 @@ void Engine::draw() {
 	window->display();
 }
 
-void Engine::drawMaze()
+void Engine::addMazeWalls()
 {
 
 	//TODO: napisaæ funkcje która sprawdzi czy punkt(albo myszka) jest aktualnie wewn¹trz danego obszaru; przyda sie do 
@@ -119,7 +119,7 @@ void Engine::drawMaze()
 	
 	//checking if mouse is on the maze board
 
-	if (mousePosition.x > MAZE_TABLE_WIDTH * MAZE_TABLE_CELL_SIZE && mousePosition.y > MAZE_TABLE_HEIGHT * MAZE_TABLE_CELL_SIZE) {
+	if (!isPointInRectangleArea(mousePosition.x, mousePosition.y, MAZE_AREA_X, MAZE_AREA_Y, MAZE_AREA_WIDTH, MAZE_AREA_HEIGHT)) {
 		return;
 	}
 
@@ -131,7 +131,7 @@ void Engine::drawMaze()
 	int j = mousePosition.y / MAZE_TABLE_CELL_SIZE;
 
 	if (i < MAZE_TABLE_WIDTH && j < MAZE_TABLE_HEIGHT)
-		mazeTable[i][j].setColor(sf::Color::Green);
+		mazeTable[i][j].setColor(MAZE_WALL_COLOR);
 }
 
 void Engine::drawMazeTable() {
@@ -149,4 +149,13 @@ sf::RectangleShape Engine::createRectangle(int x, int y, int width, int height, 
 	rectangle.setPosition(x, y);
 	rectangle.setFillColor(color);
 	return rectangle;
+}
+
+bool Engine::isPointInRectangleArea(int pointX, int pointY, int recX, int recY, int recWidth, int recHeight) {
+	if (pointX >= recX && pointX <= recX + recWidth
+		&& pointY >= recY && pointY <= recY + recHeight) {
+			return true;
+	}
+	
+	return false;
 }
