@@ -89,15 +89,12 @@ void Engine::handleEvents()
 			if (buttons[2].isClicked(window))
 			{
 				this->MODE = PUT_WALL;
-				std::cout << "1";
 			}
 			else if (buttons[3].isClicked(window)) {
 				this->MODE = PUT_START_POINT;
-				std::cout << "2";
 			}
 			else if (buttons[4].isClicked(window)) {
 				this->MODE = PUT_END_POINT;
-					std::cout << "3";
 			}
 		}
 
@@ -121,7 +118,7 @@ void Engine::draw() {
 	window->clear(BACKGROUND_COLOR);
 
 	drawMazeTable();
-	addMazeWalls();
+	addMazeElements();
 
 	for (auto b : buttons) {
 		window->draw(b);
@@ -130,7 +127,7 @@ void Engine::draw() {
 	window->display();
 }
 
-void Engine::addMazeWalls()
+void Engine::addMazeElements()
 {
 	
 	//checking if mouse is on the maze board
@@ -148,18 +145,36 @@ void Engine::addMazeWalls()
 	int j = mousePosition.y / MAZE_TABLE_CELL_SIZE;
 
 	if (i < MAZE_TABLE_WIDTH && j < MAZE_TABLE_HEIGHT) {
-		if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			if (MODE == PUT_WALL) {
+				mazeTable[i][j].setId(MazeCellTypes::WALL);
 				mazeTable[i][j].setColor(MAZE_WALL_COLOR);
 			}
 			else if (MODE == PUT_END_POINT) {
+				removePoint(MazeCellTypes::END_POINT);
+				mazeTable[i][j].setId(MazeCellTypes::END_POINT);
 				mazeTable[i][j].setColor(END_POINT_COLOR);
+
 			}
 			else if (MODE == PUT_START_POINT) {
+				removePoint(MazeCellTypes::START_POINT);
+				mazeTable[i][j].setId(MazeCellTypes::START_POINT);
 				mazeTable[i][j].setColor(START_POINT_COLOR);
 			}
-		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+		}else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+			mazeTable[i][j].setId(MazeCellTypes::PATH);
 			mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
+		}
+	}
+}
+
+void Engine::removePoint(int pointId) {
+	for (int i = 0; i < MAZE_TABLE_WIDTH; i++) {
+		for (int j = 0; j < MAZE_TABLE_HEIGHT; j++) {
+			if (mazeTable[i][j].getId() == pointId) {
+				mazeTable[i][j].setId(MazeCellTypes::PATH);
+				mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
+			}
 		}
 	}
 }
