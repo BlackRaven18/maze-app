@@ -35,7 +35,7 @@ private:
 	int MODE;
 	
 	sf::RenderWindow *window;
-	MazeCell mazeTable[MAZE_TABLE_WIDTH][MAZE_TABLE_HEIGHT];
+	MazeCell mazeTable[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
 	sf::Vector2f mousePosition;
 
 	std::vector<sf::Vector2f> buttonsPos;
