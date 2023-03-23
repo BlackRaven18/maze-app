@@ -16,12 +16,37 @@ void Engine::updateMousePosition() {
 }
 
 void Engine::initializeMazeTable() {
-	for (int i = 0; i < MAZE_TABLE_WIDTH; i++) {
-		for (int j = j = 0; j < MAZE_TABLE_HEIGHT; j++) {
-			mazeTable[i][j].setPosition(i * MAZE_TABLE_CELL_SIZE, j * MAZE_TABLE_CELL_SIZE);
+
+	int TMP[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH] = { {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
+													 {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
+													 {1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
+													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
+													 {2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
+													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,0 ,0 ,0 ,1},
+													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
+													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
+													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
+													 {0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,0},
+													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0},
+													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1},
+													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
+													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
+													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,3 ,1}
+	};
+
+	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
+		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+			mazeTable[i][j].setPosition(j * MAZE_TABLE_CELL_SIZE, i * MAZE_TABLE_CELL_SIZE);
 			mazeTable[i][j].setSize(MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE);
-			mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
-			mazeTable[i][j].setId(MazeCellTypes::PATH);	
+			//mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
+			mazeTable[i][j].setId(TMP[i][j]);
+
+			switch (mazeTable[i][j].getId()) {
+			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); break;
+			case MazeCellTypes::WALL: mazeTable[i][j].setColor(MAZE_WALL_COLOR); break;
+			case MazeCellTypes::START_POINT: mazeTable[i][j].setColor(START_POINT_COLOR); break;
+			case MazeCellTypes::END_POINT: mazeTable[i][j].setColor(END_POINT_COLOR); break;
+			}
 		}
 	}
 }
@@ -77,8 +102,8 @@ void Engine::handleEvents()
 
 			if (buttons[1].isClicked(window))
 			{
-				for (int i = 0; i < MAZE_TABLE_WIDTH; i++) {
-					for (int j = j = 0; j < MAZE_TABLE_HEIGHT; j++) {
+				for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
+					for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
 						mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
 					}
 				}
@@ -141,10 +166,10 @@ void Engine::addMazeElements()
 	}
 
 	//TODO: improve code structure to eliminate repetability
-	int i = mousePosition.x / MAZE_TABLE_CELL_SIZE;
-	int j = mousePosition.y / MAZE_TABLE_CELL_SIZE;
+	int i = mousePosition.y / MAZE_TABLE_CELL_SIZE;
+	int j = mousePosition.x / MAZE_TABLE_CELL_SIZE;
 
-	if (i < MAZE_TABLE_WIDTH && j < MAZE_TABLE_HEIGHT) {
+	if (i < MAZE_TABLE_HEIGHT && j < MAZE_TABLE_WIDTH) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			if (MODE == PUT_WALL) {
 				mazeTable[i][j].setId(MazeCellTypes::WALL);
@@ -169,8 +194,8 @@ void Engine::addMazeElements()
 }
 
 void Engine::removePoint(int pointId) {
-	for (int i = 0; i < MAZE_TABLE_WIDTH; i++) {
-		for (int j = 0; j < MAZE_TABLE_HEIGHT; j++) {
+	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
+		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
 			if (mazeTable[i][j].getId() == pointId) {
 				mazeTable[i][j].setId(MazeCellTypes::PATH);
 				mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
@@ -180,11 +205,11 @@ void Engine::removePoint(int pointId) {
 }
 
 void Engine::drawMazeTable() {
-	for(int i = 0; i < MAZE_TABLE_WIDTH; i++)
-		for (int j = 0; j < MAZE_TABLE_HEIGHT; j++) {
+	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
+		for (int j = j = 0; j < MAZE_TABLE_WIDTH; j++) {
 			mazeTable[i][j].draw(window);
-
 		}
+	}
 }
 
 sf::RectangleShape Engine::createRectangle(int x, int y, int width, int height, sf::Color color) {
