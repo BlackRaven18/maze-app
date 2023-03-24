@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include <iostream>
+#include <fstream>
 
 Engine::Engine() {
 	this->MODE = PUT_WALL;
@@ -16,23 +17,13 @@ void Engine::updateMousePosition() {
 }
 
 void Engine::initializeMazeTable() {
-
-	int TMP[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH] = { {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,0},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,3 ,1}
-	};
+	std::ifstream infile{ "labirynt.txt" };
+	int TMP[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH]{};
+	for (int i{}; i != MAZE_TABLE_HEIGHT; ++i) {
+		for (int j{}; j != MAZE_TABLE_WIDTH; ++j) {
+			infile >> TMP[i][j];
+		}
+	}
 
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
@@ -210,7 +201,19 @@ void Engine::drawMazeTable() {
 			mazeTable[i][j].draw(window);
 		}
 	}
+
+	// Sprawdzamy, czy przycisk 'b' zosta³ naciœniêty
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
+		for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
+			for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+				int a = mazeTable[i][j].getId();
+				printf("%d ", a);
+			}
+			printf("\n");
+		}
+	}
 }
+
 
 sf::RectangleShape Engine::createRectangle(int x, int y, int width, int height, sf::Color color) {
 	sf::RectangleShape rectangle;
