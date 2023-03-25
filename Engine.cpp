@@ -42,11 +42,65 @@ void Engine::initializeMazeTable() {
 			mazeTable[i][j].setId(TMP[i][j]);
 
 			switch (mazeTable[i][j].getId()) {
-			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); break;
+			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); 
+				korytarzeCounter++; break;
 			case MazeCellTypes::WALL: mazeTable[i][j].setColor(MAZE_WALL_COLOR); break;
-			case MazeCellTypes::START_POINT: mazeTable[i][j].setColor(START_POINT_COLOR); break;
-			case MazeCellTypes::END_POINT: mazeTable[i][j].setColor(END_POINT_COLOR); break;
+			case MazeCellTypes::START_POINT: mazeTable[i][j].setColor(START_POINT_COLOR); 
+				startPos.x = i;
+				startPos.y = j;
+				break;
+			case MazeCellTypes::END_POINT: mazeTable[i][j].setColor(END_POINT_COLOR); 
+				endPos.x = i;
+				endPos.y = j;  
+				break;
 			}
+		}
+	}
+}
+
+void Engine::findRoad() {
+
+	mazeTable[startPos.x][startPos.y].setId(VISITED);
+	mazeTable[startPos.x][startPos.y].setColor(MAZE_TRACK_COLOR);
+	kolejka.push(startPos);
+
+	while (!kolejka.empty()) {
+		licznikKrokow++;
+		startPos = kolejka.front(); kolejka.pop();
+
+		sf::sleep(sf::seconds(2));
+
+		if (startPos.x == endPos.x && startPos.y == endPos.y) {
+			while (mazeTable[startPos.x][startPos.y].getId() != VISITED) {
+				switch (mazeTable[startPos.x][startPos.y].getId()) {
+					case LEFT: mazeTable[startPos.x++][startPos.y].setId(VISITED); break;
+					case UP: mazeTable[startPos.x][startPos.y++].setId(VISITED); break;
+					case RIGHT: mazeTable[startPos.x--][startPos.y].setId(VISITED); break;
+					case DOWN: mazeTable[startPos.x][startPos.y--].setId(VISITED); break;
+				}
+				mazeTable[startPos.x][startPos.y].setColor(MAZE_TRACK_COLOR);
+				drawMazeTable();
+
+				sf::sleep(sf::seconds(2));
+			}
+			break;
+		}
+
+		if (mazeTable[startPos.x - 1][startPos.y].getId() == MazeCellTypes::PATH) {
+			mazeTable[startPos.x - 1][startPos.y].setId(LEFT);
+			kolejka.push(startPos);
+		}
+		if (mazeTable[startPos.x][startPos.y - 1].getId() == MazeCellTypes::PATH) {
+			mazeTable[startPos.x][startPos.y - 1].setId(UP);
+			kolejka.push(startPos);
+		}
+		if (mazeTable[startPos.x+1][startPos.y].getId() == MazeCellTypes::PATH) {
+			mazeTable[startPos.x+1][startPos.y].setId(RIGHT);
+			kolejka.push(startPos);
+		}
+		if (mazeTable[startPos.x][startPos.y + 1].getId() == MazeCellTypes::PATH) {
+			mazeTable[startPos.x][startPos.y + 1].setId(DOWN);
+			kolejka.push(startPos);
 		}
 	}
 }
@@ -99,6 +153,10 @@ void Engine::handleEvents()
 
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
+			if (buttons[0].isClicked(window)) {
+				findRoad();
+				printf("Znaleziono droge!\n");
+			}
 
 			if (buttons[1].isClicked(window))
 			{
