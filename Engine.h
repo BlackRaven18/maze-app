@@ -5,6 +5,7 @@
 #include "MazeCell.h"
 #include "MazeCellTypes.h"
 #include "Button.h"
+#include <queue>
 
 #define APP_WIDTH 1280
 #define APP_HEIGHT 720
@@ -24,6 +25,17 @@
 #define BACKGROUND_COLOR sf::Color{51, 51, 255}
 #define MAZE_BACKGROUND_COLOR sf::Color{102, 0, 102}
 #define MAZE_WALL_COLOR sf::Color{255, 255, 255}
+
+/////////////////////////
+#define MAZE_TRACK_COLOR sf::Color{0, 0, 0}
+
+const int LEFT = 5;
+const int RIGHT = 6;
+const int UP = 7;
+const int DOWN = 8;
+const int VISITED = 9;
+
+//////////////////////////
 
 #define BUTTONS_NUM 5
 
@@ -47,6 +59,14 @@ private:
 
 	void updateMousePosition();
 	void initializeMazeTable();
+	//------------------
+	void findRoad();
+	sf::Vector2i startPos;
+	sf::Vector2i endPos;
+	std::queue<sf::Vector2i> kolejka;
+	int korytarzeCounter = 0;
+	int licznikKrokow = 0;
+	//------------------
 	void initializeButtons();
 	void addMazeElements();
 	void removePoint(int pointId);
