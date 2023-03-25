@@ -24,6 +24,7 @@ void Engine::initializeMazeTable() {
 			infile >> TMP[i][j];
 		}
 	}
+	infile.close();
 
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
@@ -202,7 +203,7 @@ void Engine::drawMazeTable() {
 		}
 	}
 
-	// Sprawdzamy, czy przycisk 'b' zosta³ naciœniêty
+	/*
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
 		for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 			for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
@@ -212,6 +213,7 @@ void Engine::drawMazeTable() {
 			printf("\n");
 		}
 	}
+	*/
 }
 
 
