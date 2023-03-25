@@ -27,7 +27,7 @@
 #define MAZE_WALL_COLOR sf::Color{255, 255, 255}
 
 /////////////////////////
-#define MAZE_TRACK_COLOR sf::Color{0, 0, 0}
+#define MAZE_TRACK_COLOR sf::Color{0, 0, 255}
 
 const int LEFT = 5;
 const int RIGHT = 6;

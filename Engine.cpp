@@ -26,12 +26,12 @@ void Engine::initializeMazeTable() {
 													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
 													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
 													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,0},
+													 {0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,3},
 													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0},
 													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1},
 													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
 													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,3 ,1}
+													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1}
 	};
 
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
@@ -64,45 +64,101 @@ void Engine::findRoad() {
 	mazeTable[startPos.x][startPos.y].setColor(MAZE_TRACK_COLOR);
 	kolejka.push(startPos);
 
+	//TODO: improve code quality!
 	while (!kolejka.empty()) {
 		licznikKrokow++;
-		startPos = kolejka.front(); kolejka.pop();
+		sf::Vector2i point = kolejka.front(); 
+		kolejka.pop();
 
-		sf::sleep(sf::seconds(2));
+		sf::sleep(sf::seconds(0.01));
 
-		if (startPos.x == endPos.x && startPos.y == endPos.y) {
-			while (mazeTable[startPos.x][startPos.y].getId() != VISITED) {
-				switch (mazeTable[startPos.x][startPos.y].getId()) {
-					case LEFT: mazeTable[startPos.x++][startPos.y].setId(VISITED); break;
-					case UP: mazeTable[startPos.x][startPos.y++].setId(VISITED); break;
-					case RIGHT: mazeTable[startPos.x--][startPos.y].setId(VISITED); break;
-					case DOWN: mazeTable[startPos.x][startPos.y--].setId(VISITED); break;
+		if (point.x == endPos.x && point.y == endPos.y) {
+
+			std::cout << "Wyznaczanie drogi" << std::endl;
+			while (mazeTable[point.x][point.y].getId() != VISITED) {
+				switch (mazeTable[point.x][point.y].getId()) {
+					case LEFT: mazeTable[point.x++][point.y].setId(VISITED); break;
+					case UP: mazeTable[point.x][point.y++].setId(VISITED); break;
+					case RIGHT: mazeTable[point.x--][point.y].setId(VISITED); break;
+					case DOWN: mazeTable[point.x][point.y--].setId(VISITED); break;
 				}
-				mazeTable[startPos.x][startPos.y].setColor(MAZE_TRACK_COLOR);
-				drawMazeTable();
+				mazeTable[point.x][point.y].setColor(MAZE_TRACK_COLOR);
+				std::cout << point.x << " : " << point.y << std::endl;
+				draw();
 
-				sf::sleep(sf::seconds(2));
+				sf::sleep(sf::seconds(0.5));
 			}
-			break;
+			std::cout << "Znaleziono droge!!!" << std::endl;
+			return;
+			//break;
 		}
 
-		if (mazeTable[startPos.x - 1][startPos.y].getId() == MazeCellTypes::PATH) {
-			mazeTable[startPos.x - 1][startPos.y].setId(LEFT);
-			kolejka.push(startPos);
+		//lewa komora
+		if (point.x - 1 >= 0) {
+			if (mazeTable[point.x - 1][point.y].getId() == MazeCellTypes::PATH) {
+				mazeTable[point.x - 1][point.y].setId(LEFT);
+				mazeTable[point.x - 1][point.y].setColor(sf::Color::Cyan);
+
+				kolejka.push(sf::Vector2i(point.x - 1, point.y));
+				std::cout << point.x - 1 << " :a " << point.y << std::endl;
+			}
+			else if (mazeTable[point.x - 1][point.y].getId() == MazeCellTypes::END_POINT) {
+				mazeTable[point.x - 1][point.y].setId(LEFT);
+				kolejka.push(sf::Vector2i(point.x - 1, point.y));
+				continue;
+			}
 		}
-		if (mazeTable[startPos.x][startPos.y - 1].getId() == MazeCellTypes::PATH) {
-			mazeTable[startPos.x][startPos.y - 1].setId(UP);
-			kolejka.push(startPos);
+
+		//górna komora
+		if (point.y - 1 >= 0){
+			if (mazeTable[point.x][point.y - 1].getId() == MazeCellTypes::PATH) {
+				mazeTable[point.x][point.y - 1].setId(UP);
+				mazeTable[point.x][point.y - 1].setColor(sf::Color::Cyan);
+				kolejka.push(sf::Vector2i(point.x, point.y - 1));
+				std::cout << point.x << " :b " << point.y - 1 << std::endl;
+			}
+			else if (mazeTable[point.x][point.y - 1].getId() == MazeCellTypes::END_POINT) {
+				mazeTable[point.x][point.y - 1].setId(UP);
+				kolejka.push(sf::Vector2i(point.x, point.y - 1));
+				continue;
+			}
 		}
-		if (mazeTable[startPos.x+1][startPos.y].getId() == MazeCellTypes::PATH) {
-			mazeTable[startPos.x+1][startPos.y].setId(RIGHT);
-			kolejka.push(startPos);
+
+		//prawa komora
+		if (point.x + 1 < MAZE_TABLE_HEIGHT) {
+			if (mazeTable[point.x + 1][point.y].getId() == MazeCellTypes::PATH) {
+				mazeTable[point.x + 1][point.y].setId(RIGHT);
+				mazeTable[point.x + 1][point.y].setColor(sf::Color::Cyan);
+				kolejka.push(sf::Vector2i(point.x + 1, point.y));
+				std::cout << point.x + 1 << " :c " << point.y << std::endl;
+			}
+			else if (mazeTable[point.x + 1][point.y].getId() == MazeCellTypes::END_POINT) {
+				mazeTable[point.x + 1][point.y].setId(RIGHT);
+				kolejka.push(sf::Vector2i(point.x + 1, point.y));
+				continue;
+			}
 		}
-		if (mazeTable[startPos.x][startPos.y + 1].getId() == MazeCellTypes::PATH) {
-			mazeTable[startPos.x][startPos.y + 1].setId(DOWN);
-			kolejka.push(startPos);
+
+		//dolna komora
+		if (point.y + 1 < MAZE_TABLE_WIDTH){
+			if (mazeTable[point.x][point.y + 1].getId() == MazeCellTypes::PATH) {
+				mazeTable[point.x][point.y + 1].setId(DOWN);
+				mazeTable[point.x][point.y + 1].setColor(sf::Color::Cyan);
+				kolejka.push(sf::Vector2i(point.x, point.y + 1));
+				std::cout << point.x << " :d " << point.y + 1 << std::endl;
+			}
+			else if (mazeTable[point.x][point.y + 1].getId() == MazeCellTypes::END_POINT) {
+				mazeTable[point.x][point.y + 1].setId(DOWN);
+				kolejka.push(sf::Vector2i(point.x, point.y + 1));
+				continue;
+			}
+
 		}
+		draw();
+
 	}
+
+
 }
 
 void Engine::initializeButtons() {
@@ -155,7 +211,6 @@ void Engine::handleEvents()
 		{
 			if (buttons[0].isClicked(window)) {
 				findRoad();
-				printf("Znaleziono droge!\n");
 			}
 
 			if (buttons[1].isClicked(window))
