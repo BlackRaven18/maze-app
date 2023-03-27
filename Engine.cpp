@@ -38,7 +38,6 @@ void Engine::initializeMazeTable() {
 		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
 			mazeTable[i][j].setPosition(j * MAZE_TABLE_CELL_SIZE, i * MAZE_TABLE_CELL_SIZE);
 			mazeTable[i][j].setSize(MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE);
-			//mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
 			mazeTable[i][j].setId(TMP[i][j]);
 
 			switch (mazeTable[i][j].getId()) {
@@ -56,12 +55,16 @@ void Engine::initializeMazeTable() {
 			}
 		}
 	}
+
+	copyMazeTable(mazeTable, mazeTableCopy);
 }
 
 void Engine::findRoad() {
 
+	std::queue<sf::Vector2i> kolejka;
+
 	mazeTable[startPos.x][startPos.y].setId(VISITED);
-	mazeTable[startPos.x][startPos.y].setColor(MAZE_TRACK_COLOR);
+	//mazeTable[startPos.x][startPos.y].setColor(MAZE_TRACK_COLOR);
 	kolejka.push(startPos);
 
 	//TODO: improve code quality!
@@ -97,7 +100,7 @@ void Engine::findRoad() {
 		if (point.x - 1 >= 0) {
 			if (mazeTable[point.x - 1][point.y].getId() == MazeCellTypes::PATH) {
 				mazeTable[point.x - 1][point.y].setId(LEFT);
-				mazeTable[point.x - 1][point.y].setColor(sf::Color::Cyan);
+				mazeTable[point.x - 1][point.y].setColor(MAZE_VISITED_CELL_COLOR);
 
 				kolejka.push(sf::Vector2i(point.x - 1, point.y));
 				std::cout << point.x - 1 << " :a " << point.y << std::endl;
@@ -113,7 +116,7 @@ void Engine::findRoad() {
 		if (point.y - 1 >= 0){
 			if (mazeTable[point.x][point.y - 1].getId() == MazeCellTypes::PATH) {
 				mazeTable[point.x][point.y - 1].setId(UP);
-				mazeTable[point.x][point.y - 1].setColor(sf::Color::Cyan);
+				mazeTable[point.x][point.y - 1].setColor(MAZE_VISITED_CELL_COLOR);
 				kolejka.push(sf::Vector2i(point.x, point.y - 1));
 				std::cout << point.x << " :b " << point.y - 1 << std::endl;
 			}
@@ -128,7 +131,7 @@ void Engine::findRoad() {
 		if (point.x + 1 < MAZE_TABLE_HEIGHT) {
 			if (mazeTable[point.x + 1][point.y].getId() == MazeCellTypes::PATH) {
 				mazeTable[point.x + 1][point.y].setId(RIGHT);
-				mazeTable[point.x + 1][point.y].setColor(sf::Color::Cyan);
+				mazeTable[point.x + 1][point.y].setColor(MAZE_VISITED_CELL_COLOR);
 				kolejka.push(sf::Vector2i(point.x + 1, point.y));
 				std::cout << point.x + 1 << " :c " << point.y << std::endl;
 			}
@@ -143,7 +146,7 @@ void Engine::findRoad() {
 		if (point.y + 1 < MAZE_TABLE_WIDTH){
 			if (mazeTable[point.x][point.y + 1].getId() == MazeCellTypes::PATH) {
 				mazeTable[point.x][point.y + 1].setId(DOWN);
-				mazeTable[point.x][point.y + 1].setColor(sf::Color::Cyan);
+				mazeTable[point.x][point.y + 1].setColor(MAZE_VISITED_CELL_COLOR);
 				kolejka.push(sf::Vector2i(point.x, point.y + 1));
 				std::cout << point.x << " :d " << point.y + 1 << std::endl;
 			}
@@ -157,8 +160,14 @@ void Engine::findRoad() {
 		draw();
 
 	}
+}
 
-
+void Engine::copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]){
+	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
+		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+			dst[i][j] = src[i][j];
+		}
+	}
 }
 
 void Engine::initializeButtons() {
@@ -210,16 +219,20 @@ void Engine::handleEvents()
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
 			if (buttons[0].isClicked(window)) {
+				copyMazeTable(mazeTable, mazeTableCopy);
 				findRoad();
 			}
 
 			if (buttons[1].isClicked(window))
 			{
-				for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
+				copyMazeTable(mazeTableCopy, mazeTable);
+
+				/*for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 					for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
 						mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
 					}
-				}
+				}*/
+
 			}
 
 			//TODO: pomyœleæ czy to powinno tu byæ
@@ -292,12 +305,16 @@ void Engine::addMazeElements()
 				removePoint(MazeCellTypes::END_POINT);
 				mazeTable[i][j].setId(MazeCellTypes::END_POINT);
 				mazeTable[i][j].setColor(END_POINT_COLOR);
+				endPos.x = i;
+				endPos.y = j;
 
 			}
 			else if (MODE == PUT_START_POINT) {
 				removePoint(MazeCellTypes::START_POINT);
 				mazeTable[i][j].setId(MazeCellTypes::START_POINT);
 				mazeTable[i][j].setColor(START_POINT_COLOR);
+				startPos.x = i;
+				startPos.y = j;
 			}
 		}else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 			mazeTable[i][j].setId(MazeCellTypes::PATH);
