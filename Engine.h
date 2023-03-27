@@ -28,6 +28,7 @@
 
 /////////////////////////
 #define MAZE_TRACK_COLOR sf::Color{0, 0, 255}
+#define MAZE_VISITED_CELL_COLOR sf::Color::Cyan
 
 const int LEFT = 5;
 const int RIGHT = 6;
@@ -48,6 +49,7 @@ private:
 	
 	sf::RenderWindow *window;
 	MazeCell mazeTable[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
+	MazeCell mazeTableCopy[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
 	sf::Vector2f mousePosition;
 
 	std::vector<sf::Vector2f> buttonsPos;
@@ -63,9 +65,12 @@ private:
 	void findRoad();
 	sf::Vector2i startPos;
 	sf::Vector2i endPos;
-	std::queue<sf::Vector2i> kolejka;
 	int korytarzeCounter = 0;
 	int licznikKrokow = 0;
+	//------------------
+
+	//------------------
+	void copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]);
 	//------------------
 	void initializeButtons();
 	void addMazeElements();
