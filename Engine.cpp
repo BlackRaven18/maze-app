@@ -39,6 +39,7 @@ void Engine::initializeMazeTable() {
 			mazeTable[i][j].setPosition(j * MAZE_TABLE_CELL_SIZE, i * MAZE_TABLE_CELL_SIZE);
 			mazeTable[i][j].setSize(MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE);
 			mazeTable[i][j].setId(TMP[i][j]);
+			mazeTable[i][j].setVisited(false);
 
 			switch (mazeTable[i][j].getId()) {
 			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); 
@@ -63,8 +64,7 @@ void Engine::findRoad() {
 
 	std::queue<sf::Vector2i> kolejka;
 
-	mazeTable[startPos.x][startPos.y].setId(VISITED);
-	//mazeTable[startPos.x][startPos.y].setColor(MAZE_TRACK_COLOR);
+	mazeTable[startPos.x][startPos.y].setVisited(true);
 	kolejka.push(startPos);
 
 	//TODO: improve code quality!
@@ -73,93 +73,50 @@ void Engine::findRoad() {
 		sf::Vector2i point = kolejka.front(); 
 		kolejka.pop();
 
-		sf::sleep(sf::seconds(0.01));
+		sf::sleep(PATHFINDER_CHECKED_CELLS_DELAY);
 
 		if (point.x == endPos.x && point.y == endPos.y) {
 
 			std::cout << "Wyznaczanie drogi" << std::endl;
-			while (mazeTable[point.x][point.y].getId() != VISITED) {
+			while (!mazeTable[point.x][point.y].isVisited()) {
 				switch (mazeTable[point.x][point.y].getId()) {
-					case LEFT: mazeTable[point.x++][point.y].setId(VISITED); break;
-					case UP: mazeTable[point.x][point.y++].setId(VISITED); break;
-					case RIGHT: mazeTable[point.x--][point.y].setId(VISITED); break;
-					case DOWN: mazeTable[point.x][point.y--].setId(VISITED); break;
+					case LEFT: mazeTable[point.x++][point.y].setVisited(true); break;
+					case UP: mazeTable[point.x][point.y++].setVisited(true); break;
+					case RIGHT: mazeTable[point.x--][point.y].setVisited(true); break;
+					case DOWN: mazeTable[point.x][point.y--].setVisited(true); break;
 				}
 				mazeTable[point.x][point.y].setColor(MAZE_TRACK_COLOR);
-				std::cout << point.x << " : " << point.y << std::endl;
 				draw();
 
-				sf::sleep(sf::seconds(0.5));
+				sf::sleep(PATHFINDER_DRAWING_PATH_DELAY);
 			}
 			std::cout << "Znaleziono droge!!!" << std::endl;
 			return;
-			//break;
 		}
 
-		//lewa komora
-		if (point.x - 1 >= 0) {
-			if (mazeTable[point.x - 1][point.y].getId() == MazeCellTypes::PATH) {
-				mazeTable[point.x - 1][point.y].setId(LEFT);
-				mazeTable[point.x - 1][point.y].setColor(MAZE_VISITED_CELL_COLOR);
-
-				kolejka.push(sf::Vector2i(point.x - 1, point.y));
-				std::cout << point.x - 1 << " :a " << point.y << std::endl;
-			}
-			else if (mazeTable[point.x - 1][point.y].getId() == MazeCellTypes::END_POINT) {
-				mazeTable[point.x - 1][point.y].setId(LEFT);
-				kolejka.push(sf::Vector2i(point.x - 1, point.y));
-				continue;
-			}
-		}
-
-		//górna komora
-		if (point.y - 1 >= 0){
-			if (mazeTable[point.x][point.y - 1].getId() == MazeCellTypes::PATH) {
-				mazeTable[point.x][point.y - 1].setId(UP);
-				mazeTable[point.x][point.y - 1].setColor(MAZE_VISITED_CELL_COLOR);
-				kolejka.push(sf::Vector2i(point.x, point.y - 1));
-				std::cout << point.x << " :b " << point.y - 1 << std::endl;
-			}
-			else if (mazeTable[point.x][point.y - 1].getId() == MazeCellTypes::END_POINT) {
-				mazeTable[point.x][point.y - 1].setId(UP);
-				kolejka.push(sf::Vector2i(point.x, point.y - 1));
-				continue;
-			}
-		}
-
-		//prawa komora
-		if (point.x + 1 < MAZE_TABLE_HEIGHT) {
-			if (mazeTable[point.x + 1][point.y].getId() == MazeCellTypes::PATH) {
-				mazeTable[point.x + 1][point.y].setId(RIGHT);
-				mazeTable[point.x + 1][point.y].setColor(MAZE_VISITED_CELL_COLOR);
-				kolejka.push(sf::Vector2i(point.x + 1, point.y));
-				std::cout << point.x + 1 << " :c " << point.y << std::endl;
-			}
-			else if (mazeTable[point.x + 1][point.y].getId() == MazeCellTypes::END_POINT) {
-				mazeTable[point.x + 1][point.y].setId(RIGHT);
-				kolejka.push(sf::Vector2i(point.x + 1, point.y));
-				continue;
-			}
-		}
-
-		//dolna komora
-		if (point.y + 1 < MAZE_TABLE_WIDTH){
-			if (mazeTable[point.x][point.y + 1].getId() == MazeCellTypes::PATH) {
-				mazeTable[point.x][point.y + 1].setId(DOWN);
-				mazeTable[point.x][point.y + 1].setColor(MAZE_VISITED_CELL_COLOR);
-				kolejka.push(sf::Vector2i(point.x, point.y + 1));
-				std::cout << point.x << " :d " << point.y + 1 << std::endl;
-			}
-			else if (mazeTable[point.x][point.y + 1].getId() == MazeCellTypes::END_POINT) {
-				mazeTable[point.x][point.y + 1].setId(DOWN);
-				kolejka.push(sf::Vector2i(point.x, point.y + 1));
-				continue;
-			}
-
-		}
+		if (point.x - 1 >= 0) checkChamber(LEFT, point.x - 1, point.y, &kolejka);
+		if (point.y - 1 >= 0) checkChamber(UP, point.x, point.y - 1, &kolejka);
+		if (point.x + 1 < MAZE_TABLE_HEIGHT) checkChamber(RIGHT, point.x + 1, point.y, &kolejka);
+		if (point.y + 1 < MAZE_TABLE_WIDTH) checkChamber(DOWN, point.x, point.y + 1, &kolejka);
+		
 		draw();
-
 	}
+}
+
+void Engine::checkChamber(int chamberId, int x, int y, std::queue<sf::Vector2i>* queue) {
+	if (mazeTable[x][y].getId() == MazeCellTypes::WALL) return;
+	if (mazeTable[x][y].getId() == MazeCellTypes::START_POINT) return;
+	if (mazeTable[x][y].isChecked()) return;
+
+	if (mazeTable[x][y].getId() == MazeCellTypes::PATH) {
+		mazeTable[x][y].setColor(MAZE_VISITED_CELL_COLOR);
+	}
+
+	mazeTable[x][y].setId(chamberId);
+	mazeTable[x][y].setChecked(true);
+
+	queue->push(sf::Vector2i(x, y));
+
 }
 
 void Engine::copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]){
@@ -172,7 +129,6 @@ void Engine::copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE
 
 void Engine::initializeButtons() {
 	//font.loadFromFile("arial.ttf");
-	//textButton = Button("Reset", sf::Vector2f(100, 630), font, sf::Color::Black, sf::Color::White,sf::Color::Black, sf::Vector2f(100, 50));
 	buttonsTextures.resize(BUTTONS_NUM);
 	buttonsTextures[0].loadFromFile("Textures/start.png");
 	buttonsTextures[1].loadFromFile("Textures/restart.png");
@@ -227,11 +183,6 @@ void Engine::handleEvents()
 			{
 				copyMazeTable(mazeTableCopy, mazeTable);
 
-				/*for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-					for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
-						mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
-					}
-				}*/
 
 			}
 

@@ -30,17 +30,14 @@
 #define MAZE_TRACK_COLOR sf::Color{0, 0, 255}
 #define MAZE_VISITED_CELL_COLOR sf::Color::Cyan
 
-const int LEFT = 5;
-const int RIGHT = 6;
-const int UP = 7;
-const int DOWN = 8;
-const int VISITED = 9;
-
+#define PATHFINDER_CHECKED_CELLS_DELAY sf::seconds(0.01)
+#define PATHFINDER_DRAWING_PATH_DELAY sf::seconds(0.2)
 //////////////////////////
 
 #define BUTTONS_NUM 5
 
 enum MODE{PUT_WALL, PUT_END_POINT, PUT_START_POINT};
+enum DIRECTION{LEFT = 5, RIGHT, UP, DOWN};
 
 class Engine {
 private:
@@ -63,6 +60,7 @@ private:
 	void initializeMazeTable();
 	//------------------
 	void findRoad();
+	void checkChamber(int chamberId, int x, int y, std::queue<sf::Vector2i>* queue);
 	sf::Vector2i startPos;
 	sf::Vector2i endPos;
 	int korytarzeCounter = 0;
