@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BFSPathfinder.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="main.cpp" />
@@ -146,10 +147,13 @@
     <ClCompile Include="Rectangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AppConstDef.h" />
+    <ClInclude Include="BFSPathfinder.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="MazeCell.h" />
     <ClInclude Include="MazeCellTypes.h" />
+    <ClInclude Include="Pathfinder.h" />
     <ClInclude Include="Rectangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
