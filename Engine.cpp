@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include <iostream>
 
+
 Engine::Engine() {
 	this->MODE = PUT_WALL;
 }
@@ -42,8 +43,7 @@ void Engine::initializeMazeTable() {
 			mazeTable[i][j].setVisited(false);
 
 			switch (mazeTable[i][j].getId()) {
-			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); 
-				korytarzeCounter++; break;
+			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); break;
 			case MazeCellTypes::WALL: mazeTable[i][j].setColor(MAZE_WALL_COLOR); break;
 			case MazeCellTypes::START_POINT: mazeTable[i][j].setColor(START_POINT_COLOR); 
 				startPos.x = i;
@@ -60,64 +60,7 @@ void Engine::initializeMazeTable() {
 	copyMazeTable(mazeTable, mazeTableCopy);
 }
 
-void Engine::findRoad() {
 
-	std::queue<sf::Vector2i> kolejka;
-
-	mazeTable[startPos.x][startPos.y].setVisited(true);
-	kolejka.push(startPos);
-
-	//TODO: improve code quality!
-	while (!kolejka.empty()) {
-		licznikKrokow++;
-		sf::Vector2i point = kolejka.front(); 
-		kolejka.pop();
-
-		sf::sleep(PATHFINDER_CHECKED_CELLS_DELAY);
-
-		if (point.x == endPos.x && point.y == endPos.y) {
-
-			std::cout << "Wyznaczanie drogi" << std::endl;
-			while (!mazeTable[point.x][point.y].isVisited()) {
-				switch (mazeTable[point.x][point.y].getId()) {
-					case LEFT: mazeTable[point.x++][point.y].setVisited(true); break;
-					case UP: mazeTable[point.x][point.y++].setVisited(true); break;
-					case RIGHT: mazeTable[point.x--][point.y].setVisited(true); break;
-					case DOWN: mazeTable[point.x][point.y--].setVisited(true); break;
-				}
-				mazeTable[point.x][point.y].setColor(MAZE_TRACK_COLOR);
-				draw();
-
-				sf::sleep(PATHFINDER_DRAWING_PATH_DELAY);
-			}
-			std::cout << "Znaleziono droge!!!" << std::endl;
-			return;
-		}
-
-		if (point.x - 1 >= 0) checkChamber(LEFT, point.x - 1, point.y, &kolejka);
-		if (point.y - 1 >= 0) checkChamber(UP, point.x, point.y - 1, &kolejka);
-		if (point.x + 1 < MAZE_TABLE_HEIGHT) checkChamber(RIGHT, point.x + 1, point.y, &kolejka);
-		if (point.y + 1 < MAZE_TABLE_WIDTH) checkChamber(DOWN, point.x, point.y + 1, &kolejka);
-		
-		draw();
-	}
-}
-
-void Engine::checkChamber(int chamberId, int x, int y, std::queue<sf::Vector2i>* queue) {
-	if (mazeTable[x][y].getId() == MazeCellTypes::WALL) return;
-	if (mazeTable[x][y].getId() == MazeCellTypes::START_POINT) return;
-	if (mazeTable[x][y].isChecked()) return;
-
-	if (mazeTable[x][y].getId() == MazeCellTypes::PATH) {
-		mazeTable[x][y].setColor(MAZE_VISITED_CELL_COLOR);
-	}
-
-	mazeTable[x][y].setId(chamberId);
-	mazeTable[x][y].setChecked(true);
-
-	queue->push(sf::Vector2i(x, y));
-
-}
 
 void Engine::copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]){
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
@@ -148,6 +91,7 @@ void Engine::initializeButtons() {
 void Engine::initialize() {
 	this->window = new sf::RenderWindow(sf::VideoMode(APP_WIDTH, APP_HEIGHT), APP_TITLE);
 
+
 	initializeMazeTable();
 	initializeButtons();
 }
@@ -175,15 +119,18 @@ void Engine::handleEvents()
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
 			if (buttons[0].isClicked(window)) {
-				copyMazeTable(mazeTable, mazeTableCopy);
-				findRoad();
+
+				if (!bfsPathfinder.isRunning()) {
+					copyMazeTable(mazeTable, mazeTableCopy);
+					bfsPathfinder.start();
+					
+				}
 			}
 
 			if (buttons[1].isClicked(window))
 			{
+				bfsPathfinder.stop();
 				copyMazeTable(mazeTableCopy, mazeTable);
-
-
 			}
 
 			//TODO: pomyœleæ czy to powinno tu byæ
@@ -212,6 +159,8 @@ void Engine::handleEvents()
 void Engine::update() {
 	handleEvents();
 	updateMousePosition();
+
+	bfsPathfinder.findRoad(mazeTable, startPos, endPos);
 }
 
 
