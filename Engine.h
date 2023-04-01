@@ -8,6 +8,7 @@
 #include "Button.h"
 #include <queue>
 #include "BFSPathfinder.h"
+#include "DFSPathfinder.h"
 
 
 class Engine {
@@ -31,6 +32,7 @@ private:
 	void initializeMazeTable();
 	//------------------
 	BFSPathfinder bfsPathfinder;
+	DFSPathfinder dfsPathfinder;
 	sf::Vector2i startPos;
 	sf::Vector2i endPos;
 

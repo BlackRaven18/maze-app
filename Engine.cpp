@@ -119,17 +119,25 @@ void Engine::handleEvents()
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
 			if (buttons[0].isClicked(window)) {
-
-				if (!bfsPathfinder.isRunning()) {
+				// BFS algorithm
+				/*if (!bfsPathfinder.isRunning()) {
 					copyMazeTable(mazeTable, mazeTableCopy);
 					bfsPathfinder.start();
+					
+				}*/
+
+				// DFS algorithm
+				if (!dfsPathfinder.isRunning()) {
+					copyMazeTable(mazeTable, mazeTableCopy);
+					dfsPathfinder.start();
 					
 				}
 			}
 
 			if (buttons[1].isClicked(window))
 			{
-				bfsPathfinder.stop();
+				/*bfsPathfinder.stop();*/
+				dfsPathfinder.stop();
 				copyMazeTable(mazeTableCopy, mazeTable);
 			}
 
@@ -160,7 +168,8 @@ void Engine::update() {
 	handleEvents();
 	updateMousePosition();
 
-	bfsPathfinder.findRoad(mazeTable, startPos, endPos);
+	//bfsPathfinder.findRoad(mazeTable, startPos, endPos);
+	dfsPathfinder.findRoad(mazeTable, startPos, endPos);
 }
 
 
