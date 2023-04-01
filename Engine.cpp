@@ -52,9 +52,10 @@ void Engine::initializeButtons() {
 	buttonsTextures[2].loadFromFile("Textures/boxwhite.png");
 	buttonsTextures[3].loadFromFile("Textures/boxgreen.png");
 	buttonsTextures[4].loadFromFile("Textures/boxred.png");
+	buttonsTextures[5].loadFromFile("Textures/save.png");
 
-	buttonsPos = { {100,630}, {250,630}, {1100, 200}, {1100,300}, {1100,400} };
-	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72} };
+	buttonsPos = { {100,630}, {250,630}, {1100, 200}, {1100,300}, {1100,400}, {1100,500} };
+	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72}, {72,72} };
 
 	buttons.resize(BUTTONS_NUM);
 	for (int i = 0; i < BUTTONS_NUM; i++) {
@@ -112,6 +113,9 @@ void Engine::handleEvents()
 			}
 			else if (buttons[4].isClicked(window)) {
 				this->MODE = PUT_END_POINT;
+			}
+			else if (buttons[5].isClicked(window)) {
+		        saveMazeTable();
 			}
 		}
 
@@ -203,17 +207,21 @@ void Engine::drawMazeTable() {
 		}
 	}
 
-	/*
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
-		for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-			for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
-				int a = mazeTable[i][j].getId();
-				printf("%d ", a);
-			}
-			printf("\n");
+	
+}
+
+void Engine::saveMazeTable() {
+	std::ofstream plik("labirynt.txt");
+
+	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
+		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+			int a = mazeTable[i][j].getId();
+			plik << a << " ";
 		}
+		plik << std::endl;
 	}
-	*/
+
+	plik.close();
 }
 
 

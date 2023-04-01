@@ -25,7 +25,7 @@
 #define MAZE_BACKGROUND_COLOR sf::Color{102, 0, 102}
 #define MAZE_WALL_COLOR sf::Color{255, 255, 255}
 
-#define BUTTONS_NUM 5
+#define BUTTONS_NUM 6
 
 enum MODE{PUT_WALL, PUT_END_POINT, PUT_START_POINT};
 
@@ -51,6 +51,7 @@ private:
 	void addMazeElements();
 	void removePoint(int pointId);
 	void drawMazeTable();
+	void saveMazeTable();
 	sf::RectangleShape createRectangle(int x, int y, int width, int height, sf::Color color);
 	bool isPointInRectangleArea(int pointX, int pointY, int recX, int recY, int recWidth, int recHeight);
 
