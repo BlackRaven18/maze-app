@@ -1,7 +1,7 @@
 #include "Engine.h"
 #include <iostream>
 #include <fstream>
-
+//komentarz do usuniecia
 Engine::Engine() {
 	this->MODE = PUT_WALL;
 }
