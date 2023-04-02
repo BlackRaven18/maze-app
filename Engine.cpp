@@ -17,35 +17,52 @@ void Engine::updateMousePosition() {
 }
 
 void Engine::initializeMazeTable() {
-	std::ifstream infile{ "labirynt.txt" };
+	std::ifstream mazeFile{ MAZE_FILENAME };
 	int TMP[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH]{};
 	for (int i{}; i != MAZE_TABLE_HEIGHT; ++i) {
 		for (int j{}; j != MAZE_TABLE_WIDTH; ++j) {
-			infile >> TMP[i][j];
+			mazeFile >> TMP[i][j];
 		}
 	}
-	infile.close();
+	mazeFile.close();
 
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
 			mazeTable[i][j].setPosition(j * MAZE_TABLE_CELL_SIZE, i * MAZE_TABLE_CELL_SIZE);
 			mazeTable[i][j].setSize(MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE);
-			//mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
 			mazeTable[i][j].setId(TMP[i][j]);
+			mazeTable[i][j].setVisited(false);
 
 			switch (mazeTable[i][j].getId()) {
 			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); break;
 			case MazeCellTypes::WALL: mazeTable[i][j].setColor(MAZE_WALL_COLOR); break;
-			case MazeCellTypes::START_POINT: mazeTable[i][j].setColor(START_POINT_COLOR); break;
-			case MazeCellTypes::END_POINT: mazeTable[i][j].setColor(END_POINT_COLOR); break;
+			case MazeCellTypes::START_POINT: mazeTable[i][j].setColor(START_POINT_COLOR); 
+				startPos.x = i;
+				startPos.y = j;
+				break;
+			case MazeCellTypes::END_POINT: mazeTable[i][j].setColor(END_POINT_COLOR); 
+				endPos.x = i;
+				endPos.y = j;  
+				break;
 			}
+		}
+	}
+
+	copyMazeTable(mazeTable, mazeTableCopy);
+}
+
+
+
+void Engine::copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]){
+	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
+		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+			dst[i][j] = src[i][j];
 		}
 	}
 }
 
 void Engine::initializeButtons() {
 	//font.loadFromFile("arial.ttf");
-	//textButton = Button("Reset", sf::Vector2f(100, 630), font, sf::Color::Black, sf::Color::White,sf::Color::Black, sf::Vector2f(100, 50));
 	buttonsTextures.resize(BUTTONS_NUM);
 	buttonsTextures[0].loadFromFile("Textures/start.png");
 	buttonsTextures[1].loadFromFile("Textures/restart.png");
@@ -65,6 +82,7 @@ void Engine::initializeButtons() {
 
 void Engine::initialize() {
 	this->window = new sf::RenderWindow(sf::VideoMode(APP_WIDTH, APP_HEIGHT), APP_TITLE);
+
 
 	initializeMazeTable();
 	initializeButtons();
@@ -92,14 +110,19 @@ void Engine::handleEvents()
 
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
+			if (buttons[0].isClicked(window)) {
+
+				if (!bfsPathfinder.isRunning()) {
+					copyMazeTable(mazeTable, mazeTableCopy);
+					bfsPathfinder.start();
+					
+				}
+			}
 
 			if (buttons[1].isClicked(window))
 			{
-				for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-					for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
-						mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
-					}
-				}
+				bfsPathfinder.stop();
+				copyMazeTable(mazeTableCopy, mazeTable);
 			}
 
 			//TODO: pomyœleæ czy to powinno tu byæ
@@ -131,6 +154,8 @@ void Engine::handleEvents()
 void Engine::update() {
 	handleEvents();
 	updateMousePosition();
+
+	bfsPathfinder.findRoad(mazeTable, startPos, endPos);
 }
 
 
@@ -175,12 +200,16 @@ void Engine::addMazeElements()
 				removePoint(MazeCellTypes::END_POINT);
 				mazeTable[i][j].setId(MazeCellTypes::END_POINT);
 				mazeTable[i][j].setColor(END_POINT_COLOR);
+				endPos.x = i;
+				endPos.y = j;
 
 			}
 			else if (MODE == PUT_START_POINT) {
 				removePoint(MazeCellTypes::START_POINT);
 				mazeTable[i][j].setId(MazeCellTypes::START_POINT);
 				mazeTable[i][j].setColor(START_POINT_COLOR);
+				startPos.x = i;
+				startPos.y = j;
 			}
 		}else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 			mazeTable[i][j].setId(MazeCellTypes::PATH);
@@ -211,17 +240,17 @@ void Engine::drawMazeTable() {
 }
 
 void Engine::saveMazeTable() {
-	std::ofstream plik("labirynt.txt");
+	std::ofstream mazeFile(MAZE_FILENAME);
 
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
 			int a = mazeTable[i][j].getId();
-			plik << a << " ";
+			mazeFile << a << " ";
 		}
-		plik << std::endl;
+		mazeFile << std::endl;
 	}
 
-	plik.close();
+	mazeFile.close();
 }
 
 

@@ -5,6 +5,8 @@
 class MazeCell: public virtual Rectangle {
 private:
 	int id;
+	bool visited;
+	bool checked;
 
 public:
 	MazeCell();
@@ -12,6 +14,12 @@ public:
 
 	int getId();
 	void setId(int id);
+
+	bool isVisited();
+	void setVisited(bool visited);
+
+	bool isChecked();
+	void setChecked(bool checked);
 
 
 };

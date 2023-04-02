@@ -1,33 +1,14 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "AppConstDef.h"
 #include "Rectangle.h"
 #include "MazeCell.h"
 #include "MazeCellTypes.h"
 #include "Button.h"
+#include <queue>
+#include "BFSPathfinder.h"
 
-#define APP_WIDTH 1280
-#define APP_HEIGHT 720
-#define APP_TITLE "Maze!"
-
-#define MAZE_TABLE_WIDTH 24
-#define MAZE_TABLE_HEIGHT 15
-#define MAZE_TABLE_CELL_SIZE 40
-#define MAZE_AREA_X 0
-#define MAZE_AREA_Y 0
-#define MAZE_AREA_WIDTH MAZE_TABLE_WIDTH * MAZE_TABLE_CELL_SIZE
-#define MAZE_AREA_HEIGHT MAZE_TABLE_HEIGHT * MAZE_TABLE_CELL_SIZE
-
-#define END_POINT_COLOR sf::Color{255, 0, 0}
-#define START_POINT_COLOR sf::Color{0, 255, 0}
-
-#define BACKGROUND_COLOR sf::Color{51, 51, 255}
-#define MAZE_BACKGROUND_COLOR sf::Color{102, 0, 102}
-#define MAZE_WALL_COLOR sf::Color{255, 255, 255}
-
-#define BUTTONS_NUM 6
-
-enum MODE{PUT_WALL, PUT_END_POINT, PUT_START_POINT};
 
 class Engine {
 private:
@@ -36,6 +17,7 @@ private:
 	
 	sf::RenderWindow *window;
 	MazeCell mazeTable[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
+	MazeCell mazeTableCopy[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
 	sf::Vector2f mousePosition;
 
 	std::vector<sf::Vector2f> buttonsPos;
@@ -47,6 +29,16 @@ private:
 
 	void updateMousePosition();
 	void initializeMazeTable();
+	//------------------
+	BFSPathfinder bfsPathfinder;
+	sf::Vector2i startPos;
+	sf::Vector2i endPos;
+
+	//------------------
+
+	//------------------
+	void copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]);
+	//------------------
 	void initializeButtons();
 	void addMazeElements();
 	void removePoint(int pointId);
