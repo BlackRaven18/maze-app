@@ -78,7 +78,7 @@ void Engine::initializeButtons() {
 	buttonsTextures[2].loadFromFile("Textures/boxwhite.png");
 	buttonsTextures[3].loadFromFile("Textures/boxgreen.png");
 	buttonsTextures[4].loadFromFile("Textures/boxred.png");
-
+	
 	buttonsPos = { {100,630}, {250,630}, {1100, 200}, {1100,300}, {1100,400} };
 	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72} };
 
@@ -86,6 +86,7 @@ void Engine::initializeButtons() {
 	for (int i = 0; i < BUTTONS_NUM; i++) {
 		buttons[i] = Button(buttonsTextures[i], buttonsPos[i], sf::Color::White, buttonsSizes[i]);
 	}
+	
 }
 
 void Engine::initialize() {
@@ -174,7 +175,14 @@ void Engine::draw() {
 	for (auto b : buttons) {
 		window->draw(b);
 	}
+	
+	for (int i = 0; i < BUTTONS_NUM; i++) {
+		sf::RectangleShape rectangleil = Engine::createRectangle(buttonsPos[i].x, buttonsPos[i].y, buttonsSizes[i].x, buttonsSizes[i].y, sf::Color(128, 128, 128, 128));
 
+		if (mousePosition.x > buttonsPos[i].x - buttonsSizes[i].x && mousePosition.x < buttonsPos[i].x + buttonsSizes[i].x && mousePosition.y > buttonsPos[i].y - buttonsSizes[i].y && mousePosition.y < buttonsPos[i].y + buttonsSizes[i].y) {
+			window->draw(rectangleil);
+		}
+	}
 	window->display();
 }
 
