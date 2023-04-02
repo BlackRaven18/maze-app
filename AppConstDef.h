@@ -27,7 +27,9 @@
 #define PATHFINDER_DRAWING_PATH_DELAY sf::seconds(0.2)
 //////////////////////////
 
-#define BUTTONS_NUM 5
+#define BUTTONS_NUM 6
+
+#define MAZE_FILENAME "labirynt.txt"
 
 enum MODE { PUT_WALL, PUT_END_POINT, PUT_START_POINT };
 enum DIRECTION { LEFT = 5, RIGHT, UP, DOWN };

@@ -43,6 +43,7 @@ private:
 	void addMazeElements();
 	void removePoint(int pointId);
 	void drawMazeTable();
+	void saveMazeTable();
 	sf::RectangleShape createRectangle(int x, int y, int width, int height, sf::Color color);
 	bool isPointInRectangleArea(int pointX, int pointY, int recX, int recY, int recWidth, int recHeight);
 
