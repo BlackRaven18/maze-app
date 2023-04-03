@@ -8,6 +8,7 @@
 #include "Button.h"
 #include <queue>
 #include "BFSPathfinder.h"
+#include "DFSPathfinder.h"
 
 
 class Engine {
@@ -31,6 +32,7 @@ private:
 	void initializeMazeTable();
 	//------------------
 	BFSPathfinder bfsPathfinder;
+	DFSPathfinder dfsPathfinder;
 	sf::Vector2i startPos;
 	sf::Vector2i endPos;
 
@@ -43,6 +45,7 @@ private:
 	void addMazeElements();
 	void removePoint(int pointId);
 	void drawMazeTable();
+	void saveMazeTable();
 	void drawButtonsIllumination();
 	void drawButtons();
 	sf::RectangleShape createRectangle(int x, int y, int width, int height, sf::Color color);

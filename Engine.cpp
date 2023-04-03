@@ -1,7 +1,7 @@
 #include "Engine.h"
 #include <iostream>
-
-
+#include <fstream>
+//komentarz do usuniecia
 Engine::Engine() {
 	this->MODE = PUT_WALL;
 }
@@ -17,23 +17,14 @@ void Engine::updateMousePosition() {
 }
 
 void Engine::initializeMazeTable() {
-
-	int TMP[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH] = { {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,3},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1},
-													 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1}
-	};
+	std::ifstream mazeFile{ MAZE_FILENAME };
+	int TMP[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH]{};
+	for (int i{}; i != MAZE_TABLE_HEIGHT; ++i) {
+		for (int j{}; j != MAZE_TABLE_WIDTH; ++j) {
+			mazeFile >> TMP[i][j];
+		}
+	}
+	mazeFile.close();
 
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
@@ -78,9 +69,10 @@ void Engine::initializeButtons() {
 	buttonsTextures[2].loadFromFile("Textures/boxwhite.png");
 	buttonsTextures[3].loadFromFile("Textures/boxgreen.png");
 	buttonsTextures[4].loadFromFile("Textures/boxred.png");
-	
-	buttonsPos = { {100,630}, {250,630}, {1100, 200}, {1100,300}, {1100,400} };
-	buttonsSizes = { {100,50}, {100,50}, {64,64}, {64,64}, {64,64} };
+	buttonsTextures[5].loadFromFile("Textures/save.png");
+
+	buttonsPos = { {100,630}, {250,630}, {1100, 200}, {1100,300}, {1100,400}, {1100,500} };
+	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72}, {72,72} };
 
 	buttons.resize(BUTTONS_NUM);
 	for (int i = 0; i < BUTTONS_NUM; i++) {
@@ -120,17 +112,25 @@ void Engine::handleEvents()
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
 			if (buttons[0].isClicked(window)) {
-
-				if (!bfsPathfinder.isRunning()) {
+				// BFS algorithm
+				/*if (!bfsPathfinder.isRunning()) {
 					copyMazeTable(mazeTable, mazeTableCopy);
 					bfsPathfinder.start();
+					
+				}*/
+
+				// DFS algorithm
+				if (!dfsPathfinder.isRunning()) {
+					copyMazeTable(mazeTable, mazeTableCopy);
+					dfsPathfinder.start();
 					
 				}
 			}
 
 			if (buttons[1].isClicked(window))
 			{
-				bfsPathfinder.stop();
+				/*bfsPathfinder.stop();*/
+				dfsPathfinder.stop();
 				copyMazeTable(mazeTableCopy, mazeTable);
 			}
 
@@ -145,6 +145,9 @@ void Engine::handleEvents()
 			}
 			else if (buttons[4].isClicked(window)) {
 				this->MODE = PUT_END_POINT;
+			}
+			else if (buttons[5].isClicked(window)) {
+		        saveMazeTable();
 			}
 		}
 
@@ -161,7 +164,8 @@ void Engine::update() {
 	handleEvents();
 	updateMousePosition();
 
-	bfsPathfinder.findRoad(mazeTable, startPos, endPos);
+	//bfsPathfinder.findRoad(mazeTable, startPos, endPos);
+	dfsPathfinder.findRoad(mazeTable, startPos, endPos);
 }
 
 void Engine::drawButtons() {
@@ -253,7 +257,24 @@ void Engine::drawMazeTable() {
 			mazeTable[i][j].draw(window);
 		}
 	}
+
+	
 }
+
+void Engine::saveMazeTable() {
+	std::ofstream mazeFile(MAZE_FILENAME);
+
+	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
+		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+			int a = mazeTable[i][j].getId();
+			mazeFile << a << " ";
+		}
+		mazeFile << std::endl;
+	}
+
+	mazeFile.close();
+}
+
 
 sf::RectangleShape Engine::createRectangle(int x, int y, int width, int height, sf::Color color) {
 	sf::RectangleShape rectangle;
