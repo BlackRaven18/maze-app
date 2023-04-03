@@ -164,25 +164,30 @@ void Engine::update() {
 	bfsPathfinder.findRoad(mazeTable, startPos, endPos);
 }
 
+void Engine::drawButtons() {
+	for (auto b : buttons) {
+		window->draw(b);
+	}
+}
 
+void Engine::drawButtonsIllumination() {
+	for (int i = 0; i < BUTTONS_NUM; i++) {
+		sf::RectangleShape rectangleil = Engine::createRectangle(buttonsPos[i].x, buttonsPos[i].y, buttonsSizes[i].x, buttonsSizes[i].y, sf::Color(128, 128, 128, 128));
+
+		if (mousePosition.x > buttonsPos[i].x - buttonsSizes[i].x + 50 && mousePosition.x < buttonsPos[i].x + buttonsSizes[i].x && mousePosition.y > buttonsPos[i].y - buttonsSizes[i].y + 50 && mousePosition.y < buttonsPos[i].y + buttonsSizes[i].y) {
+			window->draw(rectangleil);
+		}
+	}
+}
 
 void Engine::draw() {
 	window->clear(BACKGROUND_COLOR);
 
 	drawMazeTable();
 	addMazeElements();
-
-	for (auto b : buttons) {
-		window->draw(b);
-	}
+	drawButtons();
+	drawButtonsIllumination();
 	
-	for (int i = 0; i < BUTTONS_NUM; i++) {
-		sf::RectangleShape rectangleil = Engine::createRectangle(buttonsPos[i].x, buttonsPos[i].y, buttonsSizes[i].x, buttonsSizes[i].y, sf::Color(128, 128, 128, 128));
-
-		if (mousePosition.x > buttonsPos[i].x - buttonsSizes[i].x+50 && mousePosition.x < buttonsPos[i].x + buttonsSizes[i].x && mousePosition.y > buttonsPos[i].y - buttonsSizes[i].y+50 && mousePosition.y < buttonsPos[i].y + buttonsSizes[i].y) {
-			window->draw(rectangleil);
-		}
-	}
 	window->display();
 }
 
