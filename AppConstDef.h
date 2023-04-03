@@ -27,7 +27,7 @@
 #define PATHFINDER_DRAWING_PATH_DELAY sf::seconds(0.2)
 //////////////////////////
 
-#define BUTTONS_NUM 6
+#define BUTTONS_NUM 8
 
 #define MAZE_FILENAME "labirynt.txt"
 
