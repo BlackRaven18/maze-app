@@ -80,7 +80,7 @@ void Engine::initializeButtons() {
 	buttonsTextures[4].loadFromFile("Textures/boxred.png");
 	
 	buttonsPos = { {100,630}, {250,630}, {1100, 200}, {1100,300}, {1100,400} };
-	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72} };
+	buttonsSizes = { {100,50}, {100,50}, {64,64}, {64,64}, {64,64} };
 
 	buttons.resize(BUTTONS_NUM);
 	for (int i = 0; i < BUTTONS_NUM; i++) {
