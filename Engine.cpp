@@ -1,4 +1,4 @@
-#include "Engine.h"
+ï»¿#include "Engine.h"
 #include <iostream>
 #include <fstream>
 //komentarz do usuniecia
@@ -73,8 +73,8 @@ void Engine::initializeButtons() {
 	buttonsTextures[6].loadFromFile("Textures/BFS_BTN.png");
 	buttonsTextures[7].loadFromFile("Textures/DFS_BTN.png");
 
-	buttonsPos = { {100,630}, {250,630}, {1100, 200}, {1100,300}, {1100,400}, {1100,500}, { 400, 630 }, {482, 630} };
-	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72}, {72,72}, {78, 50}, {78, 50} };
+	buttonsPos = { {100,630}, {250,630}, {1100,200}, {1100,300}, {1100,400}, {1100,500}, {400,630}, {482,630} };
+	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72}, {72,72}, {78,50}, {78,50} };
 
 	buttons.resize(BUTTONS_NUM);
 	for (int i = 0; i < BUTTONS_NUM; i++) {
@@ -87,6 +87,7 @@ void Engine::initializeButtons() {
 void Engine::initialize() {
 	this->window = new sf::RenderWindow(sf::VideoMode(APP_WIDTH, APP_HEIGHT), APP_TITLE);
 
+
 	initializeMazeTable();
 	initializeButtons();
 }
@@ -98,9 +99,11 @@ void Engine::startMainLoop() {
 	}
 }
 
-void Engine::handleEvents() {
+void Engine::handleEvents()
+{
 	sf::Event event;
-	while (window->pollEvent(event)) {
+	while (window->pollEvent(event))
+	{
 		if (event.type == sf::Event::Closed) {
 			window->close();
 		}
@@ -109,7 +112,8 @@ void Engine::handleEvents() {
 			window->close();
 		}
 
-		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+		{
 			if (buttons[0].isClicked(window)) {
 				if (isBfsButtonSelected == true) {
 					// BFS algorithm
@@ -126,51 +130,48 @@ void Engine::handleEvents() {
 						dfsPathfinder.start();
 					}
 				}
-
-				if (buttons[1].isClicked(window)) {
-					if (isBfsButtonSelected) {
-						bfsPathfinder.stop();
-					}
-					else {
-						dfsPathfinder.stop();
-					}
-
-					copyMazeTable(mazeTableCopy, mazeTable);
-				}
-
-				//TODO: pomyœleæ czy to powinno tu byæ
-
-				if (buttons[2].isClicked(window)) {
-					this->MODE = PUT_WALL;
-				}
-				else if (buttons[3].isClicked(window)) {
-					this->MODE = PUT_START_POINT;
-				}
-				else if (buttons[4].isClicked(window)) {
-					this->MODE = PUT_END_POINT;
-				}
-				else if (buttons[5].isClicked(window)) {
-					saveMazeTable();
-				}
-
-				if (buttons[6].isClicked(window)) {
-					isBfsButtonSelected = true;
-					std::cout << "BFS" << std::endl;
-				}
-
-				if (buttons[7].isClicked(window)) {
-					isBfsButtonSelected = false;
-					std::cout << "DFS" << std::endl;
-				}
 			}
 
-			//if (event.type == sf::Event::Resized)
-			//{
-			//	// update the view to the new size of the window
-			//	sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-			//	window -> setView(sf::View(visibleArea));
-			//}
+			if (buttons[1].isClicked(window))
+			{
+				/*bfsPathfinder.stop();*/
+				dfsPathfinder.stop();
+				copyMazeTable(mazeTableCopy, mazeTable);
+			}
+
+			//TODO: pomyï¿½leï¿½ czy to powinno tu byï¿½
+
+			if (buttons[2].isClicked(window))
+			{
+				this->MODE = PUT_WALL;
+			}
+			else if (buttons[3].isClicked(window)) {
+				this->MODE = PUT_START_POINT;
+			}
+			else if (buttons[4].isClicked(window)) {
+				this->MODE = PUT_END_POINT;
+			}
+			else if (buttons[5].isClicked(window)) {
+				saveMazeTable();
+			}
+
+			if (buttons[6].isClicked(window)) {
+				isBfsButtonSelected = true;
+				std::cout << "BFS" << std::endl;
+			}
+
+			if (buttons[7].isClicked(window)) {
+				isBfsButtonSelected = false;
+				std::cout << "DFS" << std::endl;
+			}
 		}
+
+		//if (event.type == sf::Event::Resized)
+		//{
+		//	// update the view to the new size of the window
+		//	sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+		//	window -> setView(sf::View(visibleArea));
+		//}
 	}
 }
 
@@ -201,7 +202,8 @@ void Engine::draw() {
 	window->display();
 }
 
-void Engine::addMazeElements() {
+void Engine::addMazeElements()
+{
 
 	//checking if mouse is on the maze board
 
