@@ -78,6 +78,7 @@ void Engine::initializeButtons() {
 	for (int i = 0; i < BUTTONS_NUM; i++) {
 		buttons[i] = Button(buttonsTextures[i], buttonsPos[i], sf::Color::White, buttonsSizes[i]);
 	}
+	
 }
 
 void Engine::initialize() {
@@ -167,18 +168,30 @@ void Engine::update() {
 	dfsPathfinder.findRoad(mazeTable, startPos, endPos);
 }
 
+void Engine::drawButtons() {
+	for (auto b : buttons) {
+		window->draw(b);
+	}
+}
 
+void Engine::drawButtonsIllumination() {
+	for (int i = 0; i < BUTTONS_NUM; i++) {
+		sf::RectangleShape rectangleil = Engine::createRectangle(buttonsPos[i].x, buttonsPos[i].y, buttonsSizes[i].x, buttonsSizes[i].y, sf::Color(128, 128, 128, 128));
+
+		if (mousePosition.x > buttonsPos[i].x  && mousePosition.x < buttonsPos[i].x + buttonsSizes[i].x && mousePosition.y > buttonsPos[i].y  && mousePosition.y < buttonsPos[i].y + buttonsSizes[i].y) {
+			window->draw(rectangleil);
+		}
+	}
+}
 
 void Engine::draw() {
 	window->clear(BACKGROUND_COLOR);
 
 	drawMazeTable();
 	addMazeElements();
-
-	for (auto b : buttons) {
-		window->draw(b);
-	}
-
+	drawButtons();
+	drawButtonsIllumination();
+	
 	window->display();
 }
 
