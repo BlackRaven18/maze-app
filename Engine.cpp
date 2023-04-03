@@ -134,8 +134,13 @@ void Engine::handleEvents()
 
 			if (buttons[1].isClicked(window))
 			{
-				/*bfsPathfinder.stop();*/
-				dfsPathfinder.stop();
+				if (isBfsButtonSelected) {
+					bfsPathfinder.stop();
+				}
+				else {
+					dfsPathfinder.stop();
+				}
+				
 				copyMazeTable(mazeTableCopy, mazeTable);
 			}
 
