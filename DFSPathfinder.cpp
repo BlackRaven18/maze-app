@@ -35,10 +35,10 @@ void DFSPathfinder::findRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2
     if (isExitFound()) {
         if (!mazeTable[tmpPoint.x][tmpPoint.y].isVisited()) {
             switch (mazeTable[tmpPoint.x][tmpPoint.y].getId()) {
-            case LEFT: mazeTable[tmpPoint.x++][tmpPoint.y].setVisited(true); break;
             case UP: mazeTable[tmpPoint.x][tmpPoint.y++].setVisited(true); break;
             case RIGHT: mazeTable[tmpPoint.x--][tmpPoint.y].setVisited(true); break;
             case DOWN: mazeTable[tmpPoint.x][tmpPoint.y--].setVisited(true); break;
+            case LEFT: mazeTable[tmpPoint.x++][tmpPoint.y].setVisited(true); break;
             }
             mazeTable[tmpPoint.x][tmpPoint.y].setColor(MAZE_TRACK_COLOR);
 
@@ -65,9 +65,9 @@ void DFSPathfinder::findRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2
             return;
         }
 
-        if (point.y + 1 < MAZE_TABLE_WIDTH) checkChamber(mazeTable, DOWN, point.x, point.y + 1);
+        if (point.y - 1 < MAZE_TABLE_WIDTH) checkChamber(mazeTable, UP, point.x, point.y - 1);
         if (point.x + 1 < MAZE_TABLE_HEIGHT) checkChamber(mazeTable, RIGHT, point.x + 1, point.y);
-        if (point.y - 1 >= 0) checkChamber(mazeTable, UP, point.x, point.y - 1);
+        if (point.y + 1 >= 0) checkChamber(mazeTable, DOWN, point.x, point.y + 1);
         if (point.x - 1 >= 0) checkChamber(mazeTable, LEFT, point.x - 1, point.y);
     }
 }
