@@ -25,7 +25,11 @@ void DFSPathfinder::checkChamber(MazeCell mazeTable[][MAZE_TABLE_WIDTH], int cha
 
 void DFSPathfinder::findRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2i startPos, sf::Vector2i endPos)
 {
-    if (!isInitializedWithStartData() && isRunning()) {
+    if (!isRunning()) {
+        return;
+    }
+
+    if (!isInitializedWithStartData()) {
         mazeTable[startPos.x][startPos.y].setVisited(true);
         stack.push(startPos);
 
@@ -53,7 +57,13 @@ void DFSPathfinder::findRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2
         return;
     }
 
-    if (isRunning() && !isExitFound()) {
+    if (!isExitFound()) {
+
+        if (stack.empty()) {
+            stop();
+            return;
+        }
+
         sf::Vector2i point = stack.top();
         stack.pop();
 

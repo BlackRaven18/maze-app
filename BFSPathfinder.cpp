@@ -26,7 +26,12 @@ void BFSPathfinder::checkChamber(MazeCell mazeTable[][MAZE_TABLE_WIDTH], int cha
 
 void BFSPathfinder::findRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2i startPos, sf::Vector2i endPos)
 {
-	if (!isInitializedWithStartData() && isRunning()) {
+	if (!isRunning()) {
+		return;
+	}
+
+
+	if (!isInitializedWithStartData()) {
 		mazeTable[startPos.x][startPos.y].setVisited(true);
 		queue.push(startPos);
 
@@ -54,8 +59,13 @@ void BFSPathfinder::findRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2
 
 		return;
 	}
+	if (!isExitFound()) {
 
-	if (isRunning() && !isExitFound()) {
+		if (queue.empty()) {
+			stop();
+			return;
+		}
+
 		sf::Vector2i point = queue.front();
 		queue.pop();
 
