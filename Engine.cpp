@@ -208,6 +208,17 @@ void Engine::drawButtonsIllumination() {
 	}
 }
 
+void Engine::buttonSelect() {
+	if (isBfsButtonSelected == true) {
+		sf::RectangleShape rectanglesel = Engine::createRectangle(buttonsPos[6].x, buttonsPos[6].y, buttonsSizes[6].x, buttonsSizes[6].y, sf::Color(0, 128, 0, 128));
+		window->draw(rectanglesel);
+	}
+	else {
+		sf::RectangleShape rectanglesel = Engine::createRectangle(buttonsPos[7].x, buttonsPos[7].y, buttonsSizes[7].x, buttonsSizes[7].y, sf::Color(0, 128, 0, 128));
+		window->draw(rectanglesel);
+	}
+}
+
 void Engine::draw() {
 	window->clear(BACKGROUND_COLOR);
 
@@ -215,6 +226,7 @@ void Engine::draw() {
 	addMazeElements();
 	drawButtons();
 	drawButtonsIllumination();
+	buttonSelect();
 	
 	window->display();
 }

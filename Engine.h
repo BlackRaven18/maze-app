@@ -55,6 +55,7 @@ private:
 
 	void startMainLoop();
 	void handleEvents();
+	void buttonSelect();
 
 	void initialize();
 	void update();
