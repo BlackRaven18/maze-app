@@ -17,8 +17,8 @@ private:
 	int MODE;
 	
 	sf::RenderWindow *window;
-	MazeCell** mazeTable = new MazeCell * [MAZE_TABLE_HEIGHT];
-	MazeCell** mazeTableCopy = new MazeCell * [MAZE_TABLE_HEIGHT];
+	MazeCell mazeTable[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
+	MazeCell mazeTableCopy[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
 	sf::Vector2f mousePosition;
 
 	std::vector<sf::Vector2f> buttonsPos;
@@ -43,7 +43,7 @@ private:
 	//------------------
 
 	//------------------
-	void copyMazeTable(MazeCell mazeTableCopy[][MAZE_TABLE_WIDTH], MazeCell mazeTable[][MAZE_TABLE_WIDTH]);
+	void copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]);
 	//------------------
 	void initializeButtons();
 	void addMazeElements();

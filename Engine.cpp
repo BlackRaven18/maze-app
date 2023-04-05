@@ -28,20 +28,19 @@ void Engine::initializeMazeTable() {
 
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
-			
-			mazeTable[i * MAZE_TABLE_WIDTH + j].setPosition(j * MAZE_TABLE_CELL_SIZE, i * MAZE_TABLE_CELL_SIZE);
-			mazeTable[i * MAZE_TABLE_WIDTH + j].setSize(MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE);
-			mazeTable[i * MAZE_TABLE_WIDTH + j].setId(TMP[i][j]);
-			mazeTable[i * MAZE_TABLE_WIDTH + j].setVisited(false);
+			mazeTable[i][j].setPosition(j * MAZE_TABLE_CELL_SIZE, i * MAZE_TABLE_CELL_SIZE);
+			mazeTable[i][j].setSize(MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE);
+			mazeTable[i][j].setId(TMP[i][j]);
+			mazeTable[i][j].setVisited(false);
 
-			switch (mazeTable[i * MAZE_TABLE_WIDTH + j].getId()) {
-			case MazeCellTypes::PATH: mazeTable[i * MAZE_TABLE_WIDTH + j].setColor(MAZE_BACKGROUND_COLOR); break;
-			case MazeCellTypes::WALL: mazeTable[i * MAZE_TABLE_WIDTH + j].setColor(MAZE_WALL_COLOR); break;
-			case MazeCellTypes::START_POINT: mazeTable[i * MAZE_TABLE_WIDTH + j].setColor(START_POINT_COLOR);
+			switch (mazeTable[i][j].getId()) {
+			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); break;
+			case MazeCellTypes::WALL: mazeTable[i][j].setColor(MAZE_WALL_COLOR); break;
+			case MazeCellTypes::START_POINT: mazeTable[i][j].setColor(START_POINT_COLOR);
 				startPos.x = i;
 				startPos.y = j;
 				break;
-			case MazeCellTypes::END_POINT: mazeTable[i * MAZE_TABLE_WIDTH + j].setColor(END_POINT_COLOR);
+			case MazeCellTypes::END_POINT: mazeTable[i][j].setColor(END_POINT_COLOR);
 				endPos.x = i;
 				endPos.y = j;
 				break;
@@ -54,7 +53,7 @@ void Engine::initializeMazeTable() {
 
 
 
-void Engine::copyMazeTable(MazeCell src[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH], MazeCell dst[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH]) {
+void Engine::copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]) {
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
 			dst[i][j] = src[i][j];
@@ -145,8 +144,6 @@ void Engine::handleEvents()
 					dfsPathfinder.stop();
 				}
 				
-					
-
 				copyMazeTable(mazeTableCopy, mazeTable);
 			}
 
@@ -257,28 +254,28 @@ void Engine::addMazeElements()
 	if (i < MAZE_TABLE_HEIGHT && j < MAZE_TABLE_WIDTH) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			if (MODE == PUT_WALL) {
-				mazeTable[i * MAZE_TABLE_WIDTH + j].setId(MazeCellTypes::WALL);
-				mazeTable[i * MAZE_TABLE_WIDTH + j].setColor(MAZE_WALL_COLOR);
+				mazeTable[i][j].setId(MazeCellTypes::WALL);
+				mazeTable[i][j].setColor(MAZE_WALL_COLOR);
 			}
 			else if (MODE == PUT_END_POINT) {
 				removePoint(MazeCellTypes::END_POINT);
-				mazeTable[i * MAZE_TABLE_WIDTH + j].setId(MazeCellTypes::END_POINT);
-				mazeTable[i * MAZE_TABLE_WIDTH + j].setColor(END_POINT_COLOR);
+				mazeTable[i][j].setId(MazeCellTypes::END_POINT);
+				mazeTable[i][j].setColor(END_POINT_COLOR);
 				endPos.x = i;
 				endPos.y = j;
 
 			}
 			else if (MODE == PUT_START_POINT) {
 				removePoint(MazeCellTypes::START_POINT);
-				mazeTable[i * MAZE_TABLE_WIDTH + j].setId(MazeCellTypes::START_POINT);
-				mazeTable[i * MAZE_TABLE_WIDTH + j].setColor(START_POINT_COLOR);
+				mazeTable[i][j].setId(MazeCellTypes::START_POINT);
+				mazeTable[i][j].setColor(START_POINT_COLOR);
 				startPos.x = i;
 				startPos.y = j;
 			}
 		}
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-			mazeTable[i * MAZE_TABLE_WIDTH + j].setId(MazeCellTypes::PATH);
-			mazeTable[i * MAZE_TABLE_WIDTH + j].setColor(MAZE_BACKGROUND_COLOR);
+			mazeTable[i][j].setId(MazeCellTypes::PATH);
+			mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
 		}
 	}
 }
@@ -286,9 +283,9 @@ void Engine::addMazeElements()
 void Engine::removePoint(int pointId) {
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
-			if (mazeTable[i * MAZE_TABLE_WIDTH + j].getId() == pointId) {
-				mazeTable[i * MAZE_TABLE_WIDTH + j].setId(MazeCellTypes::PATH);
-				mazeTable[i * MAZE_TABLE_WIDTH + j].setColor(MAZE_BACKGROUND_COLOR);
+			if (mazeTable[i][j].getId() == pointId) {
+				mazeTable[i][j].setId(MazeCellTypes::PATH);
+				mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
 			}
 		}
 	}
@@ -297,7 +294,7 @@ void Engine::removePoint(int pointId) {
 void Engine::drawMazeTable() {
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 		for (int j = j = 0; j < MAZE_TABLE_WIDTH; j++) {
-			mazeTable[i * MAZE_TABLE_WIDTH + j].draw(window);
+			mazeTable[i][j].draw(window);
 		}
 	}
 
@@ -309,7 +306,7 @@ void Engine::saveMazeTable() {
 
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
-			int a = mazeTable[i * MAZE_TABLE_WIDTH + j].getId();
+			int a = mazeTable[i][j].getId();
 			mazeFile << a << " ";
 		}
 		mazeFile << std::endl;
