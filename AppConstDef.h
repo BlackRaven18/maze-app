@@ -7,6 +7,7 @@
 #define MAZE_TABLE_WIDTH 24
 #define MAZE_TABLE_HEIGHT 15
 #define MAZE_TABLE_CELL_SIZE 40
+
 #define MAZE_AREA_X 0
 #define MAZE_AREA_Y 0
 #define MAZE_AREA_WIDTH MAZE_TABLE_WIDTH * MAZE_TABLE_CELL_SIZE
@@ -27,7 +28,7 @@
 #define PATHFINDER_DRAWING_PATH_DELAY sf::seconds(0.2)
 //////////////////////////
 
-#define BUTTONS_NUM 8
+#define BUTTONS_NUM 11
 
 #define MAZE_FILENAME "labirynt.txt"
 

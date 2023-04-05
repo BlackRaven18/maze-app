@@ -27,6 +27,8 @@ private:
 	std::vector<Button> buttons;
 	
 	bool isBfsButtonSelected;
+	int selectedDimension=1;
+	
 	//sf::Font font;
 
 

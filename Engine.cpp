@@ -72,9 +72,12 @@ void Engine::initializeButtons() {
 	buttonsTextures[5].loadFromFile("Textures/save.png");
 	buttonsTextures[6].loadFromFile("Textures/BFS_BTN.png");
 	buttonsTextures[7].loadFromFile("Textures/DFS_BTN.png");
+	buttonsTextures[8].loadFromFile("Textures/1x.png");
+	buttonsTextures[9].loadFromFile("Textures/2x.png");
+	buttonsTextures[10].loadFromFile("Textures/4x.png");
 
-	buttonsPos = { {100,630}, {250,630}, {1100,200}, {1100,300}, {1100,400}, {1100,500}, {400,630}, {482,630} };
-	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72}, {72,72}, {78,50}, {78,50} };
+	buttonsPos = { {100,630}, {250,630}, {1100,200}, {1100,300}, {1100,400}, {1100,500}, {400,630}, {482,630}, {1012, 100}, {1112, 100}, {1212, 100} };
+	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72}, {72,72}, {78,50}, {78,50}, {50,50}, {50,50}, {50, 50} };
 
 	buttons.resize(BUTTONS_NUM);
 	for (int i = 0; i < BUTTONS_NUM; i++) {
