@@ -4,27 +4,27 @@
 #define APP_HEIGHT 720
 #define APP_TITLE "Maze!"
 
-#define MAZE_TABLE_ROWS 15
-#define MAZE_TABLE_COLUMNS 24
-#define MAZE_TABLE_CELL_SIZE 40
-#define MAZE_FILENAME "labirynt.txt"
+#define SMALL_MAZE_ROWS 15
+#define SMALL_MAZE_COLUMNS 24
+#define SMALL_MAZE_CELL_SIZE 40
+#define SMALL_MAZE_FILENAME "maze_examples/small_maze.txt"
 
 #define MEDIUM_MAZE_ROWS 20
 #define MEDIUM_MAZE_COLUMNS 32
 #define MEDIUM_MAZE_CELL_SIZE 30
-#define MEDIUM_MAZE_FILENAME "medium_maze.txt"
+#define MEDIUM_MAZE_FILENAME "maze_examples/medium_maze.txt"
 
 
 #define BIG_MAZE_ROWS 30
 #define BIG_MAZE_COLUMNS 48
 #define BIG_MAZE_CELL_SIZE 20
-#define BIG_MAZE_FILENAME "big_maze.txt"
+#define BIG_MAZE_FILENAME "maze_examples/big_maze.txt"
 
 
 #define MAZE_AREA_X 0
 #define MAZE_AREA_Y 0
-#define MAZE_AREA_WIDTH MAZE_TABLE_COLUMNS * MAZE_TABLE_CELL_SIZE
-#define MAZE_AREA_HEIGHT MAZE_TABLE_ROWS * MAZE_TABLE_CELL_SIZE
+#define MAZE_AREA_WIDTH SMALL_MAZE_COLUMNS * SMALL_MAZE_CELL_SIZE
+#define MAZE_AREA_HEIGHT SMALL_MAZE_ROWS * SMALL_MAZE_CELL_SIZE
 
 #define END_POINT_COLOR sf::Color{255, 0, 0}
 #define START_POINT_COLOR sf::Color{0, 255, 0}
