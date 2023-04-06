@@ -29,21 +29,30 @@ private:
 	bool isBfsButtonSelected;
 	int selectedDimension=1;
 	
-	
-
-	void updateMousePosition();
-	void initializeMazeTable();
-	//------------------
 	BFSPathfinder bfsPathfinder;
 	DFSPathfinder dfsPathfinder;
 	sf::Vector2i startPos;
 	sf::Vector2i endPos;
 
+	int mazeTableRows;
+	int mazeTableColumns;
+	int mazeTableCellSize;
+	
+
+	void updateMousePosition();
+	void initializeMazeTable(int rows, int columns, int cellSize, const char* filename);
 	//------------------
 
 	//------------------
-	MazeCell** createTwoDimDynamicTable(int rows, int columns);
-	void deleteTwoDimDynamicTable(MazeCell** tab, int rows);
+
+	//------------------
+
+	template <typename T>
+	T** createTwoDimDynamicTable(int rows, int columns);
+
+	template <typename T>
+	void deleteTwoDimDynamicTable(T**, int rows);
+
 	void copyMazeTable(MazeCell **src, MazeCell **dst);
 	//------------------
 	void initializeButtons();
@@ -51,6 +60,9 @@ private:
 	void removePoint(int pointId);
 	void drawMazeTable();
 	void saveMazeTable();
+	void selectSmallMaze();
+	void selectMediumMaze();
+
 	void drawButtonsIllumination();
 	void drawButtons();
 	sf::RectangleShape createRectangle(int x, int y, int width, int height, sf::Color color);
