@@ -7,9 +7,9 @@ DFSPathfinder::DFSPathfinder()
     this->exitFound = false;
 }
 
-void DFSPathfinder::checkChamber(MazeCell **mazeTable, int chamberId, int x, int y)
+void DFSPathfinder::checkChamber(MazeCell **mazeTable, int rows, int columns, int chamberId, int x, int y)
 {
-    if (x < 0 || y < 0 || x >= MAZE_TABLE_ROWS || y >= MAZE_TABLE_COLUMNS) return;
+    if (x < 0 || y < 0 || x >= rows || y >= columns) return;
 
     if (mazeTable[x][y].getId() == MazeCellTypes::WALL) return;
     if (mazeTable[x][y].getId() == MazeCellTypes::START_POINT) return;
@@ -25,7 +25,7 @@ void DFSPathfinder::checkChamber(MazeCell **mazeTable, int chamberId, int x, int
     stack.push(sf::Vector2i(x, y));
 }
 
-void DFSPathfinder::findRoad(MazeCell **mazeTable, sf::Vector2i startPos, sf::Vector2i endPos)
+void DFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Vector2i startPos, sf::Vector2i endPos)
 {
     if (!isRunning()) {
         return;
@@ -77,10 +77,10 @@ void DFSPathfinder::findRoad(MazeCell **mazeTable, sf::Vector2i startPos, sf::Ve
             return;
         }
 
-        if (point.y - 1 < MAZE_TABLE_COLUMNS) checkChamber(mazeTable, UP, point.x, point.y - 1);
-        if (point.x + 1 < MAZE_TABLE_ROWS) checkChamber(mazeTable, RIGHT, point.x + 1, point.y);
-        if (point.y + 1 >= 0) checkChamber(mazeTable, DOWN, point.x, point.y + 1);
-        if (point.x - 1 >= 0) checkChamber(mazeTable, LEFT, point.x - 1, point.y);
+        if (point.y - 1 < columns) checkChamber(mazeTable, rows, columns, UP, point.x, point.y - 1);
+        if (point.x + 1 < rows) checkChamber(mazeTable, rows, columns, RIGHT, point.x + 1, point.y);
+        if (point.y + 1 >= 0) checkChamber(mazeTable, rows, columns, DOWN, point.x, point.y + 1);
+        if (point.x - 1 >= 0) checkChamber(mazeTable, rows, columns, LEFT, point.x - 1, point.y);
     }
 }
 
