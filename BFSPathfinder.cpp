@@ -7,8 +7,10 @@ BFSPathfinder::BFSPathfinder()
 	this->exitFound = false;
 }
 
-void BFSPathfinder::checkChamber(MazeCell mazeTable[][MAZE_TABLE_WIDTH], int chamberId, int x, int y)
+void BFSPathfinder::checkChamber(MazeCell **mazeTable, int chamberId, int x, int y)
 {
+	if (x < 0 || y < 0 || x >= MAZE_TABLE_HEIGHT || y >= MAZE_TABLE_WIDTH) return;
+
 	if (mazeTable[x][y].getId() == MazeCellTypes::WALL) return;
 	if (mazeTable[x][y].getId() == MazeCellTypes::START_POINT) return;
 	if (mazeTable[x][y].isChecked()) return;
@@ -24,7 +26,7 @@ void BFSPathfinder::checkChamber(MazeCell mazeTable[][MAZE_TABLE_WIDTH], int cha
 }
 
 
-void BFSPathfinder::findRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2i startPos, sf::Vector2i endPos)
+void BFSPathfinder::findRoad(MazeCell **mazeTable, sf::Vector2i startPos, sf::Vector2i endPos)
 {
 	if (!isRunning()) {
 		return;

@@ -17,8 +17,8 @@ private:
 	int MODE;
 	
 	sf::RenderWindow *window;
-	MazeCell mazeTable[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
-	MazeCell mazeTableCopy[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
+	MazeCell **mazeTable;
+	MazeCell **mazeTableCopy;
 	sf::Vector2f mousePosition;
 
 	std::vector<sf::Vector2f> buttonsPos;
@@ -29,8 +29,7 @@ private:
 	bool isBfsButtonSelected;
 	int selectedDimension=1;
 	
-	//sf::Font font;
-
+	
 
 	void updateMousePosition();
 	void initializeMazeTable();
@@ -43,7 +42,9 @@ private:
 	//------------------
 
 	//------------------
-	void copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]);
+	MazeCell** createTwoDimDynamicTable(int rows, int columns);
+	void deleteTwoDimDynamicTable(MazeCell** tab, int rows);
+	void copyMazeTable(MazeCell **src, MazeCell **dst);
 	//------------------
 	void initializeButtons();
 	void addMazeElements();
@@ -62,6 +63,8 @@ private:
 	void initialize();
 	void update();
 	void draw();
+
+	void dispose();
 
 public:
 	Engine();
