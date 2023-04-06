@@ -34,6 +34,7 @@ private:
 	sf::Vector2i startPos;
 	sf::Vector2i endPos;
 
+	int mazeSizeType;
 	int mazeTableRows;
 	int mazeTableColumns;
 	int mazeTableCellSize;
@@ -53,6 +54,11 @@ private:
 	template <typename T>
 	void deleteTwoDimDynamicTable(T**, int rows);
 
+	template <typename T>
+	T** recreateTwoDimDynamicTable(T** oldTable, int oldRows, int newRows, int newColumns);
+
+	void setMazeParameters(int size, int rows, int columns, int cellSize);
+
 	void copyMazeTable(MazeCell **src, MazeCell **dst);
 	//------------------
 	void initializeButtons();
@@ -60,8 +66,10 @@ private:
 	void removePoint(int pointId);
 	void drawMazeTable();
 	void saveMazeTable();
+
 	void selectSmallMaze();
 	void selectMediumMaze();
+	void selectBigMaze();
 
 	void drawButtonsIllumination();
 	void drawButtons();

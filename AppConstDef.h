@@ -7,11 +7,18 @@
 #define MAZE_TABLE_ROWS 15
 #define MAZE_TABLE_COLUMNS 24
 #define MAZE_TABLE_CELL_SIZE 40
+#define MAZE_FILENAME "labirynt.txt"
 
 #define MEDIUM_MAZE_ROWS 20
 #define MEDIUM_MAZE_COLUMNS 32
 #define MEDIUM_MAZE_CELL_SIZE 30
 #define MEDIUM_MAZE_FILENAME "medium_maze.txt"
+
+
+#define BIG_MAZE_ROWS 30
+#define BIG_MAZE_COLUMNS 48
+#define BIG_MAZE_CELL_SIZE 20
+#define BIG_MAZE_FILENAME "big_maze.txt"
 
 
 #define MAZE_AREA_X 0
@@ -36,7 +43,6 @@
 
 #define BUTTONS_NUM 11
 
-#define MAZE_FILENAME "labirynt.txt"
 
 enum MODE { PUT_WALL, PUT_END_POINT, PUT_START_POINT };
 enum DIRECTION { LEFT = 5, RIGHT, UP, DOWN };
