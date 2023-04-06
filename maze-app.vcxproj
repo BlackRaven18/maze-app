@@ -152,6 +152,7 @@
     <ClInclude Include="BFSPathfinder.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="DFSPathfinder.h" />
+    <ClInclude Include="DynamicArrayRepository.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="MazeCell.h" />
     <ClInclude Include="MazeCellTypes.h" />
