@@ -6,15 +6,10 @@ Engine::Engine() {
 
 	this->MODE = PUT_WALL;
 
-
 	mazeTable = createTwoDimDynamicTable<MazeCell>(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
 	mazeTableCopy = createTwoDimDynamicTable<MazeCell>(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
 
-	this->mazeSizeType = SMALL;
-	this->mazeTableRows = SMALL_MAZE_ROWS;
-	this->mazeTableColumns = SMALL_MAZE_COLUMNS;
-	this->mazeTableCellSize = SMALL_MAZE_CELL_SIZE;
-
+	setMazeParameters(SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE);
 }
 
 void Engine::start() {
