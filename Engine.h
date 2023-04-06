@@ -15,6 +15,7 @@ class Engine {
 private:
 
 	int MODE;
+	bool engineRunning;
 	
 	sf::RenderWindow *window;
 	MazeCell **mazeTable;
@@ -89,4 +90,5 @@ private:
 public:
 	Engine();
 	void start();
+	void stop();
 };
