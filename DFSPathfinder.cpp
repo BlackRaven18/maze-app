@@ -9,7 +9,7 @@ DFSPathfinder::DFSPathfinder()
 
 void DFSPathfinder::checkChamber(MazeCell **mazeTable, int chamberId, int x, int y)
 {
-    if (x < 0 || y < 0 || x >= MAZE_TABLE_HEIGHT || y >= MAZE_TABLE_WIDTH) return;
+    if (x < 0 || y < 0 || x >= MAZE_TABLE_ROWS || y >= MAZE_TABLE_COLUMNS) return;
 
     if (mazeTable[x][y].getId() == MazeCellTypes::WALL) return;
     if (mazeTable[x][y].getId() == MazeCellTypes::START_POINT) return;
@@ -77,8 +77,8 @@ void DFSPathfinder::findRoad(MazeCell **mazeTable, sf::Vector2i startPos, sf::Ve
             return;
         }
 
-        if (point.y - 1 < MAZE_TABLE_WIDTH) checkChamber(mazeTable, UP, point.x, point.y - 1);
-        if (point.x + 1 < MAZE_TABLE_HEIGHT) checkChamber(mazeTable, RIGHT, point.x + 1, point.y);
+        if (point.y - 1 < MAZE_TABLE_COLUMNS) checkChamber(mazeTable, UP, point.x, point.y - 1);
+        if (point.x + 1 < MAZE_TABLE_ROWS) checkChamber(mazeTable, RIGHT, point.x + 1, point.y);
         if (point.y + 1 >= 0) checkChamber(mazeTable, DOWN, point.x, point.y + 1);
         if (point.x - 1 >= 0) checkChamber(mazeTable, LEFT, point.x - 1, point.y);
     }

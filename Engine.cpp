@@ -4,8 +4,8 @@
 //komentarz do usuniecia
 Engine::Engine() {
 
-	mazeTable = createTwoDimDynamicTable(MAZE_TABLE_HEIGHT, MAZE_TABLE_WIDTH);
-	mazeTableCopy = createTwoDimDynamicTable(MAZE_TABLE_HEIGHT, MAZE_TABLE_WIDTH);
+	mazeTable = createTwoDimDynamicTable(MAZE_TABLE_ROWS, MAZE_TABLE_COLUMNS);
+	mazeTableCopy = createTwoDimDynamicTable(MAZE_TABLE_ROWS, MAZE_TABLE_COLUMNS);
 
 	this->MODE = PUT_WALL;
 }
@@ -22,16 +22,16 @@ void Engine::updateMousePosition() {
 
 void Engine::initializeMazeTable() {
 	std::ifstream mazeFile{ MAZE_FILENAME };
-	int TMP[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH]{};
-	for (int i{}; i != MAZE_TABLE_HEIGHT; ++i) {
-		for (int j{}; j != MAZE_TABLE_WIDTH; ++j) {
+	int TMP[MAZE_TABLE_ROWS][MAZE_TABLE_COLUMNS]{};
+	for (int i{}; i != MAZE_TABLE_ROWS; ++i) {
+		for (int j{}; j != MAZE_TABLE_COLUMNS; ++j) {
 			mazeFile >> TMP[i][j];
 		}
 	}
 	mazeFile.close();
 
-	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+	for (int i = 0; i < MAZE_TABLE_ROWS; i++) {
+		for (int j = 0; j < MAZE_TABLE_COLUMNS; j++) {
 			mazeTable[i][j].setPosition(j * MAZE_TABLE_CELL_SIZE, i * MAZE_TABLE_CELL_SIZE);
 			mazeTable[i][j].setSize(MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE);
 			mazeTable[i][j].setId(TMP[i][j]);
@@ -76,8 +76,8 @@ void Engine::deleteTwoDimDynamicTable(MazeCell** tab, int rows) {
 
 
 void Engine::copyMazeTable(MazeCell **src, MazeCell **dst) {
-	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+	for (int i = 0; i < MAZE_TABLE_ROWS; i++) {
+		for (int j = 0; j < MAZE_TABLE_COLUMNS; j++) {
 			dst[i][j] = src[i][j];
 		}
 	}
@@ -274,7 +274,7 @@ void Engine::addMazeElements()
 	int i = mousePosition.y / MAZE_TABLE_CELL_SIZE;
 	int j = mousePosition.x / MAZE_TABLE_CELL_SIZE;
 
-	if (i < MAZE_TABLE_HEIGHT && j < MAZE_TABLE_WIDTH) {
+	if (i < MAZE_TABLE_ROWS && j < MAZE_TABLE_COLUMNS) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			if (MODE == PUT_WALL) {
 				mazeTable[i][j].setId(MazeCellTypes::WALL);
@@ -304,8 +304,8 @@ void Engine::addMazeElements()
 }
 
 void Engine::removePoint(int pointId) {
-	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+	for (int i = 0; i < MAZE_TABLE_ROWS; i++) {
+		for (int j = 0; j < MAZE_TABLE_COLUMNS; j++) {
 			if (mazeTable[i][j].getId() == pointId) {
 				mazeTable[i][j].setId(MazeCellTypes::PATH);
 				mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
@@ -315,8 +315,8 @@ void Engine::removePoint(int pointId) {
 }
 
 void Engine::drawMazeTable() {
-	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-		for (int j = j = 0; j < MAZE_TABLE_WIDTH; j++) {
+	for (int i = 0; i < MAZE_TABLE_ROWS; i++) {
+		for (int j = j = 0; j < MAZE_TABLE_COLUMNS; j++) {
 			mazeTable[i][j].draw(window);
 		}
 	}
@@ -327,8 +327,8 @@ void Engine::drawMazeTable() {
 void Engine::saveMazeTable() {
 	std::ofstream mazeFile(MAZE_FILENAME);
 
-	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+	for (int i = 0; i < MAZE_TABLE_ROWS; i++) {
+		for (int j = 0; j < MAZE_TABLE_COLUMNS; j++) {
 			int a = mazeTable[i][j].getId();
 			mazeFile << a << " ";
 		}
@@ -357,6 +357,6 @@ bool Engine::isPointInRectangleArea(int pointX, int pointY, int recX, int recY, 
 }
 
 void Engine::dispose() {
-	deleteTwoDimDynamicTable(mazeTable, MAZE_TABLE_HEIGHT);
-	deleteTwoDimDynamicTable(mazeTableCopy, MAZE_TABLE_HEIGHT);
+	deleteTwoDimDynamicTable(mazeTable, MAZE_TABLE_ROWS);
+	deleteTwoDimDynamicTable(mazeTableCopy, MAZE_TABLE_ROWS);
 }
