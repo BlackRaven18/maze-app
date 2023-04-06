@@ -4,13 +4,13 @@
 //komentarz do usuniecia
 Engine::Engine() {
 
-	mazeTable = createTwoDimDynamicTable<MazeCell>(MAZE_TABLE_ROWS, MAZE_TABLE_COLUMNS);
-	mazeTableCopy = createTwoDimDynamicTable<MazeCell>(MAZE_TABLE_ROWS, MAZE_TABLE_COLUMNS);
+	mazeTable = createTwoDimDynamicTable<MazeCell>(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
+	mazeTableCopy = createTwoDimDynamicTable<MazeCell>(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
 
 	this->mazeSizeType = SMALL;
-	this->mazeTableRows = MAZE_TABLE_ROWS;
-	this->mazeTableColumns = MAZE_TABLE_COLUMNS;
-	this->mazeTableCellSize = MAZE_TABLE_CELL_SIZE;
+	this->mazeTableRows = SMALL_MAZE_ROWS;
+	this->mazeTableColumns = SMALL_MAZE_COLUMNS;
+	this->mazeTableCellSize = SMALL_MAZE_CELL_SIZE;
 
 	this->MODE = PUT_WALL;
 }
@@ -131,7 +131,7 @@ void Engine::initialize() {
 	this->window = new sf::RenderWindow(sf::VideoMode(APP_WIDTH, APP_HEIGHT), APP_TITLE);
 
 
-	initializeMazeTable(MAZE_TABLE_ROWS, MAZE_TABLE_COLUMNS, MAZE_TABLE_CELL_SIZE, MAZE_FILENAME);
+	initializeMazeTable(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
 	initializeButtons();
 }
 
@@ -354,12 +354,12 @@ void Engine::saveMazeTable() {
 	std::ofstream mazeFile;
 
 	switch (mazeSizeType) {
-	case SMALL: mazeFile = std::ofstream(MAZE_FILENAME); break;
+	case SMALL: mazeFile = std::ofstream(SMALL_MAZE_FILENAME); break;
 	case MEDIUM: mazeFile = std::ofstream(MEDIUM_MAZE_FILENAME); break;
 	case BIG: mazeFile = std::ofstream(BIG_MAZE_FILENAME); break;
 	}
 
-	//std::ofstream mazeFile(MAZE_FILENAME);
+	//std::ofstream mazeFile(SMALL_MAZE_FILENAME);
 
 	for (int i = 0; i < mazeTableRows; i++) {
 		for (int j = 0; j < mazeTableColumns; j++) {
@@ -382,19 +382,19 @@ void Engine::selectSmallMaze() {
 	case BIG: oldRows = BIG_MAZE_ROWS; break;
 	}
 
-	mazeTable = recreateTwoDimDynamicTable(mazeTable, oldRows, MAZE_TABLE_ROWS, MAZE_TABLE_COLUMNS);
-	mazeTableCopy = recreateTwoDimDynamicTable(mazeTableCopy, oldRows, MAZE_TABLE_ROWS, MAZE_TABLE_COLUMNS);
+	mazeTable = recreateTwoDimDynamicTable(mazeTable, oldRows, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
+	mazeTableCopy = recreateTwoDimDynamicTable(mazeTableCopy, oldRows, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
 
-	setMazeParameters(SMALL, MAZE_TABLE_ROWS, MAZE_TABLE_COLUMNS, MAZE_TABLE_CELL_SIZE);
+	setMazeParameters(SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE);
 
-	initializeMazeTable(MAZE_TABLE_ROWS, MAZE_TABLE_COLUMNS, MAZE_TABLE_CELL_SIZE, MAZE_FILENAME);
+	initializeMazeTable(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
 }
 
 void Engine::selectMediumMaze() {
 	int oldRows;
 
 	switch (mazeSizeType) {
-	case SMALL: oldRows = MAZE_TABLE_ROWS; break;
+	case SMALL: oldRows = SMALL_MAZE_ROWS; break;
 	case MEDIUM: return;
 	case BIG: oldRows = BIG_MAZE_ROWS; break;
 	}
@@ -411,7 +411,7 @@ void Engine::selectBigMaze() {
 	int oldRows;
 
 	switch (mazeSizeType) {
-	case SMALL: oldRows = MAZE_TABLE_ROWS; break;
+	case SMALL: oldRows = SMALL_MAZE_ROWS; break;
 	case MEDIUM: oldRows = MEDIUM_MAZE_ROWS; break;
 	case BIG: return;
 	}
@@ -450,6 +450,6 @@ bool Engine::isPointInRectangleArea(int pointX, int pointY, int recX, int recY, 
 }
 
 void Engine::dispose() {
-	deleteTwoDimDynamicTable(mazeTable, MAZE_TABLE_ROWS);
-	deleteTwoDimDynamicTable(mazeTableCopy, MAZE_TABLE_ROWS);
+	deleteTwoDimDynamicTable(mazeTable, SMALL_MAZE_ROWS);
+	deleteTwoDimDynamicTable(mazeTableCopy, SMALL_MAZE_ROWS);
 }
