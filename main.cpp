@@ -10,9 +10,9 @@ sf::RectangleShape createRectangle(int x, int y, int width, int height, sf::Colo
     return rectangle;
 }
 
-//void initializeMazeTable(int mazeTable[][MAZE_TABLE_HEIGHT]) {
-//    for (int i = 0; i < MAZE_TABLE_WIDTH; i++) {
-//        for (int j = j = 0; j < MAZE_TABLE_HEIGHT; j++) {
+//void initializeMazeTable(int mazeTable[][MAZE_TABLE_ROWS]) {
+//    for (int i = 0; i < MAZE_TABLE_COLUMNS; i++) {
+//        for (int j = j = 0; j < MAZE_TABLE_ROWS; j++) {
 //            mazeTable[i][j] = 1;
 //        }
 //    }
@@ -78,7 +78,7 @@ int main(int, char const**)
     rectangle6.setPosition(600, 900);
     rectangle6.setFillColor(sf::Color::Red);
     
-    int mazeTable[MAZE_TABLE_WIDTH][MAZE_TABLE_HEIGHT];
+    int mazeTable[MAZE_TABLE_COLUMNS][MAZE_TABLE_ROWS];
     int n = 1;
 
     initializeMazeTable(mazeTable);
@@ -100,8 +100,8 @@ int main(int, char const**)
         }
         
         window.clear();
-        for(int i = 0; i < MAZE_TABLE_WIDTH; i++){
-            for(int j = 0; j < MAZE_TABLE_HEIGHT; j++){
+        for(int i = 0; i < MAZE_TABLE_COLUMNS; i++){
+            for(int j = 0; j < MAZE_TABLE_ROWS; j++){
                 if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<i*TABLE_CELL_SIZE+20&&position.x>i*TABLE_CELL_SIZE&&position.y>j*TABLE_CELL_SIZE&&position.y<j*TABLE_CELL_SIZE+20){
                         if(mazeTable[i][j]==1&&n==1){
                             mazeTable[i][j]=0;
@@ -129,16 +129,16 @@ int main(int, char const**)
         }
         
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)&&position.x<750&&position.x>600&&position.y>900&&position.y<1050){
-            for(int i = 1; i < MAZE_TABLE_WIDTH; i++){
-                for(int j = 1; j < MAZE_TABLE_HEIGHT; j++){
+            for(int i = 1; i < MAZE_TABLE_COLUMNS; i++){
+                for(int j = 1; j < MAZE_TABLE_ROWS; j++){
                     mazeTable[i][j]=1;
                 }
             }
         }
         
         window.draw(createRectangle(0, 0, 1920, 1080, sf::Color::Blue));
-        for(int i=0; i < MAZE_TABLE_WIDTH; i++){
-            for(int j = 0; j < MAZE_TABLE_HEIGHT; j++){
+        for(int i=0; i < MAZE_TABLE_COLUMNS; i++){
+            for(int j = 0; j < MAZE_TABLE_ROWS; j++){
                 if(mazeTable[i][j]==1){
                     window.draw(createRectangle(i * TABLE_CELL_SIZE, j * TABLE_CELL_SIZE, TABLE_CELL_SIZE, TABLE_CELL_SIZE, sf::Color::Black));
                 }
