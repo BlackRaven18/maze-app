@@ -3,6 +3,10 @@
 #include <fstream>
 //komentarz do usuniecia
 Engine::Engine() {
+
+	mazeTable = createTwoDimDynamicTable(MAZE_TABLE_HEIGHT, MAZE_TABLE_WIDTH);
+	mazeTableCopy = createTwoDimDynamicTable(MAZE_TABLE_HEIGHT, MAZE_TABLE_WIDTH);
+
 	this->MODE = PUT_WALL;
 }
 
@@ -32,6 +36,7 @@ void Engine::initializeMazeTable() {
 			mazeTable[i][j].setSize(MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE);
 			mazeTable[i][j].setId(TMP[i][j]);
 			mazeTable[i][j].setVisited(false);
+			mazeTable[i][j].setChecked(false);
 
 			switch (mazeTable[i][j].getId()) {
 			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); break;
@@ -51,9 +56,26 @@ void Engine::initializeMazeTable() {
 	copyMazeTable(mazeTable, mazeTableCopy);
 }
 
+MazeCell** Engine::createTwoDimDynamicTable(int rows, int columns) {
+	MazeCell** table = new MazeCell*[rows];
+	for (int i = 0; i < rows; i++) {
+		table[i] = new MazeCell[columns];
+	}
+
+	return table;
+}
+
+void Engine::deleteTwoDimDynamicTable(MazeCell** tab, int rows) {
+	for (int i = 0; i < rows; i++) {
+		delete[] tab[i];
+	}
+
+	delete[] tab;
+}
 
 
-void Engine::copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]) {
+
+void Engine::copyMazeTable(MazeCell **src, MazeCell **dst) {
 	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
 		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
 			dst[i][j] = src[i][j];
@@ -109,6 +131,7 @@ void Engine::handleEvents()
 	{
 		if (event.type == sf::Event::Closed) {
 			window->close();
+			dispose();
 		}
 
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
@@ -331,4 +354,9 @@ bool Engine::isPointInRectangleArea(int pointX, int pointY, int recX, int recY, 
 	}
 
 	return false;
+}
+
+void Engine::dispose() {
+	deleteTwoDimDynamicTable(mazeTable, MAZE_TABLE_HEIGHT);
+	deleteTwoDimDynamicTable(mazeTableCopy, MAZE_TABLE_HEIGHT);
 }
