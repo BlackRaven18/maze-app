@@ -37,8 +37,8 @@
 #define MAZE_TRACK_COLOR sf::Color{0, 0, 255}
 #define MAZE_VISITED_CELL_COLOR sf::Color::Cyan
 
-#define PATHFINDER_CHECKED_CELLS_DELAY sf::seconds(0.01)
-#define PATHFINDER_DRAWING_PATH_DELAY sf::seconds(0.2)
+#define PATHFINDER_CHECKED_CELLS_DELAY sf::seconds(0.01f)
+#define PATHFINDER_DRAWING_PATH_DELAY sf::seconds(0.1f)
 //////////////////////////
 
 #define BUTTONS_NUM 11
