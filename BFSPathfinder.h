@@ -34,7 +34,7 @@ public:
 
 	BFSPathfinder();
 
-	void findRoad(MazeCell **mazeTable, int rows, int columns, sf::Vector2i startPos, sf::Vector2i endPos);
+	void findRoad(MazeCell **mazeTable, int rows, int columns, sf::Vector2i startPoint, sf::Vector2i endPoint);
 
 	bool isRunning();
 

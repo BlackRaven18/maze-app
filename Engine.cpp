@@ -6,8 +6,8 @@ Engine::Engine() {
 
 	this->MODE = PUT_WALL;
 
-	mazeTable = createTwoDimDynamicTable<MazeCell>(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
-	mazeTableCopy = createTwoDimDynamicTable<MazeCell>(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
+	mazeTable = DynamicArrayRepository<MazeCell>::createTwoDimDynamicTable(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
+	mazeTableCopy = DynamicArrayRepository<MazeCell>::createTwoDimDynamicTable(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
 
 	setMazeParameters(SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE);
 }
@@ -136,10 +136,10 @@ void Engine::update() {
 	updateMousePosition();
 
 	if (isBfsButtonSelected) {
-		bfsPathfinder.findRoad(mazeTable, mazeTableRows, mazeTableColumns,startPos, endPos);
+		bfsPathfinder.findRoad(mazeTable, mazeTableRows, mazeTableColumns,startPoint, endPoint);
 	}
 	else {
-		dfsPathfinder.findRoad(mazeTable, mazeTableRows, mazeTableColumns, startPos, endPos);
+		dfsPathfinder.findRoad(mazeTable, mazeTableRows, mazeTableColumns, startPoint, endPoint);
 	}
 }
 
@@ -163,7 +163,7 @@ void Engine::updateMousePosition() {
 void Engine::initializeMazeTable(int rows, int columns, int cellSize, const char* filename) {
 	std::ifstream mazeFile{ filename };
 
-	int** TMP = createTwoDimDynamicTable<int>(rows, columns);
+	int** TMP = DynamicArrayRepository<int>::createTwoDimDynamicTable(rows, columns);
 
 	for (int i = 0; i < rows; ++i) {
 		for (int j = 0; j < columns; ++j) {
@@ -184,57 +184,30 @@ void Engine::initializeMazeTable(int rows, int columns, int cellSize, const char
 			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); break;
 			case MazeCellTypes::WALL: mazeTable[i][j].setColor(MAZE_WALL_COLOR); break;
 			case MazeCellTypes::START_POINT: mazeTable[i][j].setColor(START_POINT_COLOR);
-				startPos.x = i;
-				startPos.y = j;
+				startPoint.x = i;
+				startPoint.y = j;
 				break;
 			case MazeCellTypes::END_POINT: mazeTable[i][j].setColor(END_POINT_COLOR);
-				endPos.x = i;
-				endPos.y = j;
+				endPoint.x = i;
+				endPoint.y = j;
 				break;
 			}
 		}
 	}
 
-	deleteTwoDimDynamicTable<int>(TMP, rows);
+	DynamicArrayRepository<int>::deleteTwoDimDynamicTable(TMP, rows);
 
 	copyMazeTable(mazeTable, mazeTableCopy);
 }
 
-template <typename T>
-T** Engine::createTwoDimDynamicTable(int rows, int columns) {
-	T** table = new T*[rows];
-	for (int i = 0; i < rows; i++) {
-		table[i] = new T[columns];
-	}
-
-	return table;
-}
-
-
-template <typename T>
-void Engine::deleteTwoDimDynamicTable(T** tab, int rows) {
-	for (int i = 0; i < rows; i++) {
-		delete[] tab[i];
-	}
-
-	delete[] tab;
-}
-
-template <typename T>
-T** Engine::recreateTwoDimDynamicTable(T** oldTable, int oldRows, int newRows, int newColumns) {
-	deleteTwoDimDynamicTable(oldTable, oldRows);
-	return createTwoDimDynamicTable<T>(newRows, newColumns);
-}
-
-
-
-void Engine::copyMazeTable(MazeCell **src, MazeCell **dst) {
+void Engine::copyMazeTable(MazeCell** src, MazeCell** dst){
 	for (int i = 0; i < mazeTableRows; i++) {
 		for (int j = 0; j < mazeTableColumns; j++) {
 			dst[i][j] = src[i][j];
 		}
 	}
 }
+
 
 void Engine::initializeButtons() {
 	//font.loadFromFile("arial.ttf");
@@ -318,16 +291,16 @@ void Engine::addMazeElements()
 				removePoint(MazeCellTypes::END_POINT);
 				mazeTable[i][j].setId(MazeCellTypes::END_POINT);
 				mazeTable[i][j].setColor(END_POINT_COLOR);
-				endPos.x = i;
-				endPos.y = j;
+				endPoint.x = i;
+				endPoint.y = j;
 
 			}
 			else if (MODE == PUT_START_POINT) {
 				removePoint(MazeCellTypes::START_POINT);
 				mazeTable[i][j].setId(MazeCellTypes::START_POINT);
 				mazeTable[i][j].setColor(START_POINT_COLOR);
-				startPos.x = i;
-				startPos.y = j;
+				startPoint.x = i;
+				startPoint.y = j;
 			}
 		}
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
@@ -383,7 +356,7 @@ void Engine::saveMazeTable() {
 
 
 void Engine::selectSmallMaze() {
-	int oldRows;
+	int oldRows = 0;
 
 	switch (mazeSizeType) {
 	case SMALL: return;
@@ -391,8 +364,8 @@ void Engine::selectSmallMaze() {
 	case BIG: oldRows = BIG_MAZE_ROWS; break;
 	}
 
-	mazeTable = recreateTwoDimDynamicTable(mazeTable, oldRows, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
-	mazeTableCopy = recreateTwoDimDynamicTable(mazeTableCopy, oldRows, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
+	mazeTable = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTable, oldRows, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
+	mazeTableCopy = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTableCopy, oldRows, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
 
 	setMazeParameters(SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE);
 
@@ -400,7 +373,7 @@ void Engine::selectSmallMaze() {
 }
 
 void Engine::selectMediumMaze() {
-	int oldRows;
+	int oldRows= 0;
 
 	switch (mazeSizeType) {
 	case SMALL: oldRows = SMALL_MAZE_ROWS; break;
@@ -408,8 +381,8 @@ void Engine::selectMediumMaze() {
 	case BIG: oldRows = BIG_MAZE_ROWS; break;
 	}
 
-	mazeTable = recreateTwoDimDynamicTable(mazeTable, oldRows, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS);
-	mazeTableCopy = recreateTwoDimDynamicTable(mazeTableCopy, oldRows, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS);
+	mazeTable = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTable, oldRows, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS);
+	mazeTableCopy = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTableCopy, oldRows, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS);
 	
 	setMazeParameters(MEDIUM, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS, MEDIUM_MAZE_CELL_SIZE);
 
@@ -417,7 +390,7 @@ void Engine::selectMediumMaze() {
 }
 
 void Engine::selectBigMaze() {
-	int oldRows;
+	int oldRows = 0;
 
 	switch (mazeSizeType) {
 	case SMALL: oldRows = SMALL_MAZE_ROWS; break;
@@ -425,8 +398,8 @@ void Engine::selectBigMaze() {
 	case BIG: return;
 	}
 
-	mazeTable = recreateTwoDimDynamicTable(mazeTable, oldRows, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS);
-	mazeTableCopy = recreateTwoDimDynamicTable(mazeTableCopy, oldRows, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS);
+	mazeTable = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTable, oldRows, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS);
+	mazeTableCopy = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTableCopy, oldRows, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS);
 	
 	setMazeParameters(BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE);
 
@@ -459,6 +432,6 @@ bool Engine::isPointInRectangleArea(int pointX, int pointY, int recX, int recY, 
 }
 
 void Engine::dispose() {
-	deleteTwoDimDynamicTable(mazeTable, SMALL_MAZE_ROWS);
-	deleteTwoDimDynamicTable(mazeTableCopy, SMALL_MAZE_ROWS);
+	DynamicArrayRepository<MazeCell>::deleteTwoDimDynamicTable(mazeTable, SMALL_MAZE_ROWS);
+	DynamicArrayRepository<MazeCell>::deleteTwoDimDynamicTable(mazeTableCopy, SMALL_MAZE_ROWS);
 }
