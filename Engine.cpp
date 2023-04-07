@@ -92,9 +92,20 @@ void Engine::initialize() {
 	initializeButtons();
 }
 
+float Engine::getDeltaTime()
+{
+	static sf::Clock clock;
+	sf::Time elapsed = clock.restart();
+	return elapsed.asSeconds();
+}
+
 void Engine::startMainLoop() {
+	static float delayTimer = PATHFINDER_DRAWING_PATH_DELAY.asSeconds();
 	while (window->isOpen()) {
-		update();
+		float deltaTime = getDeltaTime();
+		delayTimer -= deltaTime;
+		update(delayTimer);
+
 		draw();
 	}
 }
@@ -102,8 +113,11 @@ void Engine::startMainLoop() {
 void Engine::handleEvents()
 {
 	sf::Event event;
+
 	while (window->pollEvent(event))
 	{
+
+
 		if (event.type == sf::Event::Closed) {
 			window->close();
 		}
@@ -140,7 +154,7 @@ void Engine::handleEvents()
 				else {
 					dfsPathfinder.stop();
 				}
-				
+
 				copyMazeTable(mazeTableCopy, mazeTable);
 			}
 
@@ -180,15 +194,20 @@ void Engine::handleEvents()
 	}
 }
 
-void Engine::update() {
+void Engine::update(float delayTimer) {
 	handleEvents();
 	updateMousePosition();
+
 
 	if (isBfsButtonSelected) {
 		bfsPathfinder.findRoad(mazeTable, startPos, endPos);
 	}
 	else {
 		dfsPathfinder.findRoad(mazeTable, startPos, endPos);
+	}
+
+	if (delayTimer <= 0.0) {
+		delayTimer = PATHFINDER_DRAWING_PATH_DELAY.asSeconds();
 	}
 }
 
@@ -202,7 +221,7 @@ void Engine::drawButtonsIllumination() {
 	for (int i = 0; i < BUTTONS_NUM; i++) {
 		sf::RectangleShape rectangleil = Engine::createRectangle(buttonsPos[i].x, buttonsPos[i].y, buttonsSizes[i].x, buttonsSizes[i].y, sf::Color(128, 128, 128, 128));
 
-		if (mousePosition.x > buttonsPos[i].x  && mousePosition.x < buttonsPos[i].x + buttonsSizes[i].x && mousePosition.y > buttonsPos[i].y  && mousePosition.y < buttonsPos[i].y + buttonsSizes[i].y) {
+		if (mousePosition.x > buttonsPos[i].x && mousePosition.x < buttonsPos[i].x + buttonsSizes[i].x && mousePosition.y > buttonsPos[i].y && mousePosition.y < buttonsPos[i].y + buttonsSizes[i].y) {
 			window->draw(rectangleil);
 		}
 	}
@@ -215,7 +234,7 @@ void Engine::draw() {
 	addMazeElements();
 	drawButtons();
 	drawButtonsIllumination();
-	
+
 	window->display();
 }
 

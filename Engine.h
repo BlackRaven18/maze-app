@@ -56,8 +56,10 @@ private:
 	void startMainLoop();
 	void handleEvents();
 
+	float getDeltaTime();
+
 	void initialize();
-	void update();
+	void update(float delayTimer);
 	void draw();
 
 public:
