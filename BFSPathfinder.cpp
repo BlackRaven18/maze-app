@@ -26,7 +26,7 @@ void BFSPathfinder::checkChamber(MazeCell **mazeTable, int rows, int columns, in
 }
 
 
-void BFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Vector2i startPos, sf::Vector2i endPos)
+void BFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Vector2i startPoint, sf::Vector2i endPoint)
 {
 	if (!isRunning()) {
 		return;
@@ -34,8 +34,8 @@ void BFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Ve
 
 
 	if (!isInitializedWithStartData()) {
-		mazeTable[startPos.x][startPos.y].setVisited(true);
-		queue.push(startPos);
+		mazeTable[startPoint.x][startPoint.y].setVisited(true);
+		queue.push(startPoint);
 
 		setInitializedWithStartData(true);
 	}
@@ -53,7 +53,7 @@ void BFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Ve
 			sf::sleep(PATHFINDER_DRAWING_PATH_DELAY);
 		}
 
-		if (tmpPoint == startPos) {
+		if (tmpPoint == startPoint) {
 
 			std::cout << "Znaleziono droge!" << std::endl;
 			stop();
@@ -73,7 +73,7 @@ void BFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Ve
 
 		sf::sleep(PATHFINDER_CHECKED_CELLS_DELAY);
 
-		if (point.x == endPos.x && point.y == endPos.y) {
+		if (point.x == endPoint.x && point.y == endPoint.y) {
 
 			this->tmpPoint = point;
 			setExitFound(true);

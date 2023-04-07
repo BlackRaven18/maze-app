@@ -1,14 +1,15 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <queue>
 #include "AppConstDef.h"
 #include "Rectangle.h"
 #include "MazeCell.h"
 #include "MazeCellTypes.h"
 #include "Button.h"
-#include <queue>
 #include "BFSPathfinder.h"
 #include "DFSPathfinder.h"
+#include "DynamicArrayRepository.h"
 
 
 class Engine {
@@ -28,12 +29,12 @@ private:
 	std::vector<Button> buttons;
 	
 	bool isBfsButtonSelected;
-	int selectedDimension=1;
 	
 	BFSPathfinder bfsPathfinder;
 	DFSPathfinder dfsPathfinder;
-	sf::Vector2i startPos;
-	sf::Vector2i endPos;
+
+	sf::Vector2i startPoint;
+	sf::Vector2i endPoint;
 
 	int mazeSizeType;
 	int mazeTableRows;
@@ -45,18 +46,6 @@ private:
 	void initializeMazeTable(int rows, int columns, int cellSize, const char* filename);
 	//------------------
 
-	//------------------
-
-	//------------------
-
-	template <typename T>
-	T** createTwoDimDynamicTable(int rows, int columns);
-
-	template <typename T>
-	void deleteTwoDimDynamicTable(T**, int rows);
-
-	template <typename T>
-	T** recreateTwoDimDynamicTable(T** oldTable, int oldRows, int newRows, int newColumns);
 
 	void setMazeParameters(int size, int rows, int columns, int cellSize);
 
