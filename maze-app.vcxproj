@@ -146,6 +146,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MazeCell.cpp" />
     <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="ShapesAndCollisionsRep.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppConstDef.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="MazeCellTypes.h" />
     <ClInclude Include="Pathfinder.h" />
     <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="ShapesAndCollisionsRep.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

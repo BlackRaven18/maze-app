@@ -10,6 +10,7 @@
 #include "BFSPathfinder.h"
 #include "DFSPathfinder.h"
 #include "DynamicArrayRepository.h"
+#include "ShapesAndCollisionsRep.h"
 
 
 class Engine {
@@ -57,14 +58,10 @@ private:
 	void drawMazeTable();
 	void saveMazeTable();
 
-	void selectSmallMaze();
-	void selectMediumMaze();
-	void selectBigMaze();
+	void selectMaze(int oldType, int newType, int rows, int columns, int cellSize, const char* filename);
 
 	void drawButtonsIllumination();
 	void drawButtons();
-	sf::RectangleShape createRectangle(int x, int y, int width, int height, sf::Color color);
-	bool isPointInRectangleArea(int pointX, int pointY, int recX, int recY, int recWidth, int recHeight);
 
 	void startMainLoop();
 	void handleEvents();

@@ -112,13 +112,13 @@ void Engine::handleEvents()
 				std::cout << "DFS" << std::endl;
 			}
 			else if (buttons[8].isClicked(window)) {
-				selectSmallMaze();
+				selectMaze(mazeSizeType, SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
 			}
 			else if (buttons[9].isClicked(window)) {
-				selectMediumMaze();
+				selectMaze(mazeSizeType, MEDIUM, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS, MEDIUM_MAZE_CELL_SIZE, MEDIUM_MAZE_FILENAME);
 			}
 			else if (buttons[10].isClicked(window)) {
-				selectBigMaze();
+				selectMaze(mazeSizeType, BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE, BIG_MAZE_FILENAME);
 			}
 		}
 
@@ -244,21 +244,25 @@ void Engine::drawButtons() {
 
 void Engine::drawButtonsIllumination() {
 	for (int i = 0; i < BUTTONS_NUM; i++) {
-		sf::RectangleShape rectangleil = Engine::createRectangle(buttonsPos[i].x, buttonsPos[i].y, buttonsSizes[i].x, buttonsSizes[i].y, sf::Color(128, 128, 128, 128));
+		sf::RectangleShape rectangleIlumination = ShapesAndCollisionsRep::createRectangle(buttonsPos[i].x, buttonsPos[i].y,
+			buttonsSizes[i].x, buttonsSizes[i].y, sf::Color(128, 128, 128, 128));
 
-		if (mousePosition.x > buttonsPos[i].x  && mousePosition.x < buttonsPos[i].x + buttonsSizes[i].x && mousePosition.y > buttonsPos[i].y  && mousePosition.y < buttonsPos[i].y + buttonsSizes[i].y) {
-			window->draw(rectangleil);
+
+		if (ShapesAndCollisionsRep::isPointInRectangleArea(mousePosition.x, mousePosition.y, 
+			buttonsPos[i].x, buttonsPos[i].y, buttonsSizes[i].x, buttonsSizes[i].y)) {
+			window->draw(rectangleIlumination);
+
 		}
 	}
 }
 
 void Engine::buttonSelect() {
 	if (isBfsButtonSelected == true) {
-		sf::RectangleShape rectanglesel = Engine::createRectangle(buttonsPos[6].x, buttonsPos[6].y, buttonsSizes[6].x, buttonsSizes[6].y, sf::Color(0, 128, 0, 128));
+		sf::RectangleShape rectanglesel = ShapesAndCollisionsRep::createRectangle(buttonsPos[6].x, buttonsPos[6].y, buttonsSizes[6].x, buttonsSizes[6].y, sf::Color(0, 128, 0, 128));
 		window->draw(rectanglesel);
 	}
 	else {
-		sf::RectangleShape rectanglesel = Engine::createRectangle(buttonsPos[7].x, buttonsPos[7].y, buttonsSizes[7].x, buttonsSizes[7].y, sf::Color(0, 128, 0, 128));
+		sf::RectangleShape rectanglesel = ShapesAndCollisionsRep::createRectangle(buttonsPos[7].x, buttonsPos[7].y, buttonsSizes[7].x, buttonsSizes[7].y, sf::Color(0, 128, 0, 128));
 		window->draw(rectanglesel);
 	}
 }
@@ -269,7 +273,7 @@ void Engine::addMazeElements()
 
 	//checking if mouse is on the maze board
 
-	if (!isPointInRectangleArea(mousePosition.x, mousePosition.y, MAZE_AREA_X, MAZE_AREA_Y, MAZE_AREA_WIDTH, MAZE_AREA_HEIGHT)) {
+	if (!ShapesAndCollisionsRep::isPointInRectangleArea(mousePosition.x, mousePosition.y, MAZE_AREA_X, MAZE_AREA_Y, MAZE_AREA_WIDTH, MAZE_AREA_HEIGHT)) {
 		return;
 	}
 
@@ -354,81 +358,32 @@ void Engine::saveMazeTable() {
 	mazeFile.close();
 }
 
-
-void Engine::selectSmallMaze() {
+void Engine::selectMaze(int oldType, int newType, int rows, int columns, int cellSize, const char* filename) {
 	int oldRows = 0;
-
-	switch (mazeSizeType) {
-	case SMALL: return;
-	case MEDIUM: oldRows = MEDIUM_MAZE_ROWS; break;
-	case BIG: oldRows = BIG_MAZE_ROWS; break;
-	}
-
-	mazeTable = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTable, oldRows, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
-	mazeTableCopy = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTableCopy, oldRows, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
-
-	setMazeParameters(SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE);
-
-	initializeMazeTable(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
-}
-
-void Engine::selectMediumMaze() {
-	int oldRows= 0;
-
-	switch (mazeSizeType) {
-	case SMALL: oldRows = SMALL_MAZE_ROWS; break;
-	case MEDIUM: return;
-	case BIG: oldRows = BIG_MAZE_ROWS; break;
-	}
-
-	mazeTable = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTable, oldRows, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS);
-	mazeTableCopy = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTableCopy, oldRows, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS);
 	
-	setMazeParameters(MEDIUM, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS, MEDIUM_MAZE_CELL_SIZE);
+	if (oldType == newType) return;
 
-	initializeMazeTable(MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS, MEDIUM_MAZE_CELL_SIZE, MEDIUM_MAZE_FILENAME);
-}
-
-void Engine::selectBigMaze() {
-	int oldRows = 0;
-
-	switch (mazeSizeType) {
+	switch (oldType) {
 	case SMALL: oldRows = SMALL_MAZE_ROWS; break;
-	case MEDIUM: oldRows = MEDIUM_MAZE_ROWS; break;
-	case BIG: return;
+	case MEDIUM:oldRows = MEDIUM_MAZE_ROWS; break;
+	case BIG:oldRows = BIG_MAZE_ROWS; break;
 	}
 
-	mazeTable = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTable, oldRows, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS);
-	mazeTableCopy = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTableCopy, oldRows, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS);
-	
-	setMazeParameters(BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE);
+	mazeTable = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTable, oldRows, rows, columns);
+	mazeTableCopy = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTableCopy, oldRows, rows, columns);
 
-	initializeMazeTable(BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE, BIG_MAZE_FILENAME);
+	setMazeParameters(newType, rows, columns, cellSize);
+
+	initializeMazeTable(rows, columns, cellSize, filename);
+
 }
+
 
 void Engine::setMazeParameters(int size, int rows, int columns, int cellSize) {
 	this->mazeSizeType = size;
 	this->mazeTableRows = rows;
 	this->mazeTableColumns = columns;
 	this->mazeTableCellSize = cellSize;
-}
-
-
-sf::RectangleShape Engine::createRectangle(int x, int y, int width, int height, sf::Color color) {
-	sf::RectangleShape rectangle;
-	rectangle.setSize(sf::Vector2f(width, height));
-	rectangle.setPosition(x, y);
-	rectangle.setFillColor(color);
-	return rectangle;
-}
-
-bool Engine::isPointInRectangleArea(int pointX, int pointY, int recX, int recY, int recWidth, int recHeight) {
-	if (pointX >= recX && pointX <= recX + recWidth
-		&& pointY >= recY && pointY <= recY + recHeight) {
-		return true;
-	}
-
-	return false;
 }
 
 void Engine::dispose() {
