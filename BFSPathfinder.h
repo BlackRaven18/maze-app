@@ -28,16 +28,15 @@ private:
 	bool isInitializedWithStartData();
 
 	void setExitFound(bool exitFound);
-	bool isExitFound();
 
 public:
 
 	BFSPathfinder();
 
 	void findRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2i startPos, sf::Vector2i endPos);
-
+	void drawRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2i startPos);
 	bool isRunning();
-
+	bool isExitFound();
 	void start();
 	void stop();
 

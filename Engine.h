@@ -37,6 +37,7 @@ private:
 	DFSPathfinder dfsPathfinder;
 	sf::Vector2i startPos;
 	sf::Vector2i endPos;
+	sf::Clock clock;
 
 	//------------------
 
@@ -56,10 +57,8 @@ private:
 	void startMainLoop();
 	void handleEvents();
 
-	float getDeltaTime();
-
 	void initialize();
-	void update(float delayTimer);
+	void update(sf::Time deltaTime);
 	void draw();
 
 public:

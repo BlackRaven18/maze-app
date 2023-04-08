@@ -92,19 +92,14 @@ void Engine::initialize() {
 	initializeButtons();
 }
 
-float Engine::getDeltaTime()
-{
-	static sf::Clock clock;
-	sf::Time elapsed = clock.restart();
-	return elapsed.asSeconds();
-}
-
 void Engine::startMainLoop() {
-	static float delayTimer = PATHFINDER_DRAWING_PATH_DELAY.asSeconds();
+	sf::Time elapsedTime;
+	sf::Time deltaTime;
 	while (window->isOpen()) {
-		float deltaTime = getDeltaTime();
-		delayTimer -= deltaTime;
-		update(delayTimer);
+		elapsedTime = clock.getElapsedTime();
+		deltaTime += elapsedTime;
+
+		update(deltaTime);
 
 		draw();
 	}
@@ -194,20 +189,38 @@ void Engine::handleEvents()
 	}
 }
 
-void Engine::update(float delayTimer) {
+void Engine::update(sf::Time deltaTime) {
 	handleEvents();
 	updateMousePosition();
 
 
 	if (isBfsButtonSelected) {
-		bfsPathfinder.findRoad(mazeTable, startPos, endPos);
+		if (bfsPathfinder.isExitFound()) {
+			if (deltaTime >= PATHFINDER_DRAWING_PATH_DELAY) {
+				bfsPathfinder.drawRoad(mazeTable, startPos);
+				clock.restart();
+			}
+		}
+		else {
+			if (deltaTime >= PATHFINDER_CHECKED_CELLS_DELAY) {
+				bfsPathfinder.findRoad(mazeTable, startPos, endPos);
+				clock.restart();
+			}
+		}
 	}
 	else {
-		dfsPathfinder.findRoad(mazeTable, startPos, endPos);
-	}
-
-	if (delayTimer <= 0.0) {
-		delayTimer = PATHFINDER_DRAWING_PATH_DELAY.asSeconds();
+		if (dfsPathfinder.isExitFound()) {
+			if (deltaTime >= PATHFINDER_DRAWING_PATH_DELAY) {
+				dfsPathfinder.drawRoad(mazeTable, startPos);
+				clock.restart();
+			}
+		}
+		else {
+			if (deltaTime >= PATHFINDER_CHECKED_CELLS_DELAY) {
+				dfsPathfinder.findRoad(mazeTable, startPos, endPos);
+				clock.restart();
+			}
+		}
 	}
 }
 
