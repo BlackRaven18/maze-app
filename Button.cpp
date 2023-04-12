@@ -19,11 +19,25 @@ Button::Button(const std::string& buttonText, const sf::Vector2f& position, cons
     m_buttonText.setPosition(position + buttonSize / 2.0f);
 }
 
-Button::Button(const sf::Texture& buttonTexture, const sf::Vector2f& position, const sf::Color& outlineColor, const sf::Vector2f& buttonSize)
+/*Button::Button(const sf::Texture& buttonTexture, const sf::Vector2f& position, const sf::Color& outlineColor, const sf::Vector2f& buttonSize)
 {
     m_buttonSprite.setTexture(buttonTexture);
     m_buttonSprite.setPosition(position);
     m_buttonSprite.setScale(buttonSize.x / buttonTexture.getSize().x, buttonSize.y / buttonTexture.getSize().y);
+
+    m_buttonShape.setSize(buttonSize);
+    m_buttonShape.setPosition(position);
+}*/
+
+Button::Button(const std::string& buttonTexture, const sf::Vector2f& position, const sf::Color& outlineColor, const sf::Vector2f& buttonSize)
+{
+    sf::Texture texture;
+    if (!texture.loadFromFile(buttonTexture)) {
+        printf("Nie wczytano tekstury!");
+    }
+    m_buttonSprite.setTexture(texture);
+    m_buttonSprite.setPosition(position);
+    m_buttonSprite.setScale(buttonSize.x / texture.getSize().x, buttonSize.y / texture.getSize().y);
 
     m_buttonShape.setSize(buttonSize);
     m_buttonShape.setPosition(position);

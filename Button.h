@@ -10,9 +10,12 @@ public:
 
     Button(const std::string& buttonText, const sf::Vector2f& position, const sf::Font& font,
         const sf::Color& textColor, const sf::Color& buttonColor, const sf::Color& outlineColor, const sf::Vector2f& buttonSize);
-    Button(const sf::Texture& buttonTexture, const sf::Vector2f& position, const sf::Color& outlineColor, const sf::Vector2f& buttonSize);
+    Button(const std::string& buttonTexture, const sf::Vector2f& position, const sf::Color& outlineColor, const sf::Vector2f& buttonSize);
 
     bool isClicked(const sf::RenderWindow* window) const;
+    enum ButtonName {
+        START, RESTART, BOXWHITE, BOXGREEN, BOXRED, SAVE, BFSBTN, DFSBTN, ONEX, TWOX, FOURX
+    };
 
 private:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

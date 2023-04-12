@@ -211,7 +211,7 @@ void Engine::copyMazeTable(MazeCell** src, MazeCell** dst){
 
 void Engine::initializeButtons() {
 	//font.loadFromFile("arial.ttf");
-	buttonsTextures.resize(BUTTONS_NUM);
+	/*buttonsTextures.resize(BUTTONS_NUM);
 	buttonsTextures[0].loadFromFile("Textures/start.png");
 	buttonsTextures[1].loadFromFile("Textures/restart.png");
 	buttonsTextures[2].loadFromFile("Textures/boxwhite.png");
@@ -222,15 +222,27 @@ void Engine::initializeButtons() {
 	buttonsTextures[7].loadFromFile("Textures/DFS_BTN.png");
 	buttonsTextures[8].loadFromFile("Textures/1x.png");
 	buttonsTextures[9].loadFromFile("Textures/2x.png");
-	buttonsTextures[10].loadFromFile("Textures/4x.png");
+	buttonsTextures[10].loadFromFile("Textures/4x.png");*/
 
 	buttonsPos = { {100,630}, {250,630}, {1100,200}, {1100,300}, {1100,400}, {1100,500}, {400,630}, {482,630}, {1012, 100}, {1112, 100}, {1212, 100} };
 	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72}, {72,72}, {78,50}, {78,50}, {50,50}, {50,50}, {50, 50} };
 
 	buttons.resize(BUTTONS_NUM);
-	for (int i = 0; i < BUTTONS_NUM; i++) {
+	/*for (int i = 0; i < BUTTONS_NUM; i++) {
 		buttons[i] = Button(buttonsTextures[i], buttonsPos[i], sf::Color::White, buttonsSizes[i]);
-	}
+	}*/
+	buttons[0] = Button("Textures/start.png", { 100,630 }, sf::Color::White, { 100,50 });
+	ButtonName buttonName = START;
+	buttons[1] = Button("Textures/restart.png", { 250,630 }, sf::Color::White, { 100,50 });
+	buttons[2] = Button("Textures/boxwhite.png", { 1100,200 }, sf::Color::White, { 72,72 });
+	buttons[3] = Button("Textures/boxgreen.png", { 1100,300 }, sf::Color::White, { 72,72 });
+	buttons[4] = Button("Textures/boxred.png", { 1100,400 }, sf::Color::White, { 72,72 });
+	buttons[5] = Button("Textures/save.png", { 1100,500 }, sf::Color::White, { 72,72 });
+	buttons[6] = Button("Textures/BFS_BTN.png", { 400,630 }, sf::Color::White, { 78,50 });
+	buttons[7] = Button("Textures/DFS_BTN.png", { 482,630 }, sf::Color::White, { 78,50 });
+	buttons[8] = Button("Textures/1x.png", { 1012,100 }, sf::Color::White, { 50,50 });
+	buttons[9] = Button("Textures/2x.png", { 1112,100 }, sf::Color::White, { 50,50 });
+	buttons[10] = Button("Textures/4x.png", { 1212,100 }, sf::Color::White, { 50,50 });
 
 	isBfsButtonSelected = true;
 }
