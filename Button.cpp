@@ -1,4 +1,5 @@
 #include "Button.h"
+#include <iostream>
 
 Button::Button() {};
 
@@ -29,11 +30,12 @@ Button::Button(const std::string& buttonText, const sf::Vector2f& position, cons
     m_buttonShape.setPosition(position);
 }*/
 
-Button::Button(const std::string& buttonTexture, const sf::Vector2f& position, const sf::Color& outlineColor, const sf::Vector2f& buttonSize)
+Button::Button(const char* buttonTexture, const sf::Vector2f& position, const sf::Color& outlineColor, const sf::Vector2f& buttonSize)
 {
     sf::Texture texture;
-    if (!texture.loadFromFile(buttonTexture)) {
-        printf("Nie wczytano tekstury!");
+    printf("%s\n", buttonTexture);
+    if (!texture.loadFromFile(buttonTexture))
+    {
     }
     m_buttonSprite.setTexture(texture);
     m_buttonSprite.setPosition(position);
