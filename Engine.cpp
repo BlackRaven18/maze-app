@@ -272,8 +272,10 @@ void Engine::buttonSelect() {
 		window->draw(rectanglesel);
 	}
 	else {
-		sf::RectangleShape rectanglesel = ShapesAndCollisionsRep::createRectangle(buttonsPos[7].x, buttonsPos[7].y, buttonsSizes[7].x, buttonsSizes[7].y, sf::Color(0, 128, 0, 128));
-		window->draw(rectanglesel);
+		if (!isAlgorithmRunning) {
+			sf::RectangleShape rectanglesel = ShapesAndCollisionsRep::createRectangle(buttonsPos[7].x, buttonsPos[7].y, buttonsSizes[7].x, buttonsSizes[7].y, sf::Color(0, 128, 0, 128));
+			window->draw(rectanglesel);
+		}
 	}
 }
 
@@ -294,6 +296,10 @@ void Engine::addMazeElements()
 	//TODO: improve code structure to eliminate repetability
 	int i = mousePosition.y / mazeTableCellSize;
 	int j = mousePosition.x / mazeTableCellSize;
+
+	if (isAlgorithmRunning) {
+		return;
+	}
 
 	if (i < mazeTableRows && j < mazeTableColumns) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
