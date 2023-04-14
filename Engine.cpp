@@ -231,18 +231,17 @@ void Engine::initializeButtons() {
 	/*for (int i = 0; i < BUTTONS_NUM; i++) {
 		buttons[i] = Button(buttonsTextures[i], buttonsPos[i], sf::Color::White, buttonsSizes[i]);
 	}*/
-	buttons[0] = Button("Textures/start.png", { 100,630 }, sf::Color::White, { 100,50 });
-	ButtonName buttonName = START;
-	buttons[1] = Button("Textures/restart.png", { 250,630 }, sf::Color::White, { 100,50 });
-	buttons[2] = Button("Textures/boxwhite.png", { 1100,200 }, sf::Color::White, { 72,72 });
-	buttons[3] = Button("Textures/boxgreen.png", { 1100,300 }, sf::Color::White, { 72,72 });
-	buttons[4] = Button("Textures/boxred.png", { 1100,400 }, sf::Color::White, { 72,72 });
-	buttons[5] = Button("Textures/save.png", { 1100,500 }, sf::Color::White, { 72,72 });
-	buttons[6] = Button("Textures/BFS_BTN.png", { 400,630 }, sf::Color::White, { 78,50 });
-	buttons[7] = Button("Textures/DFS_BTN.png", { 482,630 }, sf::Color::White, { 78,50 });
-	buttons[8] = Button("Textures/1x.png", { 1012,100 }, sf::Color::White, { 50,50 });
-	buttons[9] = Button("Textures/2x.png", { 1112,100 }, sf::Color::White, { 50,50 });
-	buttons[10] = Button("Textures/4x.png", { 1212,100 }, sf::Color::White, { 50,50 });
+	buttons[START] = Button("Textures/start.png", { 100,630 }, sf::Color::White, { 100,50 });
+	buttons[RESTART] = Button("Textures/restart.png", { 250,630 }, sf::Color::White, { 100,50 });
+	buttons[BOXWHITE] = Button("Textures/boxwhite.png", { 1100,200 }, sf::Color::White, { 72,72 });
+	buttons[BOXGREEN] = Button("Textures/boxgreen.png", { 1100,300 }, sf::Color::White, { 72,72 });
+	buttons[BOXRED] = Button("Textures/boxred.png", { 1100,400 }, sf::Color::White, { 72,72 });
+	buttons[SAVE] = Button("Textures/save.png", { 1100,500 }, sf::Color::White, { 72,72 });
+	buttons[BFSBTN] = Button("Textures/BFS_BTN.png", { 400,630 }, sf::Color::White, { 78,50 });
+	buttons[DFSBTN] = Button("Textures/DFS_BTN.png", { 482,630 }, sf::Color::White, { 78,50 });
+	buttons[ONEX] = Button("Textures/1x.png", { 1012,100 }, sf::Color::White, { 50,50 });
+	buttons[TWOX] = Button("Textures/2x.png", { 1112,100 }, sf::Color::White, { 50,50 });
+	buttons[FOURX] = Button("Textures/4x.png", { 1212,100 }, sf::Color::White, { 50,50 });
 
 	isBfsButtonSelected = true;
 }
