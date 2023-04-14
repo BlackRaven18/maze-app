@@ -3,6 +3,8 @@
 
 Button::Button() {};
 
+std::vector<sf::Texture> texture;
+
 Button::Button(const std::string& buttonText, const sf::Vector2f& position, const sf::Font& font,
     const sf::Color& textColor, const sf::Color& buttonColor, const sf::Color& outlineColor, const sf::Vector2f& buttonSize)
 {
@@ -32,14 +34,16 @@ Button::Button(const std::string& buttonText, const sf::Vector2f& position, cons
 
 Button::Button(const char* buttonTexture, const sf::Vector2f& position, const sf::Color& outlineColor, const sf::Vector2f& buttonSize)
 {
-    sf::Texture texture;
     printf("%s\n", buttonTexture);
-    if (!texture.loadFromFile(buttonTexture))
-    {
+    texture.resize(11);
+    int i=0;
+    while(texture[i].getSize().x > 0) {
+        i++;
     }
-    m_buttonSprite.setTexture(texture);
+    texture[i].loadFromFile(buttonTexture);
+    m_buttonSprite.setTexture(texture[i]);
     m_buttonSprite.setPosition(position);
-    m_buttonSprite.setScale(buttonSize.x / texture.getSize().x, buttonSize.y / texture.getSize().y);
+    m_buttonSprite.setScale(buttonSize.x / texture[i].getSize().x, buttonSize.y / texture[i].getSize().y);
 
     m_buttonShape.setSize(buttonSize);
     m_buttonShape.setPosition(position);
