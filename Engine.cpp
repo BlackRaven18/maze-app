@@ -93,14 +93,13 @@ void Engine::initialize() {
 }
 
 void Engine::startMainLoop() {
-	sf::Time elapsedTime;
-	sf::Time deltaTime;
+	elapsedTime = 0.0f;
+	
 	while (window->isOpen()) {
-		elapsedTime = clock.getElapsedTime();
-		deltaTime += elapsedTime;
+		elapsedTime += clock.restart().asSeconds();
 
-		update(deltaTime);
-
+		update();
+		
 		draw();
 	}
 }
@@ -189,36 +188,37 @@ void Engine::handleEvents()
 	}
 }
 
-void Engine::update(sf::Time deltaTime) {
+
+void Engine::update() {
 	handleEvents();
 	updateMousePosition();
 
 
 	if (isBfsButtonSelected) {
 		if (bfsPathfinder.isExitFound()) {
-			if (deltaTime >= PATHFINDER_DRAWING_PATH_DELAY) {
+			if (elapsedTime >= PATHFINDER_DRAWING_PATH_DELAY.asSeconds()) {
 				bfsPathfinder.drawRoad(mazeTable, startPos);
-				clock.restart();
+				elapsedTime = 0.0f;
 			}
 		}
 		else {
-			if (deltaTime >= PATHFINDER_CHECKED_CELLS_DELAY) {
+			if (elapsedTime >= PATHFINDER_CHECKED_CELLS_DELAY.asSeconds()) {
 				bfsPathfinder.findRoad(mazeTable, startPos, endPos);
-				clock.restart();
+				elapsedTime = 0.0f;
 			}
 		}
 	}
 	else {
 		if (dfsPathfinder.isExitFound()) {
-			if (deltaTime >= PATHFINDER_DRAWING_PATH_DELAY) {
+			if (elapsedTime >= PATHFINDER_DRAWING_PATH_DELAY.asSeconds()) {
 				dfsPathfinder.drawRoad(mazeTable, startPos);
-				clock.restart();
+				elapsedTime = 0.0f;
 			}
 		}
 		else {
-			if (deltaTime >= PATHFINDER_CHECKED_CELLS_DELAY) {
+			if (elapsedTime >= PATHFINDER_CHECKED_CELLS_DELAY.asSeconds()) {
 				dfsPathfinder.findRoad(mazeTable, startPos, endPos);
-				clock.restart();
+				elapsedTime = 0.0f;
 			}
 		}
 	}
@@ -314,8 +314,6 @@ void Engine::drawMazeTable() {
 			mazeTable[i][j].draw(window);
 		}
 	}
-
-
 }
 
 void Engine::saveMazeTable() {

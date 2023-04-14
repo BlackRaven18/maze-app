@@ -15,8 +15,8 @@ class Engine {
 private:
 
 	int MODE;
-	
-	sf::RenderWindow *window;
+
+	sf::RenderWindow* window;
 	MazeCell mazeTable[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
 	MazeCell mazeTableCopy[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
 	sf::Vector2f mousePosition;
@@ -25,7 +25,7 @@ private:
 	std::vector<sf::Vector2f> buttonsSizes;
 	std::vector<sf::Texture> buttonsTextures;
 	std::vector<Button> buttons;
-	
+
 	bool isBfsButtonSelected;
 	//sf::Font font;
 
@@ -37,7 +37,9 @@ private:
 	DFSPathfinder dfsPathfinder;
 	sf::Vector2i startPos;
 	sf::Vector2i endPos;
+
 	sf::Clock clock;
+	float elapsedTime;
 
 	//------------------
 
@@ -58,7 +60,7 @@ private:
 	void handleEvents();
 
 	void initialize();
-	void update(sf::Time deltaTime);
+	void update();
 	void draw();
 
 public:
