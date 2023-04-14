@@ -19,7 +19,7 @@ public:
 
 private:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
+    std::vector<sf::Texture> texture;
     sf::RectangleShape m_buttonShape;
     sf::Text m_buttonText;
     sf::Sprite m_buttonSprite;
