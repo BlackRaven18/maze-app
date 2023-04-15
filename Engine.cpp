@@ -58,7 +58,7 @@ void Engine::handleEvents()
 
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
-			if (buttons[0].isClicked(window)) {
+			if (buttons[0]->isClicked(window)) {
 				if (isBfsButtonSelected == true) {
 					// BFS algorithm
 					if (!bfsPathfinder.isRunning()) {
@@ -76,7 +76,7 @@ void Engine::handleEvents()
 				}
 			}
 
-			if (buttons[1].isClicked(window))
+			if (buttons[1]->isClicked(window))
 			{
 				if (isBfsButtonSelected) {
 					bfsPathfinder.stop();
@@ -90,34 +90,34 @@ void Engine::handleEvents()
 
 			//TODO: pomy�le� czy to powinno tu by�
 
-			if (buttons[2].isClicked(window))
+			if (buttons[2]->isClicked(window))
 			{
 				this->MODE = PUT_WALL;
 			}
-			else if (buttons[3].isClicked(window)) {
+			else if (buttons[3]->isClicked(window)) {
 				this->MODE = PUT_START_POINT;
 			}
-			else if (buttons[4].isClicked(window)) {
+			else if (buttons[4]->isClicked(window)) {
 				this->MODE = PUT_END_POINT;
 			}
-			else if (buttons[5].isClicked(window)) {
+			else if (buttons[5]->isClicked(window)) {
 				saveMazeTable();
 			}
-			else if (buttons[6].isClicked(window)) {
+			else if (buttons[6]->isClicked(window)) {
 				isBfsButtonSelected = true;
 				std::cout << "BFS" << std::endl;
 			}
-			else if (buttons[7].isClicked(window)) {
+			else if (buttons[7]->isClicked(window)) {
 				isBfsButtonSelected = false;
 				std::cout << "DFS" << std::endl;
 			}
-			else if (buttons[8].isClicked(window)) {
+			else if (buttons[8]->isClicked(window)) {
 				selectMaze(mazeSizeType, SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
 			}
-			else if (buttons[9].isClicked(window)) {
+			else if (buttons[9]->isClicked(window)) {
 				selectMaze(mazeSizeType, MEDIUM, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS, MEDIUM_MAZE_CELL_SIZE, MEDIUM_MAZE_FILENAME);
 			}
-			else if (buttons[10].isClicked(window)) {
+			else if (buttons[10]->isClicked(window)) {
 				selectMaze(mazeSizeType, BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE, BIG_MAZE_FILENAME);
 			}
 		}
@@ -231,17 +231,17 @@ void Engine::initializeButtons() {
 	/*for (int i = 0; i < BUTTONS_NUM; i++) {
 		buttons[i] = Button(buttonsTextures[i], buttonsPos[i], sf::Color::White, buttonsSizes[i]);
 	}*/
-	buttons[START] = Button("Textures/start.png", { 100,630 }, sf::Color::White, { 100,50 });
-	buttons[RESTART] = Button("Textures/restart.png", { 250,630 }, sf::Color::White, { 100,50 });
-	buttons[BOXWHITE] = Button("Textures/boxwhite.png", { 1100,200 }, sf::Color::White, { 72,72 });
-	buttons[BOXGREEN] = Button("Textures/boxgreen.png", { 1100,300 }, sf::Color::White, { 72,72 });
-	buttons[BOXRED] = Button("Textures/boxred.png", { 1100,400 }, sf::Color::White, { 72,72 });
-	buttons[SAVE] = Button("Textures/save.png", { 1100,500 }, sf::Color::White, { 72,72 });
-	buttons[BFSBTN] = Button("Textures/BFS_BTN.png", { 400,630 }, sf::Color::White, { 78,50 });
-	buttons[DFSBTN] = Button("Textures/DFS_BTN.png", { 482,630 }, sf::Color::White, { 78,50 });
-	buttons[ONEX] = Button("Textures/1x.png", { 1012,100 }, sf::Color::White, { 50,50 });
-	buttons[TWOX] = Button("Textures/2x.png", { 1112,100 }, sf::Color::White, { 50,50 });
-	buttons[FOURX] = Button("Textures/4x.png", { 1212,100 }, sf::Color::White, { 50,50 });
+	buttons[START] = new Button("Textures/start.png", { 100,630 }, sf::Color::White, { 100,50 });
+	buttons[RESTART] = new Button("Textures/restart.png", { 250,630 }, sf::Color::White, { 100,50 });
+	buttons[BOXWHITE] = new Button("Textures/boxwhite.png", { 1100,200 }, sf::Color::White, { 72,72 });
+	buttons[BOXGREEN] = new Button("Textures/boxgreen.png", { 1100,300 }, sf::Color::White, { 72,72 });
+	buttons[BOXRED] = new Button("Textures/boxred.png", { 1100,400 }, sf::Color::White, { 72,72 });
+	buttons[SAVE] = new Button("Textures/save.png", { 1100,500 }, sf::Color::White, { 72,72 });
+	buttons[BFSBTN] = new Button("Textures/BFS_BTN.png", { 400,630 }, sf::Color::White, { 78,50 });
+	buttons[DFSBTN] = new Button("Textures/DFS_BTN.png", { 482,630 }, sf::Color::White, { 78,50 });
+	buttons[ONEX] = new Button("Textures/1x.png", { 1012,100 }, sf::Color::White, { 50,50 });
+	buttons[TWOX] = new Button("Textures/2x.png", { 1112,100 }, sf::Color::White, { 50,50 });
+	buttons[FOURX] = new Button("Textures/4x.png", { 1212,100 }, sf::Color::White, { 50,50 });
 
 	isBfsButtonSelected = true;
 }
@@ -249,7 +249,7 @@ void Engine::initializeButtons() {
 
 void Engine::drawButtons() {
 	for (auto b : buttons) {
-		window->draw(b);
+		window->draw(*b);
 	}
 }
 
