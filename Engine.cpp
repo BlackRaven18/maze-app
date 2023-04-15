@@ -76,7 +76,7 @@ void Engine::handleEvents()
 				else {
 					dfsPathfinder.stop();
 				}
-
+				isAlgorithmRunning = false;
 				copyMazeTable(mazeTableCopy, mazeTable);
 			}
 
@@ -141,8 +141,6 @@ void Engine::update() {
 
 	if ((bfsPathfinder.isRunning() == true) || (dfsPathfinder.isRunning() == true)) {
 		isAlgorithmRunning = true;
-	} else {
-		isAlgorithmRunning = false;
 	}
 
 	if (isBfsButtonSelected) {
