@@ -25,14 +25,14 @@ private:
 	bool isInitializedWithStartData();
 
 	void setExitFound(bool exitFound);
-	bool isExitFound();
+	
 public:
 	DFSPathfinder();
 
-	void findRoad(MazeCell **mazeTable, int rows, int columns,  sf::Vector2i startPoint, sf::Vector2i endPoint);
-
+	void findRoad(MazeCell** mazeTable, int rows, int columns, sf::Vector2i startPoint, sf::Vector2i endPoint);
+	void drawRoad(MazeCell** mazeTable, int rows, int columns, sf::Vector2i startPoint);
 	bool isRunning();
-
+	bool isExitFound();
 	void start();
 	void stop();
 };

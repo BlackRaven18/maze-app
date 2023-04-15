@@ -45,6 +45,10 @@ private:
 	//------------------
 
 
+	sf::Clock clock;
+	float elapsedTime;
+
+	//------------------
 	void setMazeParameters(int size, int rows, int columns, int cellSize);
 
 	void copyMazeTable(MazeCell **src, MazeCell **dst);

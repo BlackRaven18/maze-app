@@ -32,7 +32,6 @@ void BFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Ve
 		return;
 	}
 
-
 	if (!isInitializedWithStartData()) {
 		mazeTable[startPoint.x][startPoint.y].setVisited(true);
 		queue.push(startPoint);
@@ -40,27 +39,6 @@ void BFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Ve
 		setInitializedWithStartData(true);
 	}
 
-	if (isExitFound()) {
-		if(!mazeTable[tmpPoint.x][tmpPoint.y].isVisited()) {
-			switch (mazeTable[tmpPoint.x][tmpPoint.y].getId()) {
-			case LEFT: mazeTable[tmpPoint.x++][tmpPoint.y].setVisited(true); break;
-			case UP: mazeTable[tmpPoint.x][tmpPoint.y++].setVisited(true); break;
-			case RIGHT: mazeTable[tmpPoint.x--][tmpPoint.y].setVisited(true); break;
-			case DOWN: mazeTable[tmpPoint.x][tmpPoint.y--].setVisited(true); break;
-			}
-			mazeTable[tmpPoint.x][tmpPoint.y].setColor(MAZE_TRACK_COLOR);
-
-			sf::sleep(PATHFINDER_DRAWING_PATH_DELAY);
-		}
-
-		if (tmpPoint == startPoint) {
-
-			std::cout << "Znaleziono droge!" << std::endl;
-			stop();
-		}
-
-		return;
-	}
 	if (!isExitFound()) {
 
 		if (queue.empty()) {
@@ -70,8 +48,6 @@ void BFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Ve
 
 		sf::Vector2i point = queue.front();
 		queue.pop();
-
-		sf::sleep(PATHFINDER_CHECKED_CELLS_DELAY);
 
 		if (point.x == endPoint.x && point.y == endPoint.y) {
 
@@ -85,6 +61,25 @@ void BFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Ve
 		if (point.x + 1 < rows) checkChamber(mazeTable, rows, columns, RIGHT, point.x + 1, point.y);
 		if (point.y + 1 < columns) checkChamber(mazeTable, rows, columns, DOWN, point.x, point.y + 1);
 
+	}
+}
+
+void BFSPathfinder::drawRoad(MazeCell** mazeTable, int rows, int columns, sf::Vector2i startPoint)
+{
+	if (!mazeTable[tmpPoint.x][tmpPoint.y].isVisited()) {
+		switch (mazeTable[tmpPoint.x][tmpPoint.y].getId()) {
+		case LEFT: mazeTable[tmpPoint.x++][tmpPoint.y].setVisited(true); break;
+		case UP: mazeTable[tmpPoint.x][tmpPoint.y++].setVisited(true); break;
+		case RIGHT: mazeTable[tmpPoint.x--][tmpPoint.y].setVisited(true); break;
+		case DOWN: mazeTable[tmpPoint.x][tmpPoint.y--].setVisited(true); break;
+		}
+		mazeTable[tmpPoint.x][tmpPoint.y].setColor(MAZE_TRACK_COLOR);
+	}
+
+	if (tmpPoint == startPoint) {
+
+		std::cout << "Znaleziono droge!" << std::endl;
+		stop();
 	}
 }
 

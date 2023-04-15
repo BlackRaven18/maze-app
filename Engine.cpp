@@ -31,8 +31,13 @@ void Engine::initialize() {
 }
 
 void Engine::startMainLoop() {
+	elapsedTime = 0.0f;
+	
 	while (window->isOpen()) {
+		elapsedTime += clock.restart().asSeconds();
+
 		update();
+		
 		draw();
 	}
 
@@ -44,8 +49,11 @@ void Engine::startMainLoop() {
 void Engine::handleEvents()
 {
 	sf::Event event;
+
 	while (window->pollEvent(event))
 	{
+
+
 		if (event.type == sf::Event::Closed) {
 			stop();
 			window->close();
@@ -84,7 +92,7 @@ void Engine::handleEvents()
 				else {
 					dfsPathfinder.stop();
 				}
-				
+
 				copyMazeTable(mazeTableCopy, mazeTable);
 			}
 
@@ -124,16 +132,41 @@ void Engine::handleEvents()
 	}
 }
 
+
 void Engine::update() {
 	handleEvents();
 	updateMousePosition();
 
+
 	if (isBfsButtonSelected) {
-		bfsPathfinder.findRoad(mazeTable, mazeTableRows, mazeTableColumns,startPoint, endPoint);
+		if (bfsPathfinder.isExitFound()) {
+			if (elapsedTime >= PATHFINDER_DRAWING_PATH_DELAY.asSeconds()) {
+				bfsPathfinder.drawRoad(mazeTable, mazeTableRows, mazeTableColumns,startPoint);
+				elapsedTime = 0.0f;
+			}
+		}
+		else {
+			if (elapsedTime >= PATHFINDER_CHECKED_CELLS_DELAY.asSeconds()) {
+				bfsPathfinder.findRoad(mazeTable, mazeTableRows, mazeTableColumns, startPoint, endPoint);
+				elapsedTime = 0.0f;
+			}
+		}
 	}
 	else {
-		dfsPathfinder.findRoad(mazeTable, mazeTableRows, mazeTableColumns, startPoint, endPoint);
+		if (dfsPathfinder.isExitFound()) {
+			if (elapsedTime >= PATHFINDER_DRAWING_PATH_DELAY.asSeconds()) {
+				dfsPathfinder.drawRoad(mazeTable, mazeTableRows, mazeTableColumns, startPoint);
+				elapsedTime = 0.0f;
+			}
+		}
+		else {
+			if (elapsedTime >= PATHFINDER_CHECKED_CELLS_DELAY.asSeconds()) {
+				dfsPathfinder.findRoad(mazeTable, mazeTableRows, mazeTableColumns, startPoint, endPoint);
+				elapsedTime = 0.0f;
+			}
+		}
 	}
+		
 }
 
 void Engine::draw() {
@@ -147,6 +180,7 @@ void Engine::draw() {
 	
 	window->display();
 }
+
 
 void Engine::updateMousePosition() {
 	sf::Vector2i pixelPos = sf::Mouse::getPosition(*window);
@@ -319,8 +353,6 @@ void Engine::drawMazeTable() {
 			mazeTable[i][j].draw(window);
 		}
 	}
-
-
 }
 
 void Engine::saveMazeTable() {
