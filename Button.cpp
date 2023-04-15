@@ -1,5 +1,4 @@
 #include "Button.h"
-#include <iostream>
 
 Button::Button() {};
 
@@ -51,4 +50,17 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
         target.draw(m_buttonShape, states);
         target.draw(m_buttonText, states);
     }
+}
+
+float Button::getX() {
+    return m_buttonShape.getPosition().x;
+}
+float Button::getY() {
+    return m_buttonShape.getPosition().y;
+}
+float Button::getWidth() {
+    return m_buttonShape.getSize().x;
+}
+float Button::getHeight() {
+    return m_buttonShape.getSize().y;
 }
