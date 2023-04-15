@@ -27,7 +27,7 @@ private:
 	std::vector<sf::Vector2f> buttonsPos;
 	std::vector<sf::Vector2f> buttonsSizes;
 	std::vector<sf::Texture> buttonsTextures;
-	std::vector<Button> buttons;
+	std::vector<Button*> buttons;
 	
 	bool isBfsButtonSelected;
 	
