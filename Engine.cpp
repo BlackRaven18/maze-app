@@ -58,7 +58,7 @@ void Engine::handleEvents()
 
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
-			if (buttons[0]->isClicked(window)) {
+			if (buttons[START_BTN]->isClicked(window)) {
 				if (isBfsButtonSelected == true) {
 					// BFS algorithm
 					if (!bfsPathfinder.isRunning()) {
@@ -76,7 +76,7 @@ void Engine::handleEvents()
 				}
 			}
 
-			if (buttons[1]->isClicked(window))
+			if (buttons[RESTART_BTN]->isClicked(window))
 			{
 				if (isBfsButtonSelected) {
 					bfsPathfinder.stop();
@@ -90,44 +90,37 @@ void Engine::handleEvents()
 
 			//TODO: pomy�le� czy to powinno tu by�
 
-			if (buttons[2]->isClicked(window))
+			if (buttons[BOXWHITE_BTN]->isClicked(window))
 			{
 				this->MODE = PUT_WALL;
 			}
-			else if (buttons[3]->isClicked(window)) {
+			else if (buttons[BOXGREEN_BTN]->isClicked(window)) {
 				this->MODE = PUT_START_POINT;
 			}
-			else if (buttons[4]->isClicked(window)) {
+			else if (buttons[BOXRED_BTN]->isClicked(window)) {
 				this->MODE = PUT_END_POINT;
 			}
-			else if (buttons[5]->isClicked(window)) {
+			else if (buttons[SAVE_BTN]->isClicked(window)) {
 				saveMazeTable();
 			}
-			else if (buttons[6]->isClicked(window)) {
+			else if (buttons[BFS_BTN]->isClicked(window)) {
 				isBfsButtonSelected = true;
-				std::cout << "BFS" << std::endl;
 			}
-			else if (buttons[7]->isClicked(window)) {
+			else if (buttons[DFS_BTN]->isClicked(window)) {
 				isBfsButtonSelected = false;
 				std::cout << "DFS" << std::endl;
 			}
-			else if (buttons[8]->isClicked(window)) {
+			else if (buttons[ONEX_BTN]->isClicked(window)) {
 				selectMaze(mazeSizeType, SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
 			}
-			else if (buttons[9]->isClicked(window)) {
+			else if (buttons[TWOX_BTN]->isClicked(window)) {
 				selectMaze(mazeSizeType, MEDIUM, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS, MEDIUM_MAZE_CELL_SIZE, MEDIUM_MAZE_FILENAME);
 			}
-			else if (buttons[10]->isClicked(window)) {
+			else if (buttons[FOURX_BTN]->isClicked(window)) {
 				selectMaze(mazeSizeType, BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE, BIG_MAZE_FILENAME);
 			}
 		}
 
-		//if (event.type == sf::Event::Resized)
-		//{
-		//	// update the view to the new size of the window
-		//	sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-		//	window -> setView(sf::View(visibleArea));
-		//}
 	}
 }
 
@@ -211,37 +204,19 @@ void Engine::copyMazeTable(MazeCell** src, MazeCell** dst){
 
 void Engine::initializeButtons() {
 	//font.loadFromFile("arial.ttf");
-	/*buttonsTextures.resize(BUTTONS_NUM);
-	buttonsTextures[0].loadFromFile("Textures/start.png");
-	buttonsTextures[1].loadFromFile("Textures/restart.png");
-	buttonsTextures[2].loadFromFile("Textures/boxwhite.png");
-	buttonsTextures[3].loadFromFile("Textures/boxgreen.png");
-	buttonsTextures[4].loadFromFile("Textures/boxred.png");
-	buttonsTextures[5].loadFromFile("Textures/save.png");
-	buttonsTextures[6].loadFromFile("Textures/BFS_BTN.png");
-	buttonsTextures[7].loadFromFile("Textures/DFS_BTN.png");
-	buttonsTextures[8].loadFromFile("Textures/1x.png");
-	buttonsTextures[9].loadFromFile("Textures/2x.png");
-	buttonsTextures[10].loadFromFile("Textures/4x.png");*/
-
-	buttonsPos = { {100,630}, {250,630}, {1100,200}, {1100,300}, {1100,400}, {1100,500}, {400,630}, {482,630}, {1012, 100}, {1112, 100}, {1212, 100} };
-	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72}, {72,72}, {78,50}, {78,50}, {50,50}, {50,50}, {50, 50} };
-
 	buttons.resize(BUTTONS_NUM);
-	/*for (int i = 0; i < BUTTONS_NUM; i++) {
-		buttons[i] = Button(buttonsTextures[i], buttonsPos[i], sf::Color::White, buttonsSizes[i]);
-	}*/
-	buttons[START] = new Button("Textures/start.png", { 100,630 }, sf::Color::White, { 100,50 });
-	buttons[RESTART] = new Button("Textures/restart.png", { 250,630 }, sf::Color::White, { 100,50 });
-	buttons[BOXWHITE] = new Button("Textures/boxwhite.png", { 1100,200 }, sf::Color::White, { 72,72 });
-	buttons[BOXGREEN] = new Button("Textures/boxgreen.png", { 1100,300 }, sf::Color::White, { 72,72 });
-	buttons[BOXRED] = new Button("Textures/boxred.png", { 1100,400 }, sf::Color::White, { 72,72 });
-	buttons[SAVE] = new Button("Textures/save.png", { 1100,500 }, sf::Color::White, { 72,72 });
-	buttons[BFSBTN] = new Button("Textures/BFS_BTN.png", { 400,630 }, sf::Color::White, { 78,50 });
-	buttons[DFSBTN] = new Button("Textures/DFS_BTN.png", { 482,630 }, sf::Color::White, { 78,50 });
-	buttons[ONEX] = new Button("Textures/1x.png", { 1012,100 }, sf::Color::White, { 50,50 });
-	buttons[TWOX] = new Button("Textures/2x.png", { 1112,100 }, sf::Color::White, { 50,50 });
-	buttons[FOURX] = new Button("Textures/4x.png", { 1212,100 }, sf::Color::White, { 50,50 });
+
+	buttons[START_BTN] = new Button("Textures/start.png", { 100,630 }, sf::Color::White, { 100,50 });
+	buttons[RESTART_BTN] = new Button("Textures/restart.png", { 250,630 }, sf::Color::White, { 100,50 });
+	buttons[BOXWHITE_BTN] = new Button("Textures/boxwhite.png", { 1100,200 }, sf::Color::White, { 72,72 });
+	buttons[BOXGREEN_BTN] = new Button("Textures/boxgreen.png", { 1100,300 }, sf::Color::White, { 72,72 });
+	buttons[BOXRED_BTN] = new Button("Textures/boxred.png", { 1100,400 }, sf::Color::White, { 72,72 });
+	buttons[SAVE_BTN] = new Button("Textures/save.png", { 1100,500 }, sf::Color::White, { 72,72 });
+	buttons[BFS_BTN] = new Button("Textures/BFS_BTN.png", { 400,630 }, sf::Color::White, { 78,50 });
+	buttons[DFS_BTN] = new Button("Textures/DFS_BTN.png", { 482,630 }, sf::Color::White, { 78,50 });
+	buttons[ONEX_BTN] = new Button("Textures/1x.png", { 1012,100 }, sf::Color::White, { 50,50 });
+	buttons[TWOX_BTN] = new Button("Textures/2x.png", { 1112,100 }, sf::Color::White, { 50,50 });
+	buttons[FOURX_BTN] = new Button("Textures/4x.png", { 1212,100 }, sf::Color::White, { 50,50 });
 
 	isBfsButtonSelected = true;
 }
@@ -255,12 +230,12 @@ void Engine::drawButtons() {
 
 void Engine::drawButtonsIllumination() {
 	for (int i = 0; i < BUTTONS_NUM; i++) {
-		sf::RectangleShape rectangleIlumination = ShapesAndCollisionsRep::createRectangle(buttonsPos[i].x, buttonsPos[i].y,
-			buttonsSizes[i].x, buttonsSizes[i].y, sf::Color(128, 128, 128, 128));
+		sf::RectangleShape rectangleIlumination = ShapesAndCollisionsRep::createRectangle(buttons[i]->getX(), buttons[i]->getY(),
+			buttons[i]->getWidth(), buttons[i]->getHeight(), sf::Color(128, 128, 128, 128));
 
 
 		if (ShapesAndCollisionsRep::isPointInRectangleArea(mousePosition.x, mousePosition.y, 
-			buttonsPos[i].x, buttonsPos[i].y, buttonsSizes[i].x, buttonsSizes[i].y)) {
+			buttons[i]->getX(), buttons[i]->getY(),buttons[i]->getWidth(), buttons[i]->getHeight())) {
 			window->draw(rectangleIlumination);
 
 		}
@@ -269,11 +244,13 @@ void Engine::drawButtonsIllumination() {
 
 void Engine::buttonSelect() {
 	if (isBfsButtonSelected == true) {
-		sf::RectangleShape rectanglesel = ShapesAndCollisionsRep::createRectangle(buttonsPos[6].x, buttonsPos[6].y, buttonsSizes[6].x, buttonsSizes[6].y, sf::Color(0, 128, 0, 128));
+		sf::RectangleShape rectanglesel = ShapesAndCollisionsRep::createRectangle(
+			buttons[BFS_BTN]->getX(), buttons[BFS_BTN]->getY(), buttons[BFS_BTN]->getWidth(), buttons[BFS_BTN]->getHeight(), sf::Color(0, 128, 0, 128));
 		window->draw(rectanglesel);
 	}
 	else {
-		sf::RectangleShape rectanglesel = ShapesAndCollisionsRep::createRectangle(buttonsPos[7].x, buttonsPos[7].y, buttonsSizes[7].x, buttonsSizes[7].y, sf::Color(0, 128, 0, 128));
+		sf::RectangleShape rectanglesel = ShapesAndCollisionsRep::createRectangle(
+			buttons[DFS_BTN]->getX(), buttons[DFS_BTN]->getY(), buttons[DFS_BTN]->getWidth(), buttons[DFS_BTN]->getHeight(), sf::Color(0, 128, 0, 128));
 		window->draw(rectanglesel);
 	}
 }
