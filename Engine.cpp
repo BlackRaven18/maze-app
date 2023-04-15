@@ -26,6 +26,8 @@ void Engine::initialize() {
 
 	this->engineRunning = true;
 
+	isAlgorithmRunning = false;
+
 	initializeMazeTable(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
 	initializeButtons();
 }
@@ -66,24 +68,6 @@ void Engine::handleEvents()
 
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
-			if (buttons[START_BTN]->isClicked(window)) {
-				if (isBfsButtonSelected == true) {
-					// BFS algorithm
-					if (!bfsPathfinder.isRunning()) {
-						copyMazeTable(mazeTable, mazeTableCopy);
-						bfsPathfinder.start();
-					}
-				}
-
-				if (isBfsButtonSelected == false) {
-					// DFS algorithm
-					if (!dfsPathfinder.isRunning()) {
-						copyMazeTable(mazeTable, mazeTableCopy);
-						dfsPathfinder.start();
-					}
-				}
-			}
-
 			if (buttons[RESTART_BTN]->isClicked(window))
 			{
 				if (isBfsButtonSelected) {
@@ -96,39 +80,57 @@ void Engine::handleEvents()
 				copyMazeTable(mazeTableCopy, mazeTable);
 			}
 
-			//TODO: pomy�le� czy to powinno tu by�
+			if (!isAlgorithmRunning) {
+				if (buttons[START_BTN]->isClicked(window)) {
+					if (isBfsButtonSelected == true) {
+						// BFS algorithm
+						if (!bfsPathfinder.isRunning()) {
+							copyMazeTable(mazeTable, mazeTableCopy);
+							bfsPathfinder.start();
+						}
+					}
 
-			if (buttons[BOXWHITE_BTN]->isClicked(window))
-			{
-				this->MODE = PUT_WALL;
-			}
-			else if (buttons[BOXGREEN_BTN]->isClicked(window)) {
-				this->MODE = PUT_START_POINT;
-			}
-			else if (buttons[BOXRED_BTN]->isClicked(window)) {
-				this->MODE = PUT_END_POINT;
-			}
-			else if (buttons[SAVE_BTN]->isClicked(window)) {
-				saveMazeTable();
-			}
-			else if (buttons[BFS_BTN]->isClicked(window)) {
-				isBfsButtonSelected = true;
-			}
-			else if (buttons[DFS_BTN]->isClicked(window)) {
-				isBfsButtonSelected = false;
-				std::cout << "DFS" << std::endl;
-			}
-			else if (buttons[ONEX_BTN]->isClicked(window)) {
-				selectMaze(mazeSizeType, SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
-			}
-			else if (buttons[TWOX_BTN]->isClicked(window)) {
-				selectMaze(mazeSizeType, MEDIUM, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS, MEDIUM_MAZE_CELL_SIZE, MEDIUM_MAZE_FILENAME);
-			}
-			else if (buttons[FOURX_BTN]->isClicked(window)) {
-				selectMaze(mazeSizeType, BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE, BIG_MAZE_FILENAME);
+					if (isBfsButtonSelected == false) {
+						// DFS algorithm
+						if (!dfsPathfinder.isRunning()) {
+							copyMazeTable(mazeTable, mazeTableCopy);
+							dfsPathfinder.start();
+						}
+					}
+				}
+
+				//TODO: pomy�le� czy to powinno tu by�
+
+				if (buttons[BOXWHITE_BTN]->isClicked(window))
+				{
+					this->MODE = PUT_WALL;
+				}
+				else if (buttons[BOXGREEN_BTN]->isClicked(window)) {
+					this->MODE = PUT_START_POINT;
+				}
+				else if (buttons[BOXRED_BTN]->isClicked(window)) {
+					this->MODE = PUT_END_POINT;
+				}
+				else if (buttons[SAVE_BTN]->isClicked(window)) {
+					saveMazeTable();
+				}
+				else if (buttons[BFS_BTN]->isClicked(window)) {
+					isBfsButtonSelected = true;
+				}
+				else if (buttons[DFS_BTN]->isClicked(window)) {
+					isBfsButtonSelected = false;
+				}
+				else if (buttons[ONEX_BTN]->isClicked(window)) {
+					selectMaze(mazeSizeType, SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
+				}
+				else if (buttons[TWOX_BTN]->isClicked(window)) {
+					selectMaze(mazeSizeType, MEDIUM, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS, MEDIUM_MAZE_CELL_SIZE, MEDIUM_MAZE_FILENAME);
+				}
+				else if (buttons[FOURX_BTN]->isClicked(window)) {
+					selectMaze(mazeSizeType, BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE, BIG_MAZE_FILENAME);
+				}
 			}
 		}
-
 	}
 }
 
@@ -137,6 +139,11 @@ void Engine::update() {
 	handleEvents();
 	updateMousePosition();
 
+	if ((bfsPathfinder.isRunning() == true) || (dfsPathfinder.isRunning() == true)) {
+		isAlgorithmRunning = true;
+	} else {
+		isAlgorithmRunning = false;
+	}
 
 	if (isBfsButtonSelected) {
 		if (bfsPathfinder.isExitFound()) {
@@ -277,6 +284,7 @@ void Engine::drawButtonsIllumination() {
 }
 
 void Engine::buttonSelect() {
+
 	if (isBfsButtonSelected == true) {
 		sf::RectangleShape rectanglesel = ShapesAndCollisionsRep::createRectangle(
 			buttons[BFS_BTN]->getX(), buttons[BFS_BTN]->getY(), buttons[BFS_BTN]->getWidth(), buttons[BFS_BTN]->getHeight(), sf::Color(0, 128, 0, 128));
@@ -306,6 +314,10 @@ void Engine::addMazeElements()
 	//TODO: improve code structure to eliminate repetability
 	int i = mousePosition.y / mazeTableCellSize;
 	int j = mousePosition.x / mazeTableCellSize;
+
+	if (isAlgorithmRunning) {
+		return;
+	}
 
 	if (i < mazeTableRows && j < mazeTableColumns) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {

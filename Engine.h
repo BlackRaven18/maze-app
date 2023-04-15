@@ -39,6 +39,7 @@ private:
 	int mazeTableColumns;
 	int mazeTableCellSize;
 	
+	bool isAlgorithmRunning;
 
 	void updateMousePosition();
 	void initializeMazeTable(int rows, int columns, int cellSize, const char* filename);
