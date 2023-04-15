@@ -48,6 +48,23 @@ void Engine::startMainLoop() {
 	}
 }
 
+void Engine::generateMaze() {
+	sf::Vector2i startPoint(0, 0);
+
+	//clearing the maze table
+	for (int i = 0; i < mazeTableRows; i++) {
+		for (int j = 0; j < mazeTableColumns; j++) {
+			mazeTable[i][j].setId(MazeCellTypes::WALL);
+			mazeTable[i][j].setColor(MAZE_WALL_COLOR);
+			mazeTable[i][j].setVisited(false);
+			mazeTable[i][j].setChecked(false);
+		}
+	}
+
+
+}
+
+
 void Engine::handleEvents()
 {
 	sf::Event event;
@@ -131,6 +148,7 @@ void Engine::handleEvents()
 				}
 				else if (buttons[GENERATE_BTN]->isClicked(window)) {
 					std::cout << "Generate!" << std::endl;
+					generateMaze();
 				}
 			}
 		}

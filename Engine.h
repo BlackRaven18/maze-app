@@ -75,6 +75,9 @@ private:
 
 	void dispose();
 
+	//TODO: CHANGE THIS LATER
+	void generateMaze();
+
 public:
 	Engine();
 	void start();
