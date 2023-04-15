@@ -3,7 +3,13 @@
 #include <fstream>
 //komentarz do usuniecia
 Engine::Engine() {
+
 	this->MODE = PUT_WALL;
+
+	mazeTable = DynamicArrayRepository<MazeCell>::createTwoDimDynamicTable(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
+	mazeTableCopy = DynamicArrayRepository<MazeCell>::createTwoDimDynamicTable(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS);
+
+	setMazeParameters(SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE);
 }
 
 void Engine::start() {
@@ -11,84 +17,16 @@ void Engine::start() {
 	startMainLoop();
 }
 
-void Engine::updateMousePosition() {
-	sf::Vector2i pixelPos = sf::Mouse::getPosition(*window);
-	mousePosition = window->mapPixelToCoords(pixelPos);
-}
-
-void Engine::initializeMazeTable() {
-	std::ifstream mazeFile{ MAZE_FILENAME };
-	int TMP[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH]{};
-	for (int i{}; i != MAZE_TABLE_HEIGHT; ++i) {
-		for (int j{}; j != MAZE_TABLE_WIDTH; ++j) {
-			mazeFile >> TMP[i][j];
-		}
-	}
-	mazeFile.close();
-
-	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
-			mazeTable[i][j].setPosition(j * MAZE_TABLE_CELL_SIZE, i * MAZE_TABLE_CELL_SIZE);
-			mazeTable[i][j].setSize(MAZE_TABLE_CELL_SIZE, MAZE_TABLE_CELL_SIZE);
-			mazeTable[i][j].setId(TMP[i][j]);
-			mazeTable[i][j].setVisited(false);
-
-			switch (mazeTable[i][j].getId()) {
-			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); break;
-			case MazeCellTypes::WALL: mazeTable[i][j].setColor(MAZE_WALL_COLOR); break;
-			case MazeCellTypes::START_POINT: mazeTable[i][j].setColor(START_POINT_COLOR);
-				startPos.x = i;
-				startPos.y = j;
-				break;
-			case MazeCellTypes::END_POINT: mazeTable[i][j].setColor(END_POINT_COLOR);
-				endPos.x = i;
-				endPos.y = j;
-				break;
-			}
-		}
-	}
-
-	copyMazeTable(mazeTable, mazeTableCopy);
-}
-
-
-
-void Engine::copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]) {
-	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
-			dst[i][j] = src[i][j];
-		}
-	}
-}
-
-void Engine::initializeButtons() {
-	//font.loadFromFile("arial.ttf");
-	buttonsTextures.resize(BUTTONS_NUM);
-	buttonsTextures[0].loadFromFile("Textures/start.png");
-	buttonsTextures[1].loadFromFile("Textures/restart.png");
-	buttonsTextures[2].loadFromFile("Textures/boxwhite.png");
-	buttonsTextures[3].loadFromFile("Textures/boxgreen.png");
-	buttonsTextures[4].loadFromFile("Textures/boxred.png");
-	buttonsTextures[5].loadFromFile("Textures/save.png");
-	buttonsTextures[6].loadFromFile("Textures/BFS_BTN.png");
-	buttonsTextures[7].loadFromFile("Textures/DFS_BTN.png");
-
-	buttonsPos = { {100,630}, {250,630}, {1100,200}, {1100,300}, {1100,400}, {1100,500}, {400,630}, {482,630} };
-	buttonsSizes = { {100,50}, {100,50}, {72,72}, {72,72}, {72,72}, {72,72}, {78,50}, {78,50} };
-
-	buttons.resize(BUTTONS_NUM);
-	for (int i = 0; i < BUTTONS_NUM; i++) {
-		buttons[i] = Button(buttonsTextures[i], buttonsPos[i], sf::Color::White, buttonsSizes[i]);
-	}
-
-	isBfsButtonSelected = true;
+void Engine::stop() {
+	this->engineRunning = false;
 }
 
 void Engine::initialize() {
 	this->window = new sf::RenderWindow(sf::VideoMode(APP_WIDTH, APP_HEIGHT), APP_TITLE);
 
+	this->engineRunning = true;
 
-	initializeMazeTable();
+	initializeMazeTable(SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
 	initializeButtons();
 }
 
@@ -102,6 +40,10 @@ void Engine::startMainLoop() {
 		
 		draw();
 	}
+
+	if (!engineRunning) {
+		dispose();
+	}
 }
 
 void Engine::handleEvents()
@@ -113,16 +55,18 @@ void Engine::handleEvents()
 
 
 		if (event.type == sf::Event::Closed) {
+			stop();
 			window->close();
 		}
 
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
+			stop();
 			window->close();
 		}
 
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
-			if (buttons[0].isClicked(window)) {
+			if (buttons[START_BTN]->isClicked(window)) {
 				if (isBfsButtonSelected == true) {
 					// BFS algorithm
 					if (!bfsPathfinder.isRunning()) {
@@ -140,7 +84,7 @@ void Engine::handleEvents()
 				}
 			}
 
-			if (buttons[1].isClicked(window))
+			if (buttons[RESTART_BTN]->isClicked(window))
 			{
 				if (isBfsButtonSelected) {
 					bfsPathfinder.stop();
@@ -154,37 +98,37 @@ void Engine::handleEvents()
 
 			//TODO: pomy�le� czy to powinno tu by�
 
-			if (buttons[2].isClicked(window))
+			if (buttons[BOXWHITE_BTN]->isClicked(window))
 			{
 				this->MODE = PUT_WALL;
 			}
-			else if (buttons[3].isClicked(window)) {
+			else if (buttons[BOXGREEN_BTN]->isClicked(window)) {
 				this->MODE = PUT_START_POINT;
 			}
-			else if (buttons[4].isClicked(window)) {
+			else if (buttons[BOXRED_BTN]->isClicked(window)) {
 				this->MODE = PUT_END_POINT;
 			}
-			else if (buttons[5].isClicked(window)) {
+			else if (buttons[SAVE_BTN]->isClicked(window)) {
 				saveMazeTable();
 			}
-
-			if (buttons[6].isClicked(window)) {
+			else if (buttons[BFS_BTN]->isClicked(window)) {
 				isBfsButtonSelected = true;
-				std::cout << "BFS" << std::endl;
 			}
-
-			if (buttons[7].isClicked(window)) {
+			else if (buttons[DFS_BTN]->isClicked(window)) {
 				isBfsButtonSelected = false;
 				std::cout << "DFS" << std::endl;
 			}
+			else if (buttons[ONEX_BTN]->isClicked(window)) {
+				selectMaze(mazeSizeType, SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
+			}
+			else if (buttons[TWOX_BTN]->isClicked(window)) {
+				selectMaze(mazeSizeType, MEDIUM, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS, MEDIUM_MAZE_CELL_SIZE, MEDIUM_MAZE_FILENAME);
+			}
+			else if (buttons[FOURX_BTN]->isClicked(window)) {
+				selectMaze(mazeSizeType, BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE, BIG_MAZE_FILENAME);
+			}
 		}
 
-		//if (event.type == sf::Event::Resized)
-		//{
-		//	// update the view to the new size of the window
-		//	sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-		//	window -> setView(sf::View(visibleArea));
-		//}
 	}
 }
 
@@ -197,13 +141,13 @@ void Engine::update() {
 	if (isBfsButtonSelected) {
 		if (bfsPathfinder.isExitFound()) {
 			if (elapsedTime >= PATHFINDER_DRAWING_PATH_DELAY.asSeconds()) {
-				bfsPathfinder.drawRoad(mazeTable, startPos);
+				bfsPathfinder.drawRoad(mazeTable, mazeTableRows, mazeTableColumns,startPoint);
 				elapsedTime = 0.0f;
 			}
 		}
 		else {
 			if (elapsedTime >= PATHFINDER_CHECKED_CELLS_DELAY.asSeconds()) {
-				bfsPathfinder.findRoad(mazeTable, startPos, endPos);
+				bfsPathfinder.findRoad(mazeTable, mazeTableRows, mazeTableColumns, startPoint, endPoint);
 				elapsedTime = 0.0f;
 			}
 		}
@@ -211,33 +155,18 @@ void Engine::update() {
 	else {
 		if (dfsPathfinder.isExitFound()) {
 			if (elapsedTime >= PATHFINDER_DRAWING_PATH_DELAY.asSeconds()) {
-				dfsPathfinder.drawRoad(mazeTable, startPos);
+				dfsPathfinder.drawRoad(mazeTable, mazeTableRows, mazeTableColumns, startPoint);
 				elapsedTime = 0.0f;
 			}
 		}
 		else {
 			if (elapsedTime >= PATHFINDER_CHECKED_CELLS_DELAY.asSeconds()) {
-				dfsPathfinder.findRoad(mazeTable, startPos, endPos);
+				dfsPathfinder.findRoad(mazeTable, mazeTableRows, mazeTableColumns, startPoint, endPoint);
 				elapsedTime = 0.0f;
 			}
 		}
 	}
-}
-
-void Engine::drawButtons() {
-	for (auto b : buttons) {
-		window->draw(b);
-	}
-}
-
-void Engine::drawButtonsIllumination() {
-	for (int i = 0; i < BUTTONS_NUM; i++) {
-		sf::RectangleShape rectangleil = Engine::createRectangle(buttonsPos[i].x, buttonsPos[i].y, buttonsSizes[i].x, buttonsSizes[i].y, sf::Color(128, 128, 128, 128));
-
-		if (mousePosition.x > buttonsPos[i].x && mousePosition.x < buttonsPos[i].x + buttonsSizes[i].x && mousePosition.y > buttonsPos[i].y && mousePosition.y < buttonsPos[i].y + buttonsSizes[i].y) {
-			window->draw(rectangleil);
-		}
-	}
+		
 }
 
 void Engine::draw() {
@@ -247,16 +176,126 @@ void Engine::draw() {
 	addMazeElements();
 	drawButtons();
 	drawButtonsIllumination();
-
+	buttonSelect();
+	
 	window->display();
 }
+
+
+void Engine::updateMousePosition() {
+	sf::Vector2i pixelPos = sf::Mouse::getPosition(*window);
+	mousePosition = window->mapPixelToCoords(pixelPos);
+}
+
+void Engine::initializeMazeTable(int rows, int columns, int cellSize, const char* filename) {
+	std::ifstream mazeFile{ filename };
+
+	int** TMP = DynamicArrayRepository<int>::createTwoDimDynamicTable(rows, columns);
+
+	for (int i = 0; i < rows; ++i) {
+		for (int j = 0; j < columns; ++j) {
+			mazeFile >> TMP[i][j];
+		}
+	}
+	mazeFile.close();
+
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < columns; j++) {
+			mazeTable[i][j].setPosition(j * cellSize, i * cellSize);
+			mazeTable[i][j].setSize(cellSize, cellSize);
+			mazeTable[i][j].setId(TMP[i][j]);
+			mazeTable[i][j].setVisited(false);
+			mazeTable[i][j].setChecked(false);
+
+			switch (mazeTable[i][j].getId()) {
+			case MazeCellTypes::PATH: mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR); break;
+			case MazeCellTypes::WALL: mazeTable[i][j].setColor(MAZE_WALL_COLOR); break;
+			case MazeCellTypes::START_POINT: mazeTable[i][j].setColor(START_POINT_COLOR);
+				startPoint.x = i;
+				startPoint.y = j;
+				break;
+			case MazeCellTypes::END_POINT: mazeTable[i][j].setColor(END_POINT_COLOR);
+				endPoint.x = i;
+				endPoint.y = j;
+				break;
+			}
+		}
+	}
+
+	DynamicArrayRepository<int>::deleteTwoDimDynamicTable(TMP, rows);
+
+	copyMazeTable(mazeTable, mazeTableCopy);
+}
+
+void Engine::copyMazeTable(MazeCell** src, MazeCell** dst){
+	for (int i = 0; i < mazeTableRows; i++) {
+		for (int j = 0; j < mazeTableColumns; j++) {
+			dst[i][j] = src[i][j];
+		}
+	}
+}
+
+
+void Engine::initializeButtons() {
+	//font.loadFromFile("arial.ttf");
+	buttons.resize(BUTTONS_NUM);
+
+	buttons[START_BTN] = new Button("Textures/start.png", { 100,630 }, sf::Color::White, { 100,50 });
+	buttons[RESTART_BTN] = new Button("Textures/restart.png", { 250,630 }, sf::Color::White, { 100,50 });
+	buttons[BOXWHITE_BTN] = new Button("Textures/boxwhite.png", { 1100,200 }, sf::Color::White, { 72,72 });
+	buttons[BOXGREEN_BTN] = new Button("Textures/boxgreen.png", { 1100,300 }, sf::Color::White, { 72,72 });
+	buttons[BOXRED_BTN] = new Button("Textures/boxred.png", { 1100,400 }, sf::Color::White, { 72,72 });
+	buttons[SAVE_BTN] = new Button("Textures/save.png", { 1100,500 }, sf::Color::White, { 72,72 });
+	buttons[BFS_BTN] = new Button("Textures/BFS_BTN.png", { 400,630 }, sf::Color::White, { 78,50 });
+	buttons[DFS_BTN] = new Button("Textures/DFS_BTN.png", { 482,630 }, sf::Color::White, { 78,50 });
+	buttons[ONEX_BTN] = new Button("Textures/1x.png", { 1012,100 }, sf::Color::White, { 50,50 });
+	buttons[TWOX_BTN] = new Button("Textures/2x.png", { 1112,100 }, sf::Color::White, { 50,50 });
+	buttons[FOURX_BTN] = new Button("Textures/4x.png", { 1212,100 }, sf::Color::White, { 50,50 });
+
+	isBfsButtonSelected = true;
+}
+
+
+void Engine::drawButtons() {
+	for (auto b : buttons) {
+		window->draw(*b);
+	}
+}
+
+void Engine::drawButtonsIllumination() {
+	for (int i = 0; i < BUTTONS_NUM; i++) {
+		sf::RectangleShape rectangleIlumination = ShapesAndCollisionsRep::createRectangle(buttons[i]->getX(), buttons[i]->getY(),
+			buttons[i]->getWidth(), buttons[i]->getHeight(), sf::Color(128, 128, 128, 128));
+
+
+		if (ShapesAndCollisionsRep::isPointInRectangleArea(mousePosition.x, mousePosition.y, 
+			buttons[i]->getX(), buttons[i]->getY(),buttons[i]->getWidth(), buttons[i]->getHeight())) {
+			window->draw(rectangleIlumination);
+
+		}
+	}
+}
+
+void Engine::buttonSelect() {
+	if (isBfsButtonSelected == true) {
+		sf::RectangleShape rectanglesel = ShapesAndCollisionsRep::createRectangle(
+			buttons[BFS_BTN]->getX(), buttons[BFS_BTN]->getY(), buttons[BFS_BTN]->getWidth(), buttons[BFS_BTN]->getHeight(), sf::Color(0, 128, 0, 128));
+		window->draw(rectanglesel);
+	}
+	else {
+		sf::RectangleShape rectanglesel = ShapesAndCollisionsRep::createRectangle(
+			buttons[DFS_BTN]->getX(), buttons[DFS_BTN]->getY(), buttons[DFS_BTN]->getWidth(), buttons[DFS_BTN]->getHeight(), sf::Color(0, 128, 0, 128));
+		window->draw(rectanglesel);
+	}
+}
+
 
 void Engine::addMazeElements()
 {
 
 	//checking if mouse is on the maze board
 
-	if (!isPointInRectangleArea(mousePosition.x, mousePosition.y, MAZE_AREA_X, MAZE_AREA_Y, MAZE_AREA_WIDTH, MAZE_AREA_HEIGHT)) {
+	if (!ShapesAndCollisionsRep::isPointInRectangleArea(mousePosition.x, mousePosition.y, MAZE_AREA_X, MAZE_AREA_Y, MAZE_AREA_WIDTH, MAZE_AREA_HEIGHT)) {
 		return;
 	}
 
@@ -265,10 +304,10 @@ void Engine::addMazeElements()
 	}
 
 	//TODO: improve code structure to eliminate repetability
-	int i = mousePosition.y / MAZE_TABLE_CELL_SIZE;
-	int j = mousePosition.x / MAZE_TABLE_CELL_SIZE;
+	int i = mousePosition.y / mazeTableCellSize;
+	int j = mousePosition.x / mazeTableCellSize;
 
-	if (i < MAZE_TABLE_HEIGHT && j < MAZE_TABLE_WIDTH) {
+	if (i < mazeTableRows && j < mazeTableColumns) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			if (MODE == PUT_WALL) {
 				mazeTable[i][j].setId(MazeCellTypes::WALL);
@@ -278,16 +317,16 @@ void Engine::addMazeElements()
 				removePoint(MazeCellTypes::END_POINT);
 				mazeTable[i][j].setId(MazeCellTypes::END_POINT);
 				mazeTable[i][j].setColor(END_POINT_COLOR);
-				endPos.x = i;
-				endPos.y = j;
+				endPoint.x = i;
+				endPoint.y = j;
 
 			}
 			else if (MODE == PUT_START_POINT) {
 				removePoint(MazeCellTypes::START_POINT);
 				mazeTable[i][j].setId(MazeCellTypes::START_POINT);
 				mazeTable[i][j].setColor(START_POINT_COLOR);
-				startPos.x = i;
-				startPos.y = j;
+				startPoint.x = i;
+				startPoint.y = j;
 			}
 		}
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
@@ -298,8 +337,8 @@ void Engine::addMazeElements()
 }
 
 void Engine::removePoint(int pointId) {
-	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+	for (int i = 0; i < mazeTableRows; i++) {
+		for (int j = 0; j < mazeTableColumns; j++) {
 			if (mazeTable[i][j].getId() == pointId) {
 				mazeTable[i][j].setId(MazeCellTypes::PATH);
 				mazeTable[i][j].setColor(MAZE_BACKGROUND_COLOR);
@@ -309,18 +348,27 @@ void Engine::removePoint(int pointId) {
 }
 
 void Engine::drawMazeTable() {
-	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-		for (int j = j = 0; j < MAZE_TABLE_WIDTH; j++) {
+	for (int i = 0; i < mazeTableRows; i++) {
+		for (int j = j = 0; j < mazeTableColumns; j++) {
 			mazeTable[i][j].draw(window);
 		}
 	}
 }
 
 void Engine::saveMazeTable() {
-	std::ofstream mazeFile(MAZE_FILENAME);
 
-	for (int i = 0; i < MAZE_TABLE_HEIGHT; i++) {
-		for (int j = 0; j < MAZE_TABLE_WIDTH; j++) {
+	std::ofstream mazeFile;
+
+	switch (mazeSizeType) {
+	case SMALL: mazeFile = std::ofstream(SMALL_MAZE_FILENAME); break;
+	case MEDIUM: mazeFile = std::ofstream(MEDIUM_MAZE_FILENAME); break;
+	case BIG: mazeFile = std::ofstream(BIG_MAZE_FILENAME); break;
+	}
+
+	//std::ofstream mazeFile(SMALL_MAZE_FILENAME);
+
+	for (int i = 0; i < mazeTableRows; i++) {
+		for (int j = 0; j < mazeTableColumns; j++) {
 			int a = mazeTable[i][j].getId();
 			mazeFile << a << " ";
 		}
@@ -330,20 +378,35 @@ void Engine::saveMazeTable() {
 	mazeFile.close();
 }
 
+void Engine::selectMaze(int oldType, int newType, int rows, int columns, int cellSize, const char* filename) {
+	int oldRows = 0;
+	
+	if (oldType == newType) return;
 
-sf::RectangleShape Engine::createRectangle(int x, int y, int width, int height, sf::Color color) {
-	sf::RectangleShape rectangle;
-	rectangle.setSize(sf::Vector2f(width, height));
-	rectangle.setPosition(x, y);
-	rectangle.setFillColor(color);
-	return rectangle;
-}
-
-bool Engine::isPointInRectangleArea(int pointX, int pointY, int recX, int recY, int recWidth, int recHeight) {
-	if (pointX >= recX && pointX <= recX + recWidth
-		&& pointY >= recY && pointY <= recY + recHeight) {
-		return true;
+	switch (oldType) {
+	case SMALL: oldRows = SMALL_MAZE_ROWS; break;
+	case MEDIUM:oldRows = MEDIUM_MAZE_ROWS; break;
+	case BIG:oldRows = BIG_MAZE_ROWS; break;
 	}
 
-	return false;
+	mazeTable = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTable, oldRows, rows, columns);
+	mazeTableCopy = DynamicArrayRepository<MazeCell>::recreateTwoDimDynamicTable(mazeTableCopy, oldRows, rows, columns);
+
+	setMazeParameters(newType, rows, columns, cellSize);
+
+	initializeMazeTable(rows, columns, cellSize, filename);
+
+}
+
+
+void Engine::setMazeParameters(int size, int rows, int columns, int cellSize) {
+	this->mazeSizeType = size;
+	this->mazeTableRows = rows;
+	this->mazeTableColumns = columns;
+	this->mazeTableCellSize = cellSize;
+}
+
+void Engine::dispose() {
+	DynamicArrayRepository<MazeCell>::deleteTwoDimDynamicTable(mazeTable, SMALL_MAZE_ROWS);
+	DynamicArrayRepository<MazeCell>::deleteTwoDimDynamicTable(mazeTableCopy, SMALL_MAZE_ROWS);
 }

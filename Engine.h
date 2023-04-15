@@ -1,69 +1,81 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <queue>
 #include "AppConstDef.h"
 #include "Rectangle.h"
 #include "MazeCell.h"
 #include "MazeCellTypes.h"
 #include "Button.h"
-#include <queue>
 #include "BFSPathfinder.h"
 #include "DFSPathfinder.h"
+#include "DynamicArrayRepository.h"
+#include "ShapesAndCollisionsRep.h"
 
 
 class Engine {
 private:
 
 	int MODE;
-
-	sf::RenderWindow* window;
-	MazeCell mazeTable[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
-	MazeCell mazeTableCopy[MAZE_TABLE_HEIGHT][MAZE_TABLE_WIDTH];
+	bool engineRunning;
+	
+	sf::RenderWindow *window;
+	MazeCell **mazeTable;
+	MazeCell **mazeTableCopy;
 	sf::Vector2f mousePosition;
 
-	std::vector<sf::Vector2f> buttonsPos;
-	std::vector<sf::Vector2f> buttonsSizes;
-	std::vector<sf::Texture> buttonsTextures;
-	std::vector<Button> buttons;
-
+	std::vector<Button*> buttons;
+	
 	bool isBfsButtonSelected;
-	//sf::Font font;
-
-
-	void updateMousePosition();
-	void initializeMazeTable();
-	//------------------
+	
 	BFSPathfinder bfsPathfinder;
 	DFSPathfinder dfsPathfinder;
-	sf::Vector2i startPos;
-	sf::Vector2i endPos;
+
+	sf::Vector2i startPoint;
+	sf::Vector2i endPoint;
+
+	int mazeSizeType;
+	int mazeTableRows;
+	int mazeTableColumns;
+	int mazeTableCellSize;
+	
+
+	void updateMousePosition();
+	void initializeMazeTable(int rows, int columns, int cellSize, const char* filename);
+	//------------------
+
 
 	sf::Clock clock;
 	float elapsedTime;
 
 	//------------------
+	void setMazeParameters(int size, int rows, int columns, int cellSize);
 
-	//------------------
-	void copyMazeTable(MazeCell src[][MAZE_TABLE_WIDTH], MazeCell dst[][MAZE_TABLE_WIDTH]);
+	void copyMazeTable(MazeCell **src, MazeCell **dst);
 	//------------------
 	void initializeButtons();
 	void addMazeElements();
 	void removePoint(int pointId);
 	void drawMazeTable();
 	void saveMazeTable();
+
+	void selectMaze(int oldType, int newType, int rows, int columns, int cellSize, const char* filename);
+
 	void drawButtonsIllumination();
 	void drawButtons();
-	sf::RectangleShape createRectangle(int x, int y, int width, int height, sf::Color color);
-	bool isPointInRectangleArea(int pointX, int pointY, int recX, int recY, int recWidth, int recHeight);
 
 	void startMainLoop();
 	void handleEvents();
+	void buttonSelect();
 
 	void initialize();
 	void update();
 	void draw();
 
+	void dispose();
+
 public:
 	Engine();
 	void start();
+	void stop();
 };

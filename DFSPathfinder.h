@@ -18,7 +18,7 @@ private:
 	bool initializedWithStartData;
 	bool exitFound;
 
-	void checkChamber(MazeCell mazeTable[][MAZE_TABLE_WIDTH], int chamberId, int x, int y);
+	void checkChamber(MazeCell **mazeTable, int rows, int columns, int chamberId, int x, int y);
 	void clearStack();
 
 	void setInitializedWithStartData(bool initializedWithStartData);
@@ -29,8 +29,8 @@ private:
 public:
 	DFSPathfinder();
 
-	void findRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2i startPos, sf::Vector2i endPos);
-	void drawRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2i startPos);
+	void findRoad(MazeCell** mazeTable, int rows, int columns, sf::Vector2i startPoint, sf::Vector2i endPoint);
+	void drawRoad(MazeCell** mazeTable, int rows, int columns, sf::Vector2i startPoint);
 	bool isRunning();
 	bool isExitFound();
 	void start();

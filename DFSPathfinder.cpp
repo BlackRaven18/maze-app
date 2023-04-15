@@ -7,8 +7,10 @@ DFSPathfinder::DFSPathfinder()
     this->exitFound = false;
 }
 
-void DFSPathfinder::checkChamber(MazeCell mazeTable[][MAZE_TABLE_WIDTH], int chamberId, int x, int y)
+void DFSPathfinder::checkChamber(MazeCell **mazeTable, int rows, int columns, int chamberId, int x, int y)
 {
+    if (x < 0 || y < 0 || x >= rows || y >= columns) return;
+
     if (mazeTable[x][y].getId() == MazeCellTypes::WALL) return;
     if (mazeTable[x][y].getId() == MazeCellTypes::START_POINT) return;
     if (mazeTable[x][y].isChecked()) return;
@@ -23,15 +25,15 @@ void DFSPathfinder::checkChamber(MazeCell mazeTable[][MAZE_TABLE_WIDTH], int cha
     stack.push(sf::Vector2i(x, y));
 }
 
-void DFSPathfinder::findRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2i startPos, sf::Vector2i endPos)
+void DFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Vector2i startPoint, sf::Vector2i endPoint)
 {
     if (!isRunning()) {
         return;
     }
 
     if (!isInitializedWithStartData()) {
-        mazeTable[startPos.x][startPos.y].setVisited(true);
-        stack.push(startPos);
+        mazeTable[startPoint.x][startPoint.y].setVisited(true);
+        stack.push(startPoint);
 
         setInitializedWithStartData(true);
     }
@@ -47,20 +49,20 @@ void DFSPathfinder::findRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2
         stack.pop();
 
 
-        if (point.x == endPos.x && point.y == endPos.y) {
+        if (point.x == endPoint.x && point.y == endPoint.y) {
             this->tmpPoint = point;
             setExitFound(true);
             return;
         }
 
-        if (point.y - 1 < MAZE_TABLE_WIDTH) checkChamber(mazeTable, UP, point.x, point.y - 1);
-        if (point.x + 1 < MAZE_TABLE_HEIGHT) checkChamber(mazeTable, RIGHT, point.x + 1, point.y);
-        if (point.y + 1 >= 0) checkChamber(mazeTable, DOWN, point.x, point.y + 1);
-        if (point.x - 1 >= 0) checkChamber(mazeTable, LEFT, point.x - 1, point.y);
+        if (point.y - 1 < columns) checkChamber(mazeTable, rows, columns, UP, point.x, point.y - 1);
+        if (point.x + 1 < rows) checkChamber(mazeTable, rows, columns, RIGHT, point.x + 1, point.y);
+        if (point.y + 1 >= 0) checkChamber(mazeTable, rows, columns, DOWN, point.x, point.y + 1);
+        if (point.x - 1 >= 0) checkChamber(mazeTable, rows, columns, LEFT, point.x - 1, point.y);
     }
 }
 
-void DFSPathfinder::drawRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2i startPos)
+void DFSPathfinder::drawRoad(MazeCell** mazeTable, int rows, int columns, sf::Vector2i startPoint)
 {
     if (!mazeTable[tmpPoint.x][tmpPoint.y].isVisited()) {
         switch (mazeTable[tmpPoint.x][tmpPoint.y].getId()) {
@@ -72,7 +74,7 @@ void DFSPathfinder::drawRoad(MazeCell mazeTable[][MAZE_TABLE_WIDTH], sf::Vector2
         mazeTable[tmpPoint.x][tmpPoint.y].setColor(MAZE_TRACK_COLOR);
     }
 
-    if (tmpPoint == startPos) {
+    if (tmpPoint == startPoint) {
         std::cout << "Znaleziono droge!" << std::endl;
         stop();
     }
