@@ -19,11 +19,14 @@ Button::Button(const std::string& buttonText, const sf::Vector2f& position, cons
     m_buttonText.setPosition(position + buttonSize / 2.0f);
 }
 
-Button::Button(const sf::Texture& buttonTexture, const sf::Vector2f& position, const sf::Color& outlineColor, const sf::Vector2f& buttonSize)
+
+Button::Button(std::string texturePath, const sf::Vector2f& position, const sf::Color& outlineColor, const sf::Vector2f& buttonSize)
 {
-    m_buttonSprite.setTexture(buttonTexture);
+
+    texture.loadFromFile(texturePath);
+    m_buttonSprite.setTexture(texture);
     m_buttonSprite.setPosition(position);
-    m_buttonSprite.setScale(buttonSize.x / buttonTexture.getSize().x, buttonSize.y / buttonTexture.getSize().y);
+    m_buttonSprite.setScale(buttonSize.x / texture.getSize().x, buttonSize.y / texture.getSize().y);
 
     m_buttonShape.setSize(buttonSize);
     m_buttonShape.setPosition(position);
@@ -47,4 +50,17 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
         target.draw(m_buttonShape, states);
         target.draw(m_buttonText, states);
     }
+}
+
+float Button::getX() {
+    return m_buttonShape.getPosition().x;
+}
+float Button::getY() {
+    return m_buttonShape.getPosition().y;
+}
+float Button::getWidth() {
+    return m_buttonShape.getSize().x;
+}
+float Button::getHeight() {
+    return m_buttonShape.getSize().y;
 }

@@ -24,10 +24,7 @@ private:
 	MazeCell **mazeTableCopy;
 	sf::Vector2f mousePosition;
 
-	std::vector<sf::Vector2f> buttonsPos;
-	std::vector<sf::Vector2f> buttonsSizes;
-	std::vector<sf::Texture> buttonsTextures;
-	std::vector<Button> buttons;
+	std::vector<Button*> buttons;
 	
 	bool isBfsButtonSelected;
 	
@@ -49,6 +46,10 @@ private:
 	//------------------
 
 
+	sf::Clock clock;
+	float elapsedTime;
+
+	//------------------
 	void setMazeParameters(int size, int rows, int columns, int cellSize);
 
 	void copyMazeTable(MazeCell **src, MazeCell **dst);
