@@ -22,6 +22,8 @@ void Engine::stop() {
 }
 
 void Engine::initialize() {
+	srand(time(NULL));
+
 	this->window = new sf::RenderWindow(sf::VideoMode(APP_WIDTH, APP_HEIGHT), APP_TITLE);
 
 	this->engineRunning = true;
@@ -49,7 +51,12 @@ void Engine::startMainLoop() {
 }
 
 void Engine::generateMaze() {
-	sf::Vector2i startPoint(0, 0);
+	sf::Vector2i startPoint(8, 14);
+
+	std::stack<sf::Vector2i> stack;
+
+	int** tab = DynamicArrayRepository<int>::createTwoDimDynamicTable(mazeTableRows, mazeTableColumns); //[mazeTableRows][mazeTableColumns];
+	DynamicArrayRepository<int>::deleteTwoDimDynamicTable(tab, mazeTableRows);
 
 	//clearing the maze table
 	for (int i = 0; i < mazeTableRows; i++) {
@@ -61,6 +68,90 @@ void Engine::generateMaze() {
 		}
 	}
 
+	
+
+	//start point is not a wall
+
+
+	mazeTable[startPoint.x][startPoint.y].setVisited(true);
+	mazeTable[startPoint.x][startPoint.y].setId(MazeCellTypes::PATH);
+	mazeTable[startPoint.x][startPoint.y].setColor(MAZE_BACKGROUND_COLOR);
+	stack.push(startPoint);
+
+	while (!stack.empty()) {
+		sf::Vector2i point = stack.top();
+		stack.pop();
+
+			//dolny
+			if (point.x + 2 < mazeTableRows && mazeTable[point.x + 2][point.y].isVisited() == false) {
+				stack.push(point);
+				mazeTable[point.x + 1][point.y].setVisited(true);
+				mazeTable[point.x + 1][point.y].setId(MazeCellTypes::PATH);
+				mazeTable[point.x + 1][point.y].setColor(MAZE_BACKGROUND_COLOR);
+
+
+				mazeTable[point.x + 2][point.y].setVisited(true);
+				mazeTable[point.x + 2][point.y].setId(MazeCellTypes::PATH);
+				mazeTable[point.x + 2][point.y].setColor(MAZE_BACKGROUND_COLOR);
+
+				stack.push(sf::Vector2i(point.x + 2, point.y));
+			}
+
+			//górny
+			if (point.x - 2 >= 0 && mazeTable[point.x - 2][point.y].isVisited() == false) {
+				stack.push(point);
+				mazeTable[point.x - 1][point.y].setVisited(true);
+				mazeTable[point.x - 1][point.y].setId(MazeCellTypes::PATH);
+				mazeTable[point.x - 1][point.y].setColor(MAZE_BACKGROUND_COLOR);
+
+
+				mazeTable[point.x - 2][point.y].setVisited(true);
+				mazeTable[point.x - 2][point.y].setId(MazeCellTypes::PATH);
+				mazeTable[point.x - 2][point.y].setColor(MAZE_BACKGROUND_COLOR);
+
+				stack.push(sf::Vector2i(point.x - 2, point.y));
+			}
+
+			//lewy
+			if (point.y - 2 >= 0 && mazeTable[point.x][point.y - 2].isVisited() == false) {
+				stack.push(point);
+				mazeTable[point.x][point.y - 1].setVisited(true);
+				mazeTable[point.x][point.y - 1].setId(MazeCellTypes::PATH);
+				mazeTable[point.x][point.y - 1].setColor(MAZE_BACKGROUND_COLOR);
+
+
+				mazeTable[point.x][point.y - 2].setVisited(true);
+				mazeTable[point.x][point.y - 2].setId(MazeCellTypes::PATH);
+				mazeTable[point.x][point.y - 2].setColor(MAZE_BACKGROUND_COLOR);
+
+				stack.push(sf::Vector2i(point.x, point.y - 2));
+			}
+
+			//prawy
+			if (point.y + 2 < mazeTableColumns && mazeTable[point.x][point.y + 2].isVisited() == false) {
+				stack.push(point);
+				mazeTable[point.x][point.y + 1].setVisited(true);
+				mazeTable[point.x][point.y + 1].setId(MazeCellTypes::PATH);
+				mazeTable[point.x][point.y + 1].setColor(MAZE_BACKGROUND_COLOR);
+
+
+				mazeTable[point.x][point.y + 2].setVisited(true);
+				mazeTable[point.x][point.y + 2].setId(MazeCellTypes::PATH);
+				mazeTable[point.x][point.y + 2].setColor(MAZE_BACKGROUND_COLOR);
+
+				stack.push(sf::Vector2i(point.x, point.y + 2));
+			}
+
+
+	}
+
+	//clearing visited to be used by pathfinding algorithms
+
+	for (int i = 0; i < mazeTableRows; i++) {
+		for (int j = 0; j < mazeTableColumns; j++) {
+			mazeTable[i][j].setVisited(false);
+		}
+	}
 
 }
 
