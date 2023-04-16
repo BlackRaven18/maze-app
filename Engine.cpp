@@ -55,8 +55,6 @@ void Engine::generateMaze() {
 
 	std::stack<sf::Vector2i> stack;
 
-	int** tab = DynamicArrayRepository<int>::createTwoDimDynamicTable(mazeTableRows, mazeTableColumns); //[mazeTableRows][mazeTableColumns];
-	DynamicArrayRepository<int>::deleteTwoDimDynamicTable(tab, mazeTableRows);
 
 	//clearing the maze table
 	for (int i = 0; i < mazeTableRows; i++) {
@@ -65,6 +63,21 @@ void Engine::generateMaze() {
 			mazeTable[i][j].setColor(MAZE_WALL_COLOR);
 			mazeTable[i][j].setVisited(false);
 			mazeTable[i][j].setChecked(false);
+		}
+	}
+
+	//creating neighbour table
+
+	Neighbor** neighborTable = DynamicArrayRepository<Neighbor>::createTwoDimDynamicTable(mazeTableRows, mazeTableColumns);
+
+	for (int i = 0; i < mazeTableRows; i++) {
+		for (int j = 0; j < mazeTableColumns; j++) {
+			neighborTable[i][j].setPosition(sf::Vector2i(i, j));
+
+
+			//dolny
+			i + 2 < mazeTableRows ? neighborTable[i][j].setDownNeighborPos(sf::Vector2i(i + 2, j)) : neighborTable[i][j].setDownNeighborPos(sf::Vector2i(-1, -1));
+
 		}
 	}
 
@@ -152,6 +165,9 @@ void Engine::generateMaze() {
 			mazeTable[i][j].setVisited(false);
 		}
 	}
+
+	// deleting neihbour table
+	DynamicArrayRepository<Neighbor>::deleteTwoDimDynamicTable(neighborTable, mazeTableRows);
 
 }
 

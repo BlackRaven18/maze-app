@@ -10,46 +10,14 @@ sf::Vector2i Neighbor::getPosition()
 	return this->position;
 }
 
-void Neighbor::setUpNeighborPos(sf::Vector2i neighbourPosition)
+void Neighbor::addNewNeighbourPosition(sf::Vector2i position)
 {
-	this->upNeighbourPos = neighbourPosition;
-
+	this->neighbourPositions.push_back(position);
 }
 
-void Neighbor::setDownNeighborPos(sf::Vector2i neighbourPosition)
+void Neighbor::removeNeighbour(int position)
 {
-	this->downNeighbourPos = neighbourPosition;
-
+	if (neighbourPositions.empty()) return;
+	this->neighbourPositions.erase(neighbourPositions.begin() + position);
 }
 
-void Neighbor::setLeftNeighborPos(sf::Vector2i neighbourPosition)
-{
-	this->leftNeighbourPos = neighbourPosition;
-
-}
-
-void Neighbor::setRightNeighborPos(sf::Vector2i neighbourPosition)
-{
-	this->rightNeighbourPos = neighbourPosition;
-
-}
-
-sf::Vector2i Neighbor::getUpNeighborPos()
-{
-	return this->upNeighbourPos;
-}
-
-sf::Vector2i Neighbor::getDownNeighborPos()
-{
-	return this->downNeighbourPos;
-}
-
-sf::Vector2i Neighbor::getLeftNeighborPos()
-{
-	return this->leftNeighbourPos;
-}
-
-sf::Vector2i Neighbor::getRightNeighborPos()
-{
-	return this->rightNeighbourPos;
-}

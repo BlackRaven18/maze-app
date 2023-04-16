@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <queue>
+#include <cstdlib>
 #include "AppConstDef.h"
 #include "Rectangle.h"
 #include "MazeCell.h"
@@ -11,8 +12,8 @@
 #include "DFSPathfinder.h"
 #include "DynamicArrayRepository.h"
 #include "ShapesAndCollisionsRep.h"
+#include "Neighbor.h"
 
-#include <cstdlib>
 
 
 class Engine {
