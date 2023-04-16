@@ -12,7 +12,6 @@
 #include "DFSPathfinder.h"
 #include "DynamicArrayRepository.h"
 #include "ShapesAndCollisionsRep.h"
-#include "Neighbor.h"
 
 
 
@@ -80,6 +79,8 @@ private:
 
 	//TODO: CHANGE THIS LATER
 	void generateMaze();
+	void breakWall(sf::Vector2i wallPosition);
+	std::vector<int> createVectorWithPositions();
 
 public:
 	Engine();

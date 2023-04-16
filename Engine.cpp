@@ -96,35 +96,18 @@ void Engine::generateMaze() {
 		int randedDirection = pointDir[tmp];
 		pointDir.erase(pointDir.begin() + tmp);
 
-
-		//std::cout << randedDirection << std::endl;
-		//std::cout << pointDir.size() << std::endl << std::endl;
-
 		stack.push(point);
 		dirStack.push(pointDir);
 
 		switch (randedDirection) {
 		case LEFT:
-			//lewy
 			if (point.y - 2 >= 0 && mazeTable[point.x][point.y - 2].isVisited() == false) {
-				mazeTable[point.x][point.y - 1].setVisited(true);
-				mazeTable[point.x][point.y - 1].setId(MazeCellTypes::PATH);
-				mazeTable[point.x][point.y - 1].setColor(MAZE_BACKGROUND_COLOR);
-
-
-				mazeTable[point.x][point.y - 2].setVisited(true);
-				mazeTable[point.x][point.y - 2].setId(MazeCellTypes::PATH);
-				mazeTable[point.x][point.y - 2].setColor(MAZE_BACKGROUND_COLOR);
+				breakWall(sf::Vector2i(point.x, point.y - 1));
+				breakWall(sf::Vector2i(point.x, point.y - 2));
 
 				stack.push(sf::Vector2i(point.x, point.y - 2));
 
-				std::vector<int> dir;
-				dir.push_back(LEFT);
-				dir.push_back(RIGHT);
-				dir.push_back(UP);
-				dir.push_back(DOWN);
-
-				dirStack.push(dir);
+				dirStack.push(createVectorWithPositions());
 	
 
 			}
@@ -133,24 +116,12 @@ void Engine::generateMaze() {
 		case RIGHT:
 			//prawy
 			if (point.y + 2 < mazeTableColumns && mazeTable[point.x][point.y + 2].isVisited() == false) {
-				mazeTable[point.x][point.y + 1].setVisited(true);
-				mazeTable[point.x][point.y + 1].setId(MazeCellTypes::PATH);
-				mazeTable[point.x][point.y + 1].setColor(MAZE_BACKGROUND_COLOR);
-
-
-				mazeTable[point.x][point.y + 2].setVisited(true);
-				mazeTable[point.x][point.y + 2].setId(MazeCellTypes::PATH);
-				mazeTable[point.x][point.y + 2].setColor(MAZE_BACKGROUND_COLOR);
+				breakWall(sf::Vector2i(point.x, point.y + 1));
+				breakWall(sf::Vector2i(point.x, point.y + 2));
 
 				stack.push(sf::Vector2i(point.x, point.y + 2));
 
-				std::vector<int> dir;
-				dir.push_back(LEFT);
-				dir.push_back(RIGHT);
-				dir.push_back(UP);
-				dir.push_back(DOWN);
-
-				dirStack.push(dir);
+				dirStack.push(createVectorWithPositions());
 			}
 			break;
 
@@ -158,53 +129,32 @@ void Engine::generateMaze() {
 
 			//górny
 			if (point.x - 2 >= 0 && mazeTable[point.x - 2][point.y].isVisited() == false) {
-				mazeTable[point.x - 1][point.y].setVisited(true);
-				mazeTable[point.x - 1][point.y].setId(MazeCellTypes::PATH);
-				mazeTable[point.x - 1][point.y].setColor(MAZE_BACKGROUND_COLOR);
-
-
-				mazeTable[point.x - 2][point.y].setVisited(true);
-				mazeTable[point.x - 2][point.y].setId(MazeCellTypes::PATH);
-				mazeTable[point.x - 2][point.y].setColor(MAZE_BACKGROUND_COLOR);
+				breakWall(sf::Vector2i(point.x - 1, point.y));
+				breakWall(sf::Vector2i(point.x - 2, point.y));
 
 				stack.push(sf::Vector2i(point.x - 2, point.y));
 
-				std::vector<int> dir;
-				dir.push_back(LEFT);
-				dir.push_back(RIGHT);
-				dir.push_back(UP);
-				dir.push_back(DOWN);
-
-				dirStack.push(dir);
+				dirStack.push(createVectorWithPositions());
 			}
 			break;
 		case DOWN:
 			//dolny
 			if (point.x + 2 < mazeTableRows && mazeTable[point.x + 2][point.y].isVisited() == false) {
-				mazeTable[point.x + 1][point.y].setVisited(true);
-				mazeTable[point.x + 1][point.y].setId(MazeCellTypes::PATH);
-				mazeTable[point.x + 1][point.y].setColor(MAZE_BACKGROUND_COLOR);
-
-
-				mazeTable[point.x + 2][point.y].setVisited(true);
-				mazeTable[point.x + 2][point.y].setId(MazeCellTypes::PATH);
-				mazeTable[point.x + 2][point.y].setColor(MAZE_BACKGROUND_COLOR);
+				breakWall(sf::Vector2i(point.x + 1, point.y));
+				breakWall(sf::Vector2i(point.x + 2, point.y));
 
 				stack.push(sf::Vector2i(point.x + 2, point.y));
 
-				std::vector<int> dir;
-				dir.push_back(LEFT);
-				dir.push_back(RIGHT);
-				dir.push_back(UP);
-				dir.push_back(DOWN);
 
-				dirStack.push(dir);
+				dirStack.push(createVectorWithPositions());
 			}
 			break;
 		default:
-			std::cout << "emm?" << std::endl;
+
 			break;
 		}
+
+		std::cout << "bubu" << std::endl;
 
 
 
@@ -234,6 +184,22 @@ void Engine::generateMaze() {
 	endPoint.y = mazeTableColumns - 1;*/
 
 
+}
+
+void Engine::breakWall(sf::Vector2i wallPosition) {
+	mazeTable[wallPosition.x ][wallPosition.y].setVisited(true);
+	mazeTable[wallPosition.x ][wallPosition.y].setId(MazeCellTypes::PATH);
+	mazeTable[wallPosition.x ][wallPosition.y].setColor(MAZE_BACKGROUND_COLOR);
+}
+
+std::vector<int> Engine::createVectorWithPositions() {
+	std::vector<int> dir;
+	dir.push_back(LEFT);
+	dir.push_back(RIGHT);
+	dir.push_back(UP);
+	dir.push_back(DOWN);
+
+	return dir;
 }
 
 
