@@ -54,6 +54,7 @@ void Engine::generateMaze() {
 	sf::Vector2i startPoint(8, 14);
 
 	std::stack<sf::Vector2i> stack;
+	std::stack<std::vector<int>> dirStack;
 
 
 	//clearing the maze table
@@ -66,85 +67,46 @@ void Engine::generateMaze() {
 		}
 	}
 
-	//creating neighbour table
-
-	Neighbor** neighborTable = DynamicArrayRepository<Neighbor>::createTwoDimDynamicTable(mazeTableRows, mazeTableColumns);
-
-	for (int i = 0; i < mazeTableRows; i++) {
-		for (int j = 0; j < mazeTableColumns; j++) {
-			neighborTable[i][j].setPosition(sf::Vector2i(i, j));
-
-
-			//dolny
-			if (i + 2 < mazeTableRows) neighborTable[i][j].addNewNeighbourPosition(sf::Vector2i(i + 2, j));
-
-			//gorny
-			if (i - 2 >= 0) neighborTable[i][j].addNewNeighbourPosition(sf::Vector2i(i - 2, j));
-
-			//prawy
-			if (j + 2 < mazeTableColumns) neighborTable[i][j].addNewNeighbourPosition(sf::Vector2i(i, j + 2));
-
-			//lewy
-			if (j - 2 >= 0) neighborTable[i][j].addNewNeighbourPosition(sf::Vector2i(i, j - 2));
-
-		}
-	}
-
-	/*std::cout << neighborTable[0][0].getPosition().x << " : " << neighborTable[0][0].getPosition().y << std::endl;
-
-	std::vector<sf::Vector2i> neighbours = neighborTable[2][2].getNeighboursPositions();
-
-	for (int i = 0; i < neighbours.size(); i++) {
-		std::cout << neighbours[i].x << " : " << neighbours[i].y << std::endl;
-	}*/
-
 	
 
 	//start point is not a wall
-
-
 	mazeTable[startPoint.x][startPoint.y].setVisited(true);
 	mazeTable[startPoint.x][startPoint.y].setId(MazeCellTypes::PATH);
 	mazeTable[startPoint.x][startPoint.y].setColor(MAZE_BACKGROUND_COLOR);
 	stack.push(startPoint);
 
-	while (!stack.empty()) {
+	std::vector<int> directions;
+	directions.push_back(LEFT);
+	directions.push_back(RIGHT);
+	directions.push_back(UP);
+	directions.push_back(DOWN);
+
+	dirStack.push(directions);
+
+	while (!stack.empty() && !dirStack.empty()) {
 		sf::Vector2i point = stack.top();
 		stack.pop();
 
-			//dolny
-			if (point.x + 2 < mazeTableRows && mazeTable[point.x + 2][point.y].isVisited() == false) {
-				stack.push(point);
-				mazeTable[point.x + 1][point.y].setVisited(true);
-				mazeTable[point.x + 1][point.y].setId(MazeCellTypes::PATH);
-				mazeTable[point.x + 1][point.y].setColor(MAZE_BACKGROUND_COLOR);
+		std::vector<int> pointDir = dirStack.top();
+		dirStack.pop();
+
+		if(pointDir.empty()) continue;
+
+		int tmp = rand() % pointDir.size();
+		int randedDirection = pointDir[tmp];
+		pointDir.erase(pointDir.begin() + tmp);
 
 
-				mazeTable[point.x + 2][point.y].setVisited(true);
-				mazeTable[point.x + 2][point.y].setId(MazeCellTypes::PATH);
-				mazeTable[point.x + 2][point.y].setColor(MAZE_BACKGROUND_COLOR);
+		//std::cout << randedDirection << std::endl;
+		//std::cout << pointDir.size() << std::endl << std::endl;
 
-				stack.push(sf::Vector2i(point.x + 2, point.y));
-			}
+		stack.push(point);
+		dirStack.push(pointDir);
 
-			//górny
-			if (point.x - 2 >= 0 && mazeTable[point.x - 2][point.y].isVisited() == false) {
-				stack.push(point);
-				mazeTable[point.x - 1][point.y].setVisited(true);
-				mazeTable[point.x - 1][point.y].setId(MazeCellTypes::PATH);
-				mazeTable[point.x - 1][point.y].setColor(MAZE_BACKGROUND_COLOR);
-
-
-				mazeTable[point.x - 2][point.y].setVisited(true);
-				mazeTable[point.x - 2][point.y].setId(MazeCellTypes::PATH);
-				mazeTable[point.x - 2][point.y].setColor(MAZE_BACKGROUND_COLOR);
-
-				stack.push(sf::Vector2i(point.x - 2, point.y));
-			}
-
+		switch (randedDirection) {
+		case LEFT:
 			//lewy
 			if (point.y - 2 >= 0 && mazeTable[point.x][point.y - 2].isVisited() == false) {
-				stack.push(point);
 				mazeTable[point.x][point.y - 1].setVisited(true);
 				mazeTable[point.x][point.y - 1].setId(MazeCellTypes::PATH);
 				mazeTable[point.x][point.y - 1].setColor(MAZE_BACKGROUND_COLOR);
@@ -155,11 +117,22 @@ void Engine::generateMaze() {
 				mazeTable[point.x][point.y - 2].setColor(MAZE_BACKGROUND_COLOR);
 
 				stack.push(sf::Vector2i(point.x, point.y - 2));
-			}
 
+				std::vector<int> dir;
+				dir.push_back(LEFT);
+				dir.push_back(RIGHT);
+				dir.push_back(UP);
+				dir.push_back(DOWN);
+
+				dirStack.push(dir);
+	
+
+			}
+			break;
+
+		case RIGHT:
 			//prawy
 			if (point.y + 2 < mazeTableColumns && mazeTable[point.x][point.y + 2].isVisited() == false) {
-				stack.push(point);
 				mazeTable[point.x][point.y + 1].setVisited(true);
 				mazeTable[point.x][point.y + 1].setId(MazeCellTypes::PATH);
 				mazeTable[point.x][point.y + 1].setColor(MAZE_BACKGROUND_COLOR);
@@ -170,7 +143,69 @@ void Engine::generateMaze() {
 				mazeTable[point.x][point.y + 2].setColor(MAZE_BACKGROUND_COLOR);
 
 				stack.push(sf::Vector2i(point.x, point.y + 2));
+
+				std::vector<int> dir;
+				dir.push_back(LEFT);
+				dir.push_back(RIGHT);
+				dir.push_back(UP);
+				dir.push_back(DOWN);
+
+				dirStack.push(dir);
 			}
+			break;
+
+		case UP:
+
+			//górny
+			if (point.x - 2 >= 0 && mazeTable[point.x - 2][point.y].isVisited() == false) {
+				mazeTable[point.x - 1][point.y].setVisited(true);
+				mazeTable[point.x - 1][point.y].setId(MazeCellTypes::PATH);
+				mazeTable[point.x - 1][point.y].setColor(MAZE_BACKGROUND_COLOR);
+
+
+				mazeTable[point.x - 2][point.y].setVisited(true);
+				mazeTable[point.x - 2][point.y].setId(MazeCellTypes::PATH);
+				mazeTable[point.x - 2][point.y].setColor(MAZE_BACKGROUND_COLOR);
+
+				stack.push(sf::Vector2i(point.x - 2, point.y));
+
+				std::vector<int> dir;
+				dir.push_back(LEFT);
+				dir.push_back(RIGHT);
+				dir.push_back(UP);
+				dir.push_back(DOWN);
+
+				dirStack.push(dir);
+			}
+			break;
+		case DOWN:
+			//dolny
+			if (point.x + 2 < mazeTableRows && mazeTable[point.x + 2][point.y].isVisited() == false) {
+				mazeTable[point.x + 1][point.y].setVisited(true);
+				mazeTable[point.x + 1][point.y].setId(MazeCellTypes::PATH);
+				mazeTable[point.x + 1][point.y].setColor(MAZE_BACKGROUND_COLOR);
+
+
+				mazeTable[point.x + 2][point.y].setVisited(true);
+				mazeTable[point.x + 2][point.y].setId(MazeCellTypes::PATH);
+				mazeTable[point.x + 2][point.y].setColor(MAZE_BACKGROUND_COLOR);
+
+				stack.push(sf::Vector2i(point.x + 2, point.y));
+
+				std::vector<int> dir;
+				dir.push_back(LEFT);
+				dir.push_back(RIGHT);
+				dir.push_back(UP);
+				dir.push_back(DOWN);
+
+				dirStack.push(dir);
+			}
+			break;
+		default:
+			std::cout << "emm?" << std::endl;
+			break;
+		}
+
 
 
 	}
@@ -183,8 +218,21 @@ void Engine::generateMaze() {
 		}
 	}
 
-	// deleting neihbour table
-	DynamicArrayRepository<Neighbor>::deleteTwoDimDynamicTable(neighborTable, mazeTableRows);
+	//adding start and end points
+
+	/*removePoint(MazeCellTypes::START_POINT);
+	mazeTable[mazeTableRows - 1][0].setId(MazeCellTypes::START_POINT);
+	mazeTable[mazeTableRows - 1][0].setColor(START_POINT_COLOR);
+	mazeTable[mazeTableRows - 1][0].setVisited(true);
+	startPoint.x = mazeTableRows - 1;
+	startPoint.y = 0;
+
+	removePoint(MazeCellTypes::END_POINT);
+	mazeTable[0][mazeTableColumns - 1].setId(MazeCellTypes::END_POINT);
+	mazeTable[0][mazeTableColumns - 1].setColor(END_POINT_COLOR);
+	endPoint.x = 0;
+	endPoint.y = mazeTableColumns - 1;*/
+
 
 }
 
