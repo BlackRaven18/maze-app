@@ -21,3 +21,9 @@ void Neighbor::removeNeighbour(int position)
 	this->neighbourPositions.erase(neighbourPositions.begin() + position);
 }
 
+std::vector<sf::Vector2i> Neighbor::getNeighboursPositions()
+{
+
+	return this->neighbourPositions;
+}
+

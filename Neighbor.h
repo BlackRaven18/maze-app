@@ -16,5 +16,7 @@ public:
 	void addNewNeighbourPosition(sf::Vector2i position);
 	void removeNeighbour(int position);
 
+	std::vector<sf::Vector2i> getNeighboursPositions();
+
 
 };

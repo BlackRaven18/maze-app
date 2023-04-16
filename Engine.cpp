@@ -76,10 +76,27 @@ void Engine::generateMaze() {
 
 
 			//dolny
-			i + 2 < mazeTableRows ? neighborTable[i][j].setDownNeighborPos(sf::Vector2i(i + 2, j)) : neighborTable[i][j].setDownNeighborPos(sf::Vector2i(-1, -1));
+			if (i + 2 < mazeTableRows) neighborTable[i][j].addNewNeighbourPosition(sf::Vector2i(i + 2, j));
+
+			//gorny
+			if (i - 2 >= 0) neighborTable[i][j].addNewNeighbourPosition(sf::Vector2i(i - 2, j));
+
+			//prawy
+			if (j + 2 < mazeTableColumns) neighborTable[i][j].addNewNeighbourPosition(sf::Vector2i(i, j + 2));
+
+			//lewy
+			if (j - 2 >= 0) neighborTable[i][j].addNewNeighbourPosition(sf::Vector2i(i, j - 2));
 
 		}
 	}
+
+	/*std::cout << neighborTable[0][0].getPosition().x << " : " << neighborTable[0][0].getPosition().y << std::endl;
+
+	std::vector<sf::Vector2i> neighbours = neighborTable[2][2].getNeighboursPositions();
+
+	for (int i = 0; i < neighbours.size(); i++) {
+		std::cout << neighbours[i].x << " : " << neighbours[i].y << std::endl;
+	}*/
 
 	
 
