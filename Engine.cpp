@@ -22,6 +22,8 @@ void Engine::stop() {
 }
 
 void Engine::initialize() {
+	srand(time(NULL));
+
 	this->window = new sf::RenderWindow(sf::VideoMode(APP_WIDTH, APP_HEIGHT), APP_TITLE);
 
 	this->engineRunning = true;
@@ -47,6 +49,7 @@ void Engine::startMainLoop() {
 		dispose();
 	}
 }
+
 
 void Engine::handleEvents()
 {
@@ -128,6 +131,10 @@ void Engine::handleEvents()
 				}
 				else if (buttons[FOURX_BTN]->isClicked(window)) {
 					selectMaze(mazeSizeType, BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE, BIG_MAZE_FILENAME);
+				}
+				else if (buttons[GENERATE_BTN]->isClicked(window)) {
+					std::cout << "Generate!" << std::endl;
+					dfsMazeGenerator.generateMaze(mazeTable, mazeTableRows, mazeTableColumns, &startPoint, &endPoint);
 				}
 			}
 		}
@@ -256,6 +263,8 @@ void Engine::initializeButtons() {
 	buttons[ONEX_BTN] = new Button("Textures/1x.png", { 1012,100 }, sf::Color::White, { 50,50 });
 	buttons[TWOX_BTN] = new Button("Textures/2x.png", { 1112,100 }, sf::Color::White, { 50,50 });
 	buttons[FOURX_BTN] = new Button("Textures/4x.png", { 1212,100 }, sf::Color::White, { 50,50 });
+	buttons[GENERATE_BTN] = new Button("Textures/generate.png", { 600, 630 }, sf::Color::White, { 100, 50 });
+	
 
 	isBfsButtonSelected = true;
 }

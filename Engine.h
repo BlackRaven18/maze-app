@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <queue>
+#include <cstdlib>
 #include "AppConstDef.h"
 #include "Rectangle.h"
 #include "MazeCell.h"
@@ -9,8 +10,10 @@
 #include "Button.h"
 #include "BFSPathfinder.h"
 #include "DFSPathfinder.h"
+#include "DFSMazeGenerator.h"
 #include "DynamicArrayRepository.h"
 #include "ShapesAndCollisionsRep.h"
+
 
 
 class Engine {
@@ -30,6 +33,7 @@ private:
 	
 	BFSPathfinder bfsPathfinder;
 	DFSPathfinder dfsPathfinder;
+	DFSMazeGenerator dfsMazeGenerator;
 
 	sf::Vector2i startPoint;
 	sf::Vector2i endPoint;

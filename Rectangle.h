@@ -18,8 +18,11 @@ public:
 	int getX();
 	int getY();
 
+	sf::Vector2i getPosition();
+
 	void setX(int x);
 	void setY(int y);
+
 
 	int getWidth();
 	void setWidth(int width);

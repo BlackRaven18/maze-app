@@ -21,6 +21,10 @@ int Rectangle::getY() {
 	return rectangle.getPosition().y;
 }
 
+sf::Vector2i Rectangle::getPosition() {
+	return sf::Vector2i(x, y);
+}
+
 void Rectangle::setX(int x) {
 	rectangle.setPosition(x, rectangle.getPosition().y);
 }

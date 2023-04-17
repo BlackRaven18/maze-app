@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="BFSPathfinder.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="DFSMazeGenerator.cpp" />
     <ClCompile Include="DFSPathfinder.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="main.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="AppConstDef.h" />
     <ClInclude Include="BFSPathfinder.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="DFSMazeGenerator.h" />
     <ClInclude Include="DFSPathfinder.h" />
     <ClInclude Include="DynamicArrayRepository.h" />
     <ClInclude Include="Engine.h" />
