@@ -10,6 +10,7 @@
 #include "Button.h"
 #include "BFSPathfinder.h"
 #include "DFSPathfinder.h"
+#include "DFSMazeGenerator.h"
 #include "DynamicArrayRepository.h"
 #include "ShapesAndCollisionsRep.h"
 
@@ -32,6 +33,7 @@ private:
 	
 	BFSPathfinder bfsPathfinder;
 	DFSPathfinder dfsPathfinder;
+	DFSMazeGenerator dfsMazeGenerator;
 
 	sf::Vector2i startPoint;
 	sf::Vector2i endPoint;
@@ -76,11 +78,6 @@ private:
 	void draw();
 
 	void dispose();
-
-	//TODO: CHANGE THIS LATER
-	void generateMaze();
-	void breakWall(sf::Vector2i wallPosition);
-	std::vector<int> createVectorWithPositions();
 
 public:
 	Engine();
