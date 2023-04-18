@@ -57,6 +57,11 @@ void Engine::handleEvents()
 
 	while (window->pollEvent(event))
 	{
+		if (event.type == ::sf::Event::Resized) {
+			if (window->getSize().x < APP_MIN_WIDTH || window->getSize().y < APP_MIN_HEIGHT) {
+				window->setSize(sf::Vector2u(APP_MIN_WIDTH, APP_MIN_HEIGHT));
+			}
+		}
 
 
 		if (event.type == sf::Event::Closed) {
