@@ -88,63 +88,66 @@ void Engine::handleEvents()
 				copyMazeTable(mazeTableCopy, mazeTable);
 			}
 
-			if (!isAlgorithmRunning) {
-				if (buttons[START_BTN]->isClicked(window)) {
-					if (isBfsButtonSelected == true) {
-						// BFS algorithm
-						if (!bfsPathfinder.isRunning()) {
-							copyMazeTable(mazeTable, mazeTableCopy);
-							bfsPathfinder.start();
-						}
-					}
+			//disable buttons wher algorithm is running
+			if (isAlgorithmRunning) { break; }
 
-					if (isBfsButtonSelected == false) {
-						// DFS algorithm
-						if (!dfsPathfinder.isRunning()) {
-							copyMazeTable(mazeTable, mazeTableCopy);
-							dfsPathfinder.start();
-						}
+
+			if (buttons[START_BTN]->isClicked(window)) {
+				if (isBfsButtonSelected == true) {
+					// BFS algorithm
+					if (!bfsPathfinder.isRunning()) {
+						copyMazeTable(mazeTable, mazeTableCopy);
+						bfsPathfinder.start();
 					}
 				}
 
-				//TODO: pomy�le� czy to powinno tu by�
+				if (isBfsButtonSelected == false) {
+					// DFS algorithm
+					if (!dfsPathfinder.isRunning()) {
+						copyMazeTable(mazeTable, mazeTableCopy);
+						dfsPathfinder.start();
+					}
+				}
+			}
 
-				if (buttons[BOXWHITE_BTN]->isClicked(window))
-				{
-					this->MODE = PUT_WALL;
-				}
-				else if (buttons[BOXGREEN_BTN]->isClicked(window)) {
-					this->MODE = PUT_START_POINT;
-				}
-				else if (buttons[BOXRED_BTN]->isClicked(window)) {
-					this->MODE = PUT_END_POINT;
-				}
-				else if (buttons[SAVE_BTN]->isClicked(window)) {
-					saveMazeTable();
-				}
-				else if (buttons[BFS_BTN]->isClicked(window)) {
-					isBfsButtonSelected = true;
-				}
-				else if (buttons[DFS_BTN]->isClicked(window)) {
-					isBfsButtonSelected = false;
-				}
-				else if (buttons[ONEX_BTN]->isClicked(window)) {
-					selectMaze(mazeSizeType, SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
-				}
-				else if (buttons[TWOX_BTN]->isClicked(window)) {
-					selectMaze(mazeSizeType, MEDIUM, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS, MEDIUM_MAZE_CELL_SIZE, MEDIUM_MAZE_FILENAME);
-				}
-				else if (buttons[FOURX_BTN]->isClicked(window)) {
-					selectMaze(mazeSizeType, BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE, BIG_MAZE_FILENAME);
-				}
-				else if (buttons[GENERATE_BTN]->isClicked(window)) {
-					std::cout << "Generate!" << std::endl;
-					dfsMazeGenerator.generateMaze(mazeTable, mazeTableRows, mazeTableColumns, &startPoint, &endPoint);
-				}
+			//TODO: pomy�le� czy to powinno tu by�
+
+			if (buttons[BOXWHITE_BTN]->isClicked(window))
+			{
+				this->MODE = PUT_WALL;
+			}
+			else if (buttons[BOXGREEN_BTN]->isClicked(window)) {
+				this->MODE = PUT_START_POINT;
+			}
+			else if (buttons[BOXRED_BTN]->isClicked(window)) {
+				this->MODE = PUT_END_POINT;
+			}
+			else if (buttons[SAVE_BTN]->isClicked(window)) {
+				saveMazeTable();
+			}
+			else if (buttons[BFS_BTN]->isClicked(window)) {
+				isBfsButtonSelected = true;
+			}
+			else if (buttons[DFS_BTN]->isClicked(window)) {
+				isBfsButtonSelected = false;
+			}
+			else if (buttons[ONEX_BTN]->isClicked(window)) {
+				selectMaze(mazeSizeType, SMALL, SMALL_MAZE_ROWS, SMALL_MAZE_COLUMNS, SMALL_MAZE_CELL_SIZE, SMALL_MAZE_FILENAME);
+			}
+			else if (buttons[TWOX_BTN]->isClicked(window)) {
+				selectMaze(mazeSizeType, MEDIUM, MEDIUM_MAZE_ROWS, MEDIUM_MAZE_COLUMNS, MEDIUM_MAZE_CELL_SIZE, MEDIUM_MAZE_FILENAME);
+			}
+			else if (buttons[FOURX_BTN]->isClicked(window)) {
+				selectMaze(mazeSizeType, BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE, BIG_MAZE_FILENAME);
+			}
+			else if (buttons[GENERATE_BTN]->isClicked(window)) {
+				std::cout << "Generate!" << std::endl;
+				dfsMazeGenerator.generateMaze(mazeTable, mazeTableRows, mazeTableColumns, &startPoint, &endPoint);
 			}
 		}
 	}
 }
+
 
 
 void Engine::update() {
