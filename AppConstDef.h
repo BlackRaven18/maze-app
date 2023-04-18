@@ -4,6 +4,9 @@
 #define APP_HEIGHT 720
 #define APP_TITLE "Maze!"
 
+#define APP_MIN_WIDTH 800
+#define APP_MIN_HEIGHT 600
+
 #define SMALL_MAZE_ROWS 15
 #define SMALL_MAZE_COLUMNS 24
 #define SMALL_MAZE_CELL_SIZE 40
