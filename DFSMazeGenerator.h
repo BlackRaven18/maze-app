@@ -20,8 +20,8 @@ private:
 	void setCellParameters(MazeCell* mazeCell, bool visited, int id, sf::Color color);
 	void clearStacks();
 
-	void setStartPoint(MazeCell* mazeCell, int rows, sf::Vector2i *startPoint);
-	void setEndPoint(MazeCell* mazeCell, int columns, sf::Vector2i *endPoint);
+	void setStartPoint(MazeCell* mazeCell, int row, int column, sf::Vector2i *startPoint);
+	void setEndPoint(MazeCell* mazeCell, int row, int column, sf::Vector2i *endPoint);
 
 
 public:

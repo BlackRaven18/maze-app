@@ -14,6 +14,8 @@ private:
 	std::stack<sf::Vector2i> stack;
 	sf::Vector2i tmpPoint;
 
+	int steps;
+
 	bool running;
 	bool initializedWithStartData;
 	bool exitFound;
