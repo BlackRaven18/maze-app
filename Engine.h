@@ -27,8 +27,11 @@ private:
 	MazeCell **mazeTableCopy;
 	sf::Vector2f mousePosition;
 
+
+	sf::Clock clock;
+	float elapsedTime;
+
 	std::vector<Button*> buttons;
-	
 	bool isBfsButtonSelected;
 	
 	BFSPathfinder bfsPathfinder;
@@ -46,32 +49,26 @@ private:
 	bool isAlgorithmRunning;
 
 	void updateMousePosition();
+
 	void initializeMazeTable(int rows, int columns, int cellSize, const char* filename);
-	//------------------
-
-
-	sf::Clock clock;
-	float elapsedTime;
-
-	//------------------
 	void setMazeParameters(int size, int rows, int columns, int cellSize);
-
 	void copyMazeTable(MazeCell **src, MazeCell **dst);
-	//------------------
-	void initializeButtons();
+
 	void addMazeElements();
 	void removePoint(int pointId);
 	void drawMazeTable();
 	void saveMazeTable();
-
 	void selectMaze(int oldType, int newType, int rows, int columns, int cellSize, const char* filename);
 
+	void initializeButtons();
 	void drawButtonsIllumination();
 	void drawButtons();
+	void buttonSelect();
+
+	void updatePathfindingAlgorithms();
 
 	void startMainLoop();
 	void handleEvents();
-	void buttonSelect();
 
 	void initialize();
 	void update();

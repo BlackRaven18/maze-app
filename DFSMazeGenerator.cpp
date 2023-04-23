@@ -45,8 +45,8 @@ void DFSMazeGenerator::generateMaze(MazeCell** mazeTable, int rows, int columns,
 	clearVisited(mazeTable, rows, columns);
 
 	//adding start and end points
-	setStartPoint(&mazeTable[rows - 1][0], rows, startPoint);
-	setEndPoint(&mazeTable[0][columns - 1], columns, endPoint);
+	setStartPoint(&mazeTable[rows - 2][1], rows - 2, 1, startPoint);
+	setEndPoint(&mazeTable[1][columns - 2], 1, columns - 2, endPoint);
 
 	clearStacks();
 }
@@ -131,17 +131,17 @@ void DFSMazeGenerator::clearStacks()
 	while (!dirStack.empty()) dirStack.pop();
 }
 
-void DFSMazeGenerator::setStartPoint(MazeCell* mazeCell, int rows, sf::Vector2i *startPoint)
+void DFSMazeGenerator::setStartPoint(MazeCell* mazeCell, int row, int column, sf::Vector2i *startPoint)
 {
 	setCellParameters(mazeCell, true, MazeCellTypes::START_POINT, START_POINT_COLOR);
-	startPoint->x = rows - 1;
-	startPoint->y = 0;
+	startPoint->x = row;
+	startPoint->y = column;
 }
 
-void DFSMazeGenerator::setEndPoint(MazeCell* mazeCell, int columns, sf::Vector2i* endPoint)
+void DFSMazeGenerator::setEndPoint(MazeCell* mazeCell, int row, int column, sf::Vector2i* endPoint)
 {
 	setCellParameters(mazeCell, false, MazeCellTypes::END_POINT, END_POINT_COLOR);
-	endPoint->x = 0;
-	endPoint->y = columns - 1;
+	endPoint->x = row;
+	endPoint->y = column;
 }
 

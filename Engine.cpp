@@ -1,7 +1,7 @@
 ﻿#include "Engine.h"
 #include <iostream>
 #include <fstream>
-//komentarz do usuniecia
+
 Engine::Engine() {
 
 	this->MODE = PUT_WALL;
@@ -58,6 +58,10 @@ void Engine::handleEvents()
 	while (window->pollEvent(event))
 	{
 		if (event.type == ::sf::Event::Resized) {
+
+			std::cout << "Resized!" << std::endl;
+
+
 			if (window->getSize().x < APP_MIN_WIDTH || window->getSize().y < APP_MIN_HEIGHT) {
 				window->setSize(sf::Vector2u(APP_MIN_WIDTH, APP_MIN_HEIGHT));
 			}
@@ -141,27 +145,18 @@ void Engine::handleEvents()
 				selectMaze(mazeSizeType, BIG, BIG_MAZE_ROWS, BIG_MAZE_COLUMNS, BIG_MAZE_CELL_SIZE, BIG_MAZE_FILENAME);
 			}
 			else if (buttons[GENERATE_BTN]->isClicked(window)) {
-				std::cout << "Generate!" << std::endl;
 				dfsMazeGenerator.generateMaze(mazeTable, mazeTableRows, mazeTableColumns, &startPoint, &endPoint);
 			}
 		}
 	}
 }
 
-
-
-void Engine::update() {
-	handleEvents();
-	updateMousePosition();
-
-	if ((bfsPathfinder.isRunning() == true) || (dfsPathfinder.isRunning() == true)) {
-		isAlgorithmRunning = true;
-	}
-
+void Engine::updatePathfindingAlgorithms() {
 	if (isBfsButtonSelected) {
+
 		if (bfsPathfinder.isExitFound()) {
 			if (elapsedTime >= PATHFINDER_DRAWING_PATH_DELAY.asSeconds()) {
-				bfsPathfinder.drawRoad(mazeTable, mazeTableRows, mazeTableColumns,startPoint);
+				bfsPathfinder.drawRoad(mazeTable, mazeTableRows, mazeTableColumns, startPoint);
 				elapsedTime = 0.0f;
 			}
 		}
@@ -186,6 +181,19 @@ void Engine::update() {
 			}
 		}
 	}
+}
+
+
+
+void Engine::update() {
+	handleEvents();
+	updateMousePosition();
+
+	if ((bfsPathfinder.isRunning() == true) || (dfsPathfinder.isRunning() == true)) {
+		isAlgorithmRunning = true;
+	}
+
+	updatePathfindingAlgorithms();
 		
 }
 

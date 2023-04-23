@@ -7,6 +7,7 @@ BFSPathfinder::BFSPathfinder()
 	this->exitFound = false;
 }
 
+
 void BFSPathfinder::checkChamber(MazeCell **mazeTable, int rows, int columns, int chamberId, int x, int y)
 {
 	if (x < 0 || y < 0 || x >= rows || y >= columns) return;
@@ -35,6 +36,7 @@ void BFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Ve
 	if (!isInitializedWithStartData()) {
 		mazeTable[startPoint.x][startPoint.y].setVisited(true);
 		queue.push(startPoint);
+		steps = 0;
 
 		setInitializedWithStartData(true);
 	}
@@ -74,11 +76,12 @@ void BFSPathfinder::drawRoad(MazeCell** mazeTable, int rows, int columns, sf::Ve
 		case DOWN: mazeTable[tmpPoint.x][tmpPoint.y--].setVisited(true); break;
 		}
 		mazeTable[tmpPoint.x][tmpPoint.y].setColor(MAZE_TRACK_COLOR);
+		steps++;
 	}
 
 	if (tmpPoint == startPoint) {
 
-		std::cout << "Znaleziono droge!" << std::endl;
+		std::cout << "Znaleziono droge!; liczba krokow: " << steps  << std::endl;
 		stop();
 	}
 }

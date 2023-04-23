@@ -1,11 +1,15 @@
 #pragma once
 
+
+//16:9
 #define APP_WIDTH 1280
 #define APP_HEIGHT 720
 #define APP_TITLE "Maze!"
 
+
+//16:9
 #define APP_MIN_WIDTH 800
-#define APP_MIN_HEIGHT 600
+#define APP_MIN_HEIGHT 450
 
 #define SMALL_MAZE_ROWS 15
 #define SMALL_MAZE_COLUMNS 24
@@ -33,16 +37,14 @@
 #define START_POINT_COLOR sf::Color{0, 255, 0}
 
 #define BACKGROUND_COLOR sf::Color{51, 51, 255}
-#define MAZE_BACKGROUND_COLOR sf::Color{102, 0, 102}
-#define MAZE_WALL_COLOR sf::Color{255, 255, 255}
+#define MAZE_BACKGROUND_COLOR sf::Color{255,255,255}
+#define MAZE_WALL_COLOR sf::Color{0,0,0}
 
-/////////////////////////RESTART_BTN
 #define MAZE_TRACK_COLOR sf::Color{0, 0, 255}
 #define MAZE_VISITED_CELL_COLOR sf::Color::Cyan
 
 #define PATHFINDER_CHECKED_CELLS_DELAY sf::seconds(0.01f)
 #define PATHFINDER_DRAWING_PATH_DELAY sf::seconds(0.1f)
-//////////////////////////
 
 #define BUTTONS_NUM 12
 

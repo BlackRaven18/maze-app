@@ -17,6 +17,8 @@ private:
 	std::queue<sf::Vector2i> queue;
 	sf::Vector2i tmpPoint;
 
+	int steps;
+
 	bool running;
 	bool initializedWithStartData;
 	bool exitFound;

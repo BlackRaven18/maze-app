@@ -34,6 +34,7 @@ void DFSPathfinder::findRoad(MazeCell **mazeTable, int rows, int columns, sf::Ve
     if (!isInitializedWithStartData()) {
         mazeTable[startPoint.x][startPoint.y].setVisited(true);
         stack.push(startPoint);
+        steps = 0;
 
         setInitializedWithStartData(true);
     }
@@ -72,10 +73,11 @@ void DFSPathfinder::drawRoad(MazeCell** mazeTable, int rows, int columns, sf::Ve
         case LEFT: mazeTable[tmpPoint.x++][tmpPoint.y].setVisited(true); break;
         }
         mazeTable[tmpPoint.x][tmpPoint.y].setColor(MAZE_TRACK_COLOR);
+        steps++;
     }
 
     if (tmpPoint == startPoint) {
-        std::cout << "Znaleziono droge!" << std::endl;
+        std::cout << "Znaleziono droge!; liczba krokow: " << steps << std::endl;
         stop();
     }
 }
